@@ -1,0 +1,19 @@
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #ccc;
+  background-color: rgba(240, 240, 240, 0.2)
+}
+
+th, td {
+  padding: 20px;
+}
+
+tbody tr:nth-of-type(odd) {
+  background-color: rgba(175, 255, 200, 0.2);
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: rgba(100, 255, 150, 0.2);
+}

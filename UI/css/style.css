@@ -17,7 +17,6 @@ p, li {
 header h1 {
   font-family: serif;
   font-size: 3rem;
-  color: #A03E9D;
 }
 
  nav ul{
@@ -28,18 +27,22 @@ header h1 {
 }
 
 nav li {
-  border: 1px solid #A03E9D;
+  background-color: black;
+  border: 1px solid white;
   padding: 1rem;
   text-align: center;
 }
 
 header a {
   text-decoration: none;
-  color: #A03E9D;
+  color: inherit;
+}
+nav a {
+  color: white;
 }
 
-.dropdown {
-  background-image: url('images/dropdown.png');
+a.dropdown {
+  background-image: url('images/dropdown2.png');
   background-repeat: no-repeat;
   background-position: right;
   background-size: 1rem 1rem;
