@@ -1,0 +1,47 @@
+html {
+  height: 100%
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  font-size: 10px;
+  font-family: helvetica, arial, sans-serif;
+  height: 100%;
+}
+
+p, li {
+  font-size: 1.5rem;
+}
+
+header h1 {
+  font-family: serif;
+  font-size: 3rem;
+  color: #A03E9D;
+}
+
+ nav ul{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  border: 1px solid #A03E9D;
+  padding: 1rem;
+  text-align: center;
+}
+
+header a {
+  text-decoration: none;
+  color: #A03E9D;
+}
+
+.dropdown {
+  background-image: url('images/dropdown.png');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 1rem 1rem;
+  padding-right: 1rem;
+}
