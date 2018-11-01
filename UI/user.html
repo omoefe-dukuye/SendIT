@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Sign Up | SendIT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+  </head>
+  <body>
+    <header>
+      <h1><a href="index.html">SendIT</a></h1>
+      <nav>
+        <ul>
+          <li><a href="create_order.html">Create Order</a></li>
+          <li><a href="sign_up.html">Sign-up</a></li>
+          <li class="dropdown">
+            <a href="login.html">Login</a>
+            <form class="dropdown_content" action="index.html" method="post">
+               <label for="username">Username</label><br>
+               <input id="username" type="text" name="" value=""><br>
+               <label for="password">Password</label><br>
+               <input id="password" type="password" name="" value=""><br>
+               <input type="submit" name="" value="Log In">
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>Profile</h2>
+      <section>
+        <table>
+          <caption>Parcel Delivery Order status</caption>
+          <thead>
+            <tr>
+              <th scope="col" colspan="2">Delivery Orders</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <th scope="row">In Transit</th>
+              <td>48</td>
+            </tr>
+            <tr>
+              <th scope="row">Delivered</th>
+              <td></td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <th scope="col">Total</th>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section>
+        <h3>All Orders:</h3>
+        <ul>
+
+        </ul>
+      </section>
+
+    </main>
+
+    <footer>
+      <hr>
+      Omo 2018 for Andela Bootcamp.
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
