@@ -10,8 +10,12 @@ th, td {
   padding: 20px;
 }
 
-tbody tr:nth-of-type(even) {
+tbody tr:nth-of-type(odd) {
   background-color: #eee;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #ddd;
 }
 
 tbody th, tfoot th {
