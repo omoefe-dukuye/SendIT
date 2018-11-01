@@ -5,8 +5,8 @@ html {
 body {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  font-size: 10px;
   font-family: helvetica, arial, sans-serif;
+  font-size: 10px;
   height: 100%;
 }
 
@@ -41,10 +41,26 @@ nav a {
   color: white;
 }
 
-a.dropdown {
+.dropdown {
   background-image: url('images/dropdown2.png');
   background-repeat: no-repeat;
   background-position: right;
   background-size: 1rem 1rem;
   padding-right: 1rem;
+}
+
+.dropdown_content {
+  box-shadow: 2px 2px 2px #ddd, -2px -2px 2px #ddd;
+  background-color: #fff;
+  display: none;
+  font-size: 1rem;
+  margin: 1rem 0;
+  text-align: left;
+  padding: 1rem;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown_content {
+  display: block;
 }
