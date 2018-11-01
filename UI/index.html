@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Home | SendIT</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
     <header>
@@ -12,7 +12,16 @@
         <ul>
           <li><a href="create_order.html">Create Order</a></li>
           <li><a href="sign_up.html">Sign-up</a></li>
-          <li><a class="dropdown" href="login.html">Login</a></li>
+          <li class="dropdown">
+            <button>Log In</button>
+            <form class="dropdown_content" action="index.html" method="post">
+              <label for="username">Username</label><br>
+              <input id="username" type="text" name="" value=""><br>
+              <label for="password"></label><br>
+              <input id="password" type="password" name="" value=""><br>
+              <input type="submit" name="" value="Log In">
+            </form>
+          </li>
         </ul>
       </nav>
     </header>

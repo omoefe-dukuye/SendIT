@@ -36,7 +36,16 @@ nav li {
 header a {
   text-decoration: none;
   color: inherit;
+  font-size: 2rem;
 }
+
+header button {
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-size: 2rem;
+}
+
 nav a {
   color: white;
 }
