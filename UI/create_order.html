@@ -4,10 +4,12 @@
   <meta charset="utf-8">
   <title>Create Order | SendIT</title>
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Hind+Madurai" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 </head>
 <body>
   <header>
-    <h1><a href="index.html">SendIT</a></h1>
+    <a href="index.html"><h1>SendIT</h1><i class="fas fa-plane-departure"></i></a>
     <nav>
       <ul>
         <li><a href="create_order.html">Create Order</a></li>
@@ -27,22 +29,19 @@
   </header>
   <main>
     <h2>Create an order</h2>
-    <form class="" action="index.html" method="post">
-      <label for="firstname"></label><br>
-      <input id="firstname" type="text" name="" value=""><br>
-      <label for="lastname"></label><br>
-      <input id="lastname" type="text" name="" value=""><br>
-      <label for="email"></label><br>
-      <input id="email" type="text" name="" value=""><br>
-      <label for="username"></label><br>
-      <input id="username" type="text" name="" value=""><br>
+    <form class="form" action="index.html" method="post">
+      <label for="pickup">Pickup Location:</label>
+      <input id="pickup" type="text" name="" value="">
+      <label for="destination">Destination</label>
+      <input id="destination" type="text" name="" value="">
+      <label for="content">Parcel Description:</label>
+      <input id="content" type="text" name="" value="">
       <input type="submit" name="" value="Create Order">
     </form>
   </main>
 
   <footer>
-    <hr>
-    Omo 2018 for Andela Bootcamp.
+    <h3>Contact Us:</h3>
   </footer>
   <script src="main.js"></script>
 </body>
