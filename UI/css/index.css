@@ -113,6 +113,7 @@ section, div, .slides p, ul div, main ul, main li, html, body {
   margin: 2rem auto;
   line-height: 1.5;
   text-indent: 2rem;
+  text-align: center;
 }
 
 @media (max-width: 720px) {
