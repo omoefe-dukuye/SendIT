@@ -1,0 +1,41 @@
+{
+  "name": "send-it",
+  "version": "1.0.0",
+  "description": "SendIT is a courier service that helps users deliver parcels to different destinations.",
+  "main": "index.js",
+  "engines": {
+    "node": "10.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/un-tethered/SendIT.git"
+  },
+  "keywords": [
+    "parcel",
+    "delivery"
+  ],
+  "author": "Omoefe Dukuye",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/un-tethered/SendIT/issues"
+  },
+  "homepage": "https://github.com/un-tethered/SendIT#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "chai": "^4.2.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.6",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
