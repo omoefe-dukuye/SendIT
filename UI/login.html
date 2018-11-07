@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="courier, shipping, delivery, parcel">
+    <title>Login | SendIT</title>
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Hind+Madurai" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
+  </head>
+  <body>
+      <header class="header_footer">
+        <div class="logo_wrapper">
+          <a  class="header_link logo shadow" href="index.html">
+            <h1 class="inline">SendIT</h1>
+            <i class="fas fa-plane-departure"></i>
+          </a>
+          <p class="slogan">
+            ...delivering on time, all the time.
+          </p>
+        </div>
+        <div class="link_wrapper">
+          <ul>
+            <li class="inline">
+              <a class="header_link shadow" href="login.html">Log In</a>
+            </li>
+            <li class="inline">
+              <a class="header_link shadow" href="signup.html">Create Account</a>
+            </li>
+          </ul>
+        </div>
+      </header>
+      <main>
+        <section>
+          <form class="" action="index.html" method="post">
+            <label class="shadow" for="email">EMAIL</label>
+            <input id="email" type="text" name="" value="">
+            <label class="shadow" for="password">PASSWORD</label>
+            <input id="password" type="password" name="" value="">
+            <input class="shadow submit" type="submit" name="" value="Log in">
+          </form>
+          <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+        </section>
+      </main>
+      <footer class="header_footer">
+        <div class="shadow">
+          <h3 class="center">Contact us:</h3>
+          <ul>
+            <li>call: +2347063308109</li>
+            <li>email: help@sendIT.com</li>
+          </ul>
+        </div>
+      </footer>
+      <script>
+        document.querySelector('.submit').onclick = (e) => {
+          e.preventDefault();
+          window.open('user.html');
+        };
+      </script>
+  </body>
+</html>
