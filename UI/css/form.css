@@ -1,0 +1,45 @@
+section {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  width: 30%;
+  margin: 2rem auto;
+}
+
+@media (max-width: 1079px) {
+  form {
+    width: 45%;
+  }
+}
+
+@media (max-width: 719px) {
+  form {
+    width: 60%;
+  }
+}
+
+input[type="text"], input[type="password"] {
+  display: block;
+  border: none;
+  border-bottom: 1px solid #90f;
+  background-color: transparent;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+input[type="submit"] {
+  width: 50%;
+  height: 3rem;
+  border: 1px solid #90f;
+  border-radius: 5px;
+  margin: 0 auto;
+}
+
+input[type="submit"]:hover {
+background-color: #90f;
+color: #fff;
+}
