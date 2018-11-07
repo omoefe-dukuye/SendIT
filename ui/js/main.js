@@ -1,20 +1,19 @@
 const nav = document.querySelectorAll('.nav');
 const doc = document.querySelectorAll('.doc');
-const profile = document.querySelector('.profile');
 const profileClose = document.querySelector('.profile_close');
 const seeProfile = document.querySelector('.see_profile');
 const blur = document.querySelector('.profile_wrapper');
 
 
-for (let i=0; i<nav.length; i++) {
+for (let i = 0; i < nav.length; i += 1) {
   nav[i].addEventListener('click', (e) => {
     e.target.setAttribute('class', 'nav active');
-    for (let i=0; i<nav.length; i++) {
-      if (nav[i] !== e.target) {
-        nav[i].setAttribute('class', 'nav');
-        doc[i].setAttribute('class', 'doc no_display')
+    for (let j = 0; j < nav.length; j += 1) {
+      if (nav[j] !== e.target) {
+        nav[j].setAttribute('class', 'nav');
+        doc[j].setAttribute('class', 'doc no_display');
       } else {
-        doc[i].setAttribute('class', 'doc');
+        doc[j].setAttribute('class', 'doc');
       }
     }
   });
