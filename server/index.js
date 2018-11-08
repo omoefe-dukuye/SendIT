@@ -34,7 +34,18 @@ app.post('/api/v1/parcels', (req, res) => {
 });
 
 app.get('/api/v1/parcels', (req, res) => {
+  if (db[0]) {
+    return res.status(200).send({
+      success: true,
+      message: 'Orders retrieved successfully.',
+      orders: db,
+    });
+  }
 
+  return res.status(200).send({
+    success: true,
+    message: 'No orders to retrieve.',
+  });
 });
 
 app.get('/api/v1/parcels/:parcelId', (req, res) => {
