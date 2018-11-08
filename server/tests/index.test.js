@@ -138,3 +138,40 @@ describe('PUT /api/v1/parcels/:parcelId/cancel', () => {
       .end(done);
   });
 });
+
+
+describe('GET /api/v1/users/:userId/parcels', () => {
+  it('Should get all orders by user provided', (done) => {
+    db.push({
+      user: 'Omoefe',
+      pickupLocation: 'Benin',
+      destination: 'Andela',
+      description: 'Omoefe',
+    });
+
+    request(app)
+      .get('/api/v1/users/Omoefe/parcels')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.success).to.equal(true);
+      })
+      .end((err) => {
+        if (err) {
+          db.pop();
+          return done(err);
+        }
+        db.pop();
+        return done();
+      });
+  });
+
+  it('Should throw error if user does not exist', (done) => {
+    request(app)
+      .get('/api/v1/users/1/parcels')
+      .expect(404)
+      .expect((res) => {
+        expect(res.body.success).to.equal(false);
+      })
+      .end(done);
+  });
+});
