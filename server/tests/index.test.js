@@ -46,3 +46,18 @@ describe('POST /api/v1/parcels', () => {
       });
   });
 });
+
+describe('GET /api/v1/parcels', () => {
+  it('Should get all orders', (done) => {
+    request(app)
+      .get('/api/v1/parcels')
+      .expect(200)
+      .expect((res) => {
+        if (db[0]) {
+          return expect(res.body.orders.length).to.equal(dbLength);
+        }
+        return expect(res.body.message).to.equal('No orders to retrieve.');
+      })
+      .end(done);
+  });
+});
