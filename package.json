@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "babel-node ./server/index.js",
-    "test": "mocha --require babel-register server/**/*test.js"
+    "test": "mocha --require babel-register server/**/*test.js --exit"
   },
   "repository": {
     "type": "git",
