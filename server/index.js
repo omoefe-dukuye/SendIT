@@ -49,7 +49,19 @@ app.get('/api/v1/parcels', (req, res) => {
 });
 
 app.get('/api/v1/parcels/:parcelId', (req, res) => {
-
+  const id = Number(req.params.parcelId);
+  const order = db.filter(parcel => parcel.id === id);
+  if (order[0]) {
+    return res.status(200).send({
+      success: true,
+      message: 'Order retrieved successfully.',
+      order: order[0],
+    });
+  }
+  return res.status(404).send({
+    success: false,
+    message: 'Order does not exist.',
+  });
 });
 
 
