@@ -91,7 +91,24 @@ app.put('/api/v1/parcels/:parcelId/cancel', (req, res) => {
 });
 
 app.get('/api/v1/users/:userId/parcels', (req, res) => {
+  const user = req.params.userId;
+  const orders = db.filter(order => order.user === user);
+  if (orders[0]) {
+    return res.status(200).send({
+      success: true,
+      message: 'Orders retrieved successfully.',
+      orders,
+    });
+  }
 
+  return res.status(404).send({
+    success: false,
+    message: 'No orders for this user.',
+  });
+});
+
+app.listen(3000, () => {
+  console.log('Server started on port 3000');
 });
 
 export default app;
