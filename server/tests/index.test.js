@@ -61,3 +61,39 @@ describe('GET /api/v1/parcels', () => {
       .end(done);
   });
 });
+
+describe('GET /api/v1/parcels/:parcelId', () => {
+  it('Should get specific order if ID exists', (done) => {
+    const id = dbLength + 1;
+    db.push({
+      id,
+      pickupLocation: 'Benin',
+      destination: 'Andela',
+      description: 'Omoefe',
+    });
+    request(app)
+      .get(`/api/v1/parcels/${id}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.order.id).to.equal(id);
+      })
+      .end((err) => {
+        if (err) {
+          db.pop();
+          return done(err);
+        }
+        db.pop();
+        return done();
+      });
+  });
+
+  it('Should throw error if ID does not exist', (done) => {
+    request(app)
+      .get(`/api/v1/parcels/${db.length + 100}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body.success).to.equal(false);
+      })
+      .end(done);
+  });
+});
