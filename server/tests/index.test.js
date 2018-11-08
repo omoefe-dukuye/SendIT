@@ -6,6 +6,7 @@ import app from '../index';
 
 const dbLength = db.length;
 
+
 describe('POST /api/v1/parcels', () => {
   it('Should create a new order if all fields are filled', (done) => {
     request(app)
@@ -62,6 +63,7 @@ describe('GET /api/v1/parcels', () => {
   });
 });
 
+
 describe('GET /api/v1/parcels/:parcelId', () => {
   it('Should get specific order if ID exists', (done) => {
     const id = dbLength + 1;
@@ -90,6 +92,45 @@ describe('GET /api/v1/parcels/:parcelId', () => {
   it('Should throw error if ID does not exist', (done) => {
     request(app)
       .get(`/api/v1/parcels/${db.length + 100}`)
+      .expect(404)
+      .expect((res) => {
+        expect(res.body.success).to.equal(false);
+      })
+      .end(done);
+  });
+});
+
+
+describe('PUT /api/v1/parcels/:parcelId/cancel', () => {
+  it('Should set status to "cancelled" if ID exists', (done) => {
+    const id = db.length + 1;
+    db.push({
+      id,
+      pickupLocation: 'Benin',
+      destination: 'Andela',
+      description: 'Omoefe',
+    });
+    request(app)
+      .put(`/api/v1/parcels/${id}/cancel`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.success).to.equal(true);
+      })
+      .end((err) => {
+        if (err) {
+          db.pop();
+          return done(err);
+        }
+        expect(db[id - 1].status).to.equal('cancelled');
+        db.pop();
+        return done();
+      });
+  });
+
+  it('Should throw error if ID does not exist', (done) => {
+    const id = db.length;
+    request(app)
+      .put(`/api/v1/parcels/${id}/cancel`)
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
