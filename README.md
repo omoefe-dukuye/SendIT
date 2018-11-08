@@ -18,7 +18,7 @@ SendIT is a courier service that helps users deliver parcels to different destin
 Project is managed [here](https://www.pivotaltracker.com/n/projects/2223621) using the project management tool, [Pivotal Tracker](https://www.pivotaltracker.com).
 
 ## Templates
-UI templates are hosted on Github pages [here](https://un-tethered.github.io/SendIT/)
+UI templates are hosted on Github pages [here](https://un-tethered.github.io/SendIT/UI)
 
 ## Technologies Used
 * [Node.js](https://nodejs.org) - A runtime environment based off of Chrome's V8 Engine for writing Javascript code on the server.
