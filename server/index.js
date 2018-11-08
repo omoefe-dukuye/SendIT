@@ -66,7 +66,28 @@ app.get('/api/v1/parcels/:parcelId', (req, res) => {
 
 
 app.put('/api/v1/parcels/:parcelId/cancel', (req, res) => {
+  const id = Number(req.params.parcelId);
+  let orderFound;
 
+  db.forEach((order) => {
+    if (order.id === id) {
+      orderFound = order;
+    }
+  });
+
+  if (!orderFound) {
+    return res.status(404).send({
+      success: false,
+      message: 'Invalid ID.',
+    });
+  }
+
+  orderFound.status = 'cancelled';
+
+  return res.status(200).send({
+    success: true,
+    message: `Order ${id} cancelled.`,
+  });
 });
 
 app.get('/api/v1/users/:userId/parcels', (req, res) => {
