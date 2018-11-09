@@ -24,7 +24,7 @@ describe('POST /api/v1/parcels', () => {
         if (err) {
           return done(err);
         }
-        expect(data.length).to.equal(dataLength + 1);
+        expect(data.length).to.equal(dataLength + 1); // check if entry is added to data structure
         data.pop();
         return done();
       });
@@ -42,7 +42,7 @@ describe('POST /api/v1/parcels', () => {
         if (err) {
           return done(err);
         }
-        expect(data.length).to.equal(dataLength);
+        expect(data.length).to.equal(dataLength); // confirm nothing is added to data structure
         return done();
       });
   });
@@ -59,24 +59,22 @@ describe('GET /api/v1/parcels', () => {
       .end(done);
   });
   it('Should indicate, if there are no orders to display', (done) => {
-    data.pop();
+    data.pop(); // empty data structure
     request(app)
       .get('/api/v1/parcels')
       .expect(200)
       .expect((res) => {
         expect(res.body.message).to.equal('No orders to retrieve.');
-      })
-      .end(() => {
-        data.push({
+        data.push({ // restore popped entry
           id: 1,
           user: 'Omoefe',
           pickupLocation: 'UBTH, Benin',
           destination: '235 Ikorodu road, Lagos',
-          description: 'Human, 6 feet;5 inches',
+          description: 'Human, 6"5"',
           status: 'created',
         });
-        return done();
-      });
+      })
+      .end(done);
   });
 });
 
@@ -94,7 +92,7 @@ describe('GET /api/v1/parcels/:parcelId', () => {
 
   it('Should throw error if ID does not exist', (done) => {
     request(app)
-      .get('/api/v1/parcels/10')
+      .get('/api/v1/parcels/10') // make request with bogus id
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
@@ -117,7 +115,7 @@ describe('PUT /api/v1/parcels/:parcelId/cancel', () => {
 
   it('Should throw error if ID does not exist', (done) => {
     request(app)
-      .put('/api/v1/parcels/10/cancel')
+      .put('/api/v1/parcels/10/cancel') // make request with bogus id
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
@@ -140,7 +138,7 @@ describe('GET /api/v1/users/:userId/parcels', () => {
 
   it('Should throw error if user does not exist', (done) => {
     request(app)
-      .get('/api/v1/users/1/parcels')
+      .get('/api/v1/users/1/parcels') // make request with bogus userID
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
