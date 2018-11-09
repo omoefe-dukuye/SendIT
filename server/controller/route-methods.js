@@ -1,5 +1,7 @@
 import data from '../config/config-test';
 
+// make routes into class methods
+
 class routeMethods {
   static createOrder(req, res) {
     if (req.body.pickupLocation && req.body.destination && req.body.description) {

@@ -3,6 +3,6 @@ export default [{
   user: 'Omoefe',
   pickupLocation: 'UBTH, Benin',
   destination: '235 Ikorodu road, Lagos',
-  description: 'Human, 6 feet;5 inches',
+  description: 'Human, 6"5"',
   status: 'created',
 }];

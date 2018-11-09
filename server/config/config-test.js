@@ -5,7 +5,7 @@ const env = process.env.NODE_ENV;
 
 let data;
 
-if (env === 'test') {
+if (env === 'test') { // use dummy data file for tests
   data = dataTest;
 } else {
   data = dataMain;
