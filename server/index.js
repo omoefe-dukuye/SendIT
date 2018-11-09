@@ -16,7 +16,7 @@ app.use(router);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log('Server started on port 3000');
+  console.log(`Server started on port ${PORT}`);
 });
 
 export default app;
