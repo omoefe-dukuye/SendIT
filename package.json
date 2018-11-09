@@ -56,6 +56,9 @@
       "text"
     ],
     "sourceMap": false,
-    "instrument": false
+    "instrument": false,
+    "exclude": [
+      "**/*test.js"
+    ]
   }
 }

@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import request from 'supertest';
 
-import db from '../db/db';
+import data from '../config/config-test';
 import app from '../index';
 
-const dbLength = db.length;
+const dataLength = data.length;
 
 
 describe('POST /api/v1/parcels', () => {
@@ -14,7 +14,7 @@ describe('POST /api/v1/parcels', () => {
       .send({
         pickupLocation: 'UBTH, Benin',
         destination: 'Andela Epic Tower, 235 Ikorodu road, Lagos',
-        description: 'MacBook, 10',
+        description: 'Me',
       })
       .expect(201)
       .expect((res) => {
@@ -24,8 +24,8 @@ describe('POST /api/v1/parcels', () => {
         if (err) {
           return done(err);
         }
-        expect(db.length).to.equal(dbLength + 1);
-        db.pop();
+        expect(data.length).to.equal(dataLength + 1);
+        data.pop();
         return done();
       });
   });
@@ -42,56 +42,59 @@ describe('POST /api/v1/parcels', () => {
         if (err) {
           return done(err);
         }
-        expect(db.length).to.equal(dbLength);
+        expect(data.length).to.equal(dataLength);
         return done();
       });
   });
 });
 
 describe('GET /api/v1/parcels', () => {
-  it('Should get all orders', (done) => {
+  it('Should get orders if orders exist', (done) => {
     request(app)
       .get('/api/v1/parcels')
       .expect(200)
       .expect((res) => {
-        if (db[0]) {
-          return expect(res.body.orders.length).to.equal(dbLength);
-        }
-        return expect(res.body.message).to.equal('No orders to retrieve.');
+        expect(res.body.orders.length).to.equal(dataLength);
       })
       .end(done);
+  });
+  it('Should indicate, if there are no orders to display', (done) => {
+    data.pop();
+    request(app)
+      .get('/api/v1/parcels')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.message).to.equal('No orders to retrieve.');
+      })
+      .end(() => {
+        data.push({
+          id: 1,
+          user: 'Omoefe',
+          pickupLocation: 'UBTH, Benin',
+          destination: '235 Ikorodu road, Lagos',
+          description: 'Human, 6 feet;5 inches',
+          status: 'created',
+        });
+        return done();
+      });
   });
 });
 
 
 describe('GET /api/v1/parcels/:parcelId', () => {
   it('Should get specific order if ID exists', (done) => {
-    const id = dbLength + 1;
-    db.push({
-      id,
-      pickupLocation: 'Benin',
-      destination: 'Andela',
-      description: 'Omoefe',
-    });
     request(app)
-      .get(`/api/v1/parcels/${id}`)
+      .get('/api/v1/parcels/1')
       .expect(200)
       .expect((res) => {
-        expect(res.body.order.id).to.equal(id);
+        expect(res.body.order.id).to.equal(1);
       })
-      .end((err) => {
-        if (err) {
-          db.pop();
-          return done(err);
-        }
-        db.pop();
-        return done();
-      });
+      .end(done);
   });
 
   it('Should throw error if ID does not exist', (done) => {
     request(app)
-      .get(`/api/v1/parcels/${db.length + 100}`)
+      .get('/api/v1/parcels/10')
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
@@ -103,34 +106,18 @@ describe('GET /api/v1/parcels/:parcelId', () => {
 
 describe('PUT /api/v1/parcels/:parcelId/cancel', () => {
   it('Should set status to "cancelled" if ID exists', (done) => {
-    const id = db.length + 1;
-    db.push({
-      id,
-      pickupLocation: 'Benin',
-      destination: 'Andela',
-      description: 'Omoefe',
-    });
     request(app)
-      .put(`/api/v1/parcels/${id}/cancel`)
+      .put('/api/v1/parcels/1/cancel')
       .expect(200)
       .expect((res) => {
         expect(res.body.success).to.equal(true);
       })
-      .end((err) => {
-        if (err) {
-          db.pop();
-          return done(err);
-        }
-        expect(db[id - 1].status).to.equal('cancelled');
-        db.pop();
-        return done();
-      });
+      .end(done);
   });
 
   it('Should throw error if ID does not exist', (done) => {
-    const id = db.length;
     request(app)
-      .put(`/api/v1/parcels/${id}/cancel`)
+      .put('/api/v1/parcels/10/cancel')
       .expect(404)
       .expect((res) => {
         expect(res.body.success).to.equal(false);
@@ -142,27 +129,13 @@ describe('PUT /api/v1/parcels/:parcelId/cancel', () => {
 
 describe('GET /api/v1/users/:userId/parcels', () => {
   it('Should get all orders by user provided', (done) => {
-    db.push({
-      user: 'Omoefe',
-      pickupLocation: 'Benin',
-      destination: 'Andela',
-      description: 'Omoefe',
-    });
-
     request(app)
       .get('/api/v1/users/Omoefe/parcels')
       .expect(200)
       .expect((res) => {
         expect(res.body.success).to.equal(true);
       })
-      .end((err) => {
-        if (err) {
-          db.pop();
-          return done(err);
-        }
-        db.pop();
-        return done();
-      });
+      .end(done);
   });
 
   it('Should throw error if user does not exist', (done) => {

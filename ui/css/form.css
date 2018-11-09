@@ -3,6 +3,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 4rem;
 }
 
 form {
@@ -25,13 +26,24 @@ form {
 input[type="text"], input[type="password"] {
   display: block;
   border: none;
-  border-bottom: 1px solid #90f;
+  border-bottom: 1px solid #bbb;
   background-color: transparent;
+  font-size: 1.5rem;
+  height: 2rem;
+  margin-top: 1rem;
+  padding: 4px 1rem;
+  outline: none;
   width: 100%;
   margin-bottom: 3rem;
+  font-weight: bold;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: #90f;
 }
 
 input[type="submit"] {
+  background-color: rgba(153, 0, 255, 0.1);
   width: 50%;
   height: 3rem;
   border: 1px solid #90f;
