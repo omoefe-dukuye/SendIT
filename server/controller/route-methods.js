@@ -1,4 +1,4 @@
-import data from '../config/config-test';
+import data from '../data/data';
 
 // make routes into class methods
 
@@ -45,12 +45,12 @@ class routeMethods {
 
   static fetchById(req, res) {
     const id = Number(req.params.parcelId);
-    const order = data.filter(parcel => parcel.id === id);
-    if (order[0]) {
+    const order = data.find(parcel => parcel.id === id);
+    if (order) {
       return res.status(200).send({
         success: true,
         message: 'Order retrieved successfully.',
-        order: order[0],
+        order,
       });
     }
     return res.status(404).send({

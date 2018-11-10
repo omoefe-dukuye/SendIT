@@ -1,8 +1,17 @@
 import { expect } from 'chai';
 import request from 'supertest';
 
-import data from '../config/config-test';
+import data from '../data/data';
 import app from '../index';
+
+data.push({ // add test entry to data structure
+  id: 1,
+  user: 'Omoefe',
+  pickupLocation: 'UBTH, Benin',
+  destination: '235 Ikorodu road, Lagos',
+  description: 'Human, 6"5"',
+  status: 'created',
+});
 
 const dataLength = data.length;
 
