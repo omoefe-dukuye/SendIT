@@ -4,64 +4,37 @@ main {
   justify-content: center;
 }
 
-
 section {
-  width: 60%;
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: #adf;
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.2));
-  box-shadow: 1px 1px 2px #90f, -1px -1px 2px #90f;
+  display: block;
+  width: 25%;
+  height: auto;
+  margin: 0 auto;
 }
 
-@media (min-width: 721px) {
+@media(max-width: 1000px) {
   section {
-    width: 35%;
+    width: 40%;
   }
 }
 
-@media (min-width: 1025px) {
+@media(max-width: 720px) {
   section {
-    width: 20%;
+    width: 50%;
+  }
+  section p {
+    font-size: 1.3rem;
   }
 }
-
 
 form {
   width: 100%;
-  margin: 0 auto;
-}
-
-
-input {
-  padding-left: 1rem;
-  display: block;
-  background-color: #eef;
-  border-radius: 0.5rem;
-  border: 1px solid #90f;
-  font-size: 2rem;
-  height: 4rem;
-  width: 90%;
-  margin: 0 auto;
-  margin-bottom: 1rem;
-}
-
-input[type="submit"] {
-  color: #fff;
-  margin: 0 auto;
-  width: 50%;
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.2));
-  box-shadow: inset 1px 1px 2px #fff, inset -1px -1px 1px #90f, 1px 1px 1px #888;
-}
-
-input[type="submit"]:hover {
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.2));
-}
-
-label {
-  color: #fff;
 }
 
 section p {
+  margin: 1rem auto;
   text-align: right;
+}
+
+.form input[type="submit"] {
+  width: 40%;
 }

@@ -24,15 +24,17 @@ section, div, .slides p, ul div, main ul, main li, html, body {
 
 .first_slide {
   background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/map.png');
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .second_slide {
   background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/fast.jpeg');
-  color: #fff;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .third_slide {
   background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/service.jpg');
+  color: rgba(0, 0, 0, 0.3);
 }
 
 .image_slider {
@@ -114,6 +116,10 @@ section, div, .slides p, ul div, main ul, main li, html, body {
   line-height: 1.5;
   text-indent: 2rem;
   text-align: center;
+}
+
+.about a {
+  color: white;
 }
 
 @media (max-width: 720px) {
