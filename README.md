@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=github)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=github)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/un-tethered/SendIT/maintainability)
 
-SendIT is an app that helps users deliver parcels to different destinations.
+#### SendIT is an app that helps users deliver parcels to different destinations.
 
 
 ## Implemented Features
