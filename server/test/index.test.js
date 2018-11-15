@@ -8,7 +8,9 @@ data.push({ // add test entry to data structure
   id: 1,
   user: 'Omoefe',
   pickupLocation: 'UBTH, Benin',
+  currentLocation: 'UBTH, Benin',
   destination: '235 Ikorodu road, Lagos',
+  recipientEmail: 'omoefe.dukuye@gmail.com',
   description: 'Human, 6"5"',
   status: 'created',
 });
@@ -21,9 +23,10 @@ describe('POST /api/v1/parcels', () => {
     request(app)
       .post('/api/v1/parcels')
       .send({
-        pickupLocation: 'UBTH, Benin',
-        destination: 'Andela Epic Tower, 235 Ikorodu road, Lagos',
-        description: 'Me',
+        location: 'UBTH, Benin',
+        destination: 'Andela Epic Tower,  Ikorodu road, Lagos',
+        email: 'omoefe.dukuye@gmail.com',
+        description: 'lorem ipsum',
       })
       .expect(201)
       .expect((res) => {
@@ -45,7 +48,7 @@ describe('POST /api/v1/parcels', () => {
       .send({ description: 'MacBook, 10' })
       .expect(400)
       .expect((res) => {
-        expect(res.body.success).to.equal(false);
+        expect(res.body.success).to.equal(undefined);
       })
       .end((err) => {
         if (err) {
@@ -68,20 +71,13 @@ describe('GET /api/v1/parcels', () => {
       .end(done);
   });
   it('Should indicate, if there are no orders to display', (done) => {
-    data.pop(); // empty data structure
+    const dataCopy = data.splice(0, data.length); // empty data structure
     request(app)
       .get('/api/v1/parcels')
       .expect(200)
       .expect((res) => {
         expect(res.body.message).to.equal('No orders to retrieve.');
-        data.push({ // restore popped entry
-          id: 1,
-          user: 'Omoefe',
-          pickupLocation: 'UBTH, Benin',
-          destination: '235 Ikorodu road, Lagos',
-          description: 'Human, 6"5"',
-          status: 'created',
-        });
+        data.splice(0, 0, ...dataCopy); // restore data structure
       })
       .end(done);
   });
