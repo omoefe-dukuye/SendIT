@@ -12,6 +12,7 @@ class routeMethods {
       currentLocation: req.body.location,
       recipientEmail: req.body.email,
       destination: req.body.destination,
+      distance: req.body.distance,
       description: req.body.description,
     };
     data.push(order);

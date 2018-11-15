@@ -29,9 +29,10 @@ const checkDetails = (req, res, next) => {
 };
 
 const checkLocation = (req, res, next) => {
-  isAddress(req.body.location, (address, error) => {
+  isAddress(req.body.location, (address, error, lat, lng) => {
     if (address) {
       req.body.location = address;
+      req.body.locationCoords = { lat, lng };
       next();
     } else {
       const msg = error === 1 ? 'Network error' : 'Invalid location';
@@ -41,9 +42,10 @@ const checkLocation = (req, res, next) => {
 };
 
 const checkDestination = (req, res, next) => {
-  isAddress(req.body.destination, (address, error) => {
+  isAddress(req.body.destination, (address, error, lat, lng) => {
     if (address) {
       req.body.destination = address;
+      req.body.destinationCoords = { lat, lng };
       next();
     } else {
       const msg = error === 1 ? 'Network error' : 'Invalid destination';

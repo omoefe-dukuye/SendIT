@@ -13,7 +13,13 @@ const isAddress = (address, callback) => {
     } else if (body.status !== 'OK') {
       callback(undefined, '2');
     } else {
-      callback(body.results[0].formatted_address);
+      const { location } = body.results[0].geometry;
+      callback(
+        body.results[0].formatted_address,
+        undefined,
+        location.lat,
+        location.lng,
+      );
     }
   });
 };
