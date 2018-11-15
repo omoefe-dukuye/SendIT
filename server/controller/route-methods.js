@@ -4,27 +4,22 @@ import data from '../data/data';
 
 class routeMethods {
   static createOrder(req, res) {
-    if (req.body.pickupLocation && req.body.destination && req.body.description) {
-      const order = {
-        id: data.length + 1,
-        user: 'Omoefe',
-        status: 'created',
-        pickupLocation: req.body.pickupLocation,
-        currentLocation: req.body.pickupLocation,
-        destination: req.body.destination,
-        description: req.body.description,
-      };
-      data.push(order);
-      return res.status(201).send({
-        success: true,
-        message: 'Order created successfully.',
-        order,
-      });
-    }
-
-    return res.status(400).send({
-      success: false,
-      message: 'Please fill all fields.',
+    const order = {
+      id: data.length + 1,
+      user: 'Omoefe',
+      status: 'created',
+      pickupLocation: req.body.location,
+      currentLocation: req.body.location,
+      recipientEmail: req.body.email,
+      destination: req.body.destination,
+      distance: req.body.distance,
+      description: req.body.description,
+    };
+    data.push(order);
+    return res.status(201).send({
+      success: true,
+      message: 'Order created successfully.',
+      order,
     });
   }
 
