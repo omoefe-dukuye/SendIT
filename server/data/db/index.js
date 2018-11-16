@@ -7,16 +7,12 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-export default {
-  query(text, params) {
-    return new Promise((resolve, reject) => {
-      pool.query(text, params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
+export default (text, params) => new Promise((resolve, reject) => {
+  pool.query(text, params)
+    .then((res) => {
+      resolve(res);
+    })
+    .catch((err) => {
+      reject(err);
     });
-  },
-};
+});

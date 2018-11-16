@@ -3,5 +3,4 @@ node_modules
 coverage
 dist
 .env
-db.js
 package-lock.json
