@@ -3,5 +3,5 @@ node_modules
 coverage
 dist
 .env
-postgres.js
+db.js
 package-lock.json
