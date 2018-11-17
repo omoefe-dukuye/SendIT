@@ -1,6 +1,5 @@
-
-const { Pool } = require('pg');
-const dotenv = require('dotenv');
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -13,10 +12,9 @@ pool.on('connect', () => {
 });
 
 const createTables = () => {
-  const queryText =
-    `CREATE TABLE IF NOT EXISTS
-      parcels(
-        id UUID PRIMARY KEY,
+  const queryText = `CREATE TABLE IF NOT EXISTS
+    parcels(
+      id UUID PRIMARY KEY,
         pickup_location TEXT NOT NULL,
         current_location TEXT NOT NULL,
         destination TEXT NOT NULL,

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
-import db from '../data/db';
+import db from '../utility/dbconnect';
 
 // make routes into class methods
 
@@ -45,7 +45,7 @@ class routeMethods {
       });
     })().catch((e) => {
       res.status(400).send({
-        success: 'damn',
+        success: false,
         error: (e),
       });
     });
