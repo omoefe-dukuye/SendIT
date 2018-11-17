@@ -17,8 +17,7 @@ const isAddress = (address, callback) => {
       callback(
         body.results[0].formatted_address,
         undefined,
-        location.lat,
-        location.lng,
+        { lat: location.lat, lng: location.lng },
       );
     }
   });

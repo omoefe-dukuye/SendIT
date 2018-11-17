@@ -1,98 +1,153 @@
-import data from '../data/data';
+import moment from 'moment';
+import uuidv4 from 'uuid/v4';
+import db from '../utility/dbconnect';
 
 // make routes into class methods
 
 class routeMethods {
   static createOrder(req, res) {
-    const order = {
-      id: data.length + 1,
-      user: 'Omoefe',
-      status: 'created',
-      pickupLocation: req.body.location,
-      currentLocation: req.body.location,
-      recipientEmail: req.body.email,
-      destination: req.body.destination,
-      distance: req.body.distance,
-      description: req.body.description,
-    };
-    data.push(order);
-    return res.status(201).send({
-      success: true,
-      message: 'Order created successfully.',
-      order,
+    (async () => {
+      const query = `INSERT INTO
+        parcels(
+          id,
+          pickup_location,
+          current_location,
+          destination,
+          description,
+          distance,
+          status,
+          sender,
+          recipient_email,
+          created_date,
+          modified_date
+        ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        returning *`;
+
+      const values = [
+        uuidv4(),
+        req.body.location,
+        req.body.location,
+        req.body.destination,
+        req.body.description,
+        req.body.distance,
+        'created',
+        'Omoefe',
+        req.body.email,
+        moment(new Date()),
+        moment(new Date()),
+      ];
+
+      const { rows } = await db(query, values);
+      res.status(201).send({
+        success: true,
+        message: 'Order created successfully.',
+        order: rows[0],
+      });
+    })().catch((e) => {
+      res.status(400).send({
+        success: false,
+        error: (e),
+      });
     });
   }
 
   static fetchAll(req, res) {
-    if (data[0]) {
-      return res.status(200).send({
-        success: true,
-        message: 'Orders retrieved successfully.',
-        orders: data,
+    (async () => {
+      const query = 'SELECT * FROM parcels';
+      const { rows, rowCount } = await db(query);
+      if (rows[0]) {
+        res.status(200).send({
+          success: true,
+          message: `${rowCount} orders retrieved.`,
+          orders: rows,
+        });
+      } else {
+        res.status(200).send({
+          success: true,
+          message: 'No Orders to retrieve',
+        });
+      }
+    })().catch((e) => {
+      res.status(400).send({
+        success: false,
+        message: e,
       });
-    }
-
-    return res.status(200).send({
-      success: true,
-      message: 'No orders to retrieve.',
     });
   }
 
   static fetchById(req, res) {
-    const id = Number(req.params.parcelId);
-    const order = data.find(parcel => parcel.id === id);
-    if (order) {
-      return res.status(200).send({
-        success: true,
-        message: 'Order retrieved successfully.',
-        order,
+    (async () => {
+      const query = 'SELECT * FROM parcels WHERE id = $1';
+      const id = req.params.parcelId;
+      const { rows } = await db(query, [id]);
+      if (rows[0]) {
+        res.status(200).send({
+          success: true,
+          message: `Order '${id}' retrieved.`,
+          orders: rows[0],
+        });
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Invalid ID',
+        });
+      }
+    })().catch((e) => {
+      res.status(400).send({
+        success: false,
+        message: e,
       });
-    }
-    return res.status(404).send({
-      success: false,
-      message: 'Order does not exist.',
     });
   }
 
   static cancel(req, res) {
-    const id = Number(req.params.parcelId);
-    let orderFound;
-
-    data.forEach((order) => {
-      if (order.id === id) {
-        orderFound = order;
+    (async () => {
+      const id = req.params.parcelId;
+      const find = 'SELECT * FROM parcels WHERE id = $1';
+      const { rows } = await db(find, [id]);
+      if (!rows[0]) {
+        return res.status(404).send({
+          success: false,
+          message: 'Invalid ID',
+        });
       }
-    });
-
-    if (!orderFound) {
-      return res.status(404).send({
-        success: false,
-        message: 'Invalid ID.',
+      const update = `UPDATE parcels
+        SET status=$1
+        WHERE id=$2`;
+      await db(update, ['cancelled', id]);
+      return res.status(200).send({
+        success: true,
+        message: `Order '${id}' cancelled.`,
       });
-    }
-
-    orderFound.status = 'cancelled';
-
-    return res.status(200).send({
-      success: true,
-      message: `Order ${id} cancelled.`,
+    })().catch((e) => {
+      res.status(400).send({
+        success: false,
+        message: e,
+      });
     });
   }
 
   static fetchByUser(req, res) {
-    const user = req.params.userId;
-    const orders = data.filter(order => order.user === user);
-    if (orders[0]) {
-      return res.status(200).send({
-        success: true,
-        message: 'Orders retrieved successfully.',
-        orders,
+    (async () => {
+      const user = req.params.userId;
+      const query = 'SELECT * FROM parcels WHERE sender = $1';
+      const { rows } = await db(query, [user]);
+      if (rows[0]) {
+        return res.status(200).send({
+          success: true,
+          message: `All orders for '${user}' retrieved successfully.`,
+          orders: rows,
+        });
+      }
+      return res.status(404).send({
+        success: false,
+        message: `No orders for found for '${user}'.`,
       });
-    }
-
-    return res.status(404).send({
-      success: false,
-      message: 'No orders for this user.',
+    })().catch((e) => {
+      res.status(400).send({
+        success: false,
+        message: e,
+      });
     });
   }
 }
