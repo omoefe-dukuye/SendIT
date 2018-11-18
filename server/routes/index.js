@@ -1,16 +1,21 @@
 import { Router } from 'express';
-import routes from '../controller/route-methods';
-import check from '../middleware/validator';
+import verifyToken from '../middleware/authUser';
+import routes from '../controller/parcels';
+import user from '../controller/users';
+import checkOrder from '../middleware/validators/create-order';
+import checkUser from '../middleware/validators/create-user';
 import addDistance from '../middleware/distance';
 
 const router = Router();
 
 // set endpoint callbacks to their respective methods
 
-router.post('/api/v1/parcels', check.isComplete, check.general, check.location, check.destination, addDistance, routes.createOrder); // create order
-router.get('/api/v1/parcels', routes.fetchAll); // fetch all orders
-router.get('/api/v1/parcels/:parcelId', routes.fetchById); // fetch specific order
-router.put('/api/v1/parcels/:parcelId/cancel', routes.cancel); // cancel order
+router.post('/api/v1/parcels', verifyToken, ...checkOrder, addDistance, routes.createOrder); // create order
+router.get('/api/v1/parcels', verifyToken, routes.fetchAll); // fetch all orders
+router.get('/api/v1/parcels/:parcelId', verifyToken, routes.fetchById); // fetch specific order
+router.put('/api/v1/parcels/:parcelId/cancel', verifyToken, routes.cancel); // cancel order
 router.get('/api/v1/users/:userId/parcels', routes.fetchByUser); // fetch orders by specific user
+router.post('/api/v1/auth/signup', checkUser, user.create);
+router.post('/api/v1/auth/login', checkUser, user.login);
 
 export default router;

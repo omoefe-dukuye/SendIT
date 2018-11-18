@@ -31,7 +31,7 @@ class routeMethods {
         req.body.description,
         req.body.distance,
         'created',
-        'Omoefe',
+        req.user.id,
         req.body.email,
         moment(new Date()),
         moment(new Date()),
@@ -53,8 +53,8 @@ class routeMethods {
 
   static fetchAll(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels';
-      const { rows, rowCount } = await db(query);
+      const query = 'SELECT * FROM parcels WHERE sender = $1';
+      const { rows, rowCount } = await db(query, [req.user.id]);
       if (rows[0]) {
         res.status(200).send({
           success: true,
@@ -77,9 +77,9 @@ class routeMethods {
 
   static fetchById(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE id = $1';
+      const query = 'SELECT * FROM parcels WHERE sender = $1 AND id = $2';
       const id = req.params.parcelId;
-      const { rows } = await db(query, [id]);
+      const { rows } = await db(query, [req.user.id, id]);
       if (rows[0]) {
         res.status(200).send({
           success: true,
@@ -102,9 +102,9 @@ class routeMethods {
 
   static cancel(req, res) {
     (async () => {
+      const query = 'SELECT * FROM parcels WHERE sender = $1 AND id = $2';
       const id = req.params.parcelId;
-      const find = 'SELECT * FROM parcels WHERE id = $1';
-      const { rows } = await db(find, [id]);
+      const { rows } = await db(query, [req.user.id, id]);
       if (!rows[0]) {
         return res.status(404).send({
           success: false,
