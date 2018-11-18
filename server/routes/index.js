@@ -5,6 +5,7 @@ import user from '../controller/users';
 import checkOrder from '../middleware/validators/create-order';
 import checkDest from '../middleware/validators/change-dest';
 import checkUser from '../middleware/validators/create-user';
+import checkStatus from '../middleware/validators/change-status';
 import addDistance from '../middleware/add-distance';
 
 const router = Router();
@@ -20,5 +21,6 @@ router.post('/api/v1/auth/signup', checkUser, user.create);
 router.post('/api/v1/auth/login', checkUser, user.login);
 router.get('/api/v1/admin/parcels/', verifyToken, routes.adminFetchAll);
 router.put('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, addDistance, routes.changeDest);
+router.put('/api/v1/parcels/:parcelId/status', verifyToken, checkStatus, routes.status);
 
 export default router;

@@ -7,5 +7,8 @@ export default (req, res, next) => {
   if (!isEmail(req.body.email)) {
     return res.status(400).send('Invalid email.');
   }
+  if (req.body.password.length < 6) {
+    return res.status(400).send('Password should be longer than 5 characters.');
+  }
   return next();
 };
