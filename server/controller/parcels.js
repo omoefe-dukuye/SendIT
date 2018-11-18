@@ -75,6 +75,31 @@ class routeMethods {
     });
   }
 
+  static adminFetchAll(req, res) {
+    (async () => {
+      if (!req.admin) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const queryText = 'SELECT * FROM parcels';
+      const { rows, rowCount } = await db(queryText);
+      if (rows[0]) {
+        res.status(200).send({
+          message: `${rowCount} orders retrieved.`,
+          orders: rows,
+        });
+      } else {
+        res.status(200).send({
+          message: 'No Orders to retrieve',
+        });
+      }
+
+      return undefined;
+    })().catch((error) => {
+      res.status(400).send({ error });
+    });
+  }
+
   static fetchById(req, res) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE sender = $1 AND id = $2';

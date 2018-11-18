@@ -17,5 +17,5 @@ router.put('/api/v1/parcels/:parcelId/cancel', verifyToken, routes.cancel); // c
 router.get('/api/v1/users/:userId/parcels', routes.fetchByUser); // fetch orders by specific user
 router.post('/api/v1/auth/signup', checkUser, user.create);
 router.post('/api/v1/auth/login', checkUser, user.login);
-
+router.get('/api/v1/admin/parcels/', verifyToken, routes.adminFetchAll);
 export default router;

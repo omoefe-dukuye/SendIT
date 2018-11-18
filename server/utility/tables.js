@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
@@ -45,10 +46,32 @@ const createUserTable = () => {
         id UUID PRIMARY KEY,
         email VARCHAR(128) UNIQUE NOT NULL,
         password VARCHAR(128) NOT NULL,
+        role VARCHAR(128),
         created_date TIMESTAMP
       )`;
 
   pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+
+const upgradeToAdmin = async (id) => {
+  const query = 'SELECT * FROM users WHERE id = $1';
+  const { rows } = await pool.query(query, [id]);
+  if (!rows[0]) {
+    console.log('Invalid ID');
+  }
+  const update = `UPDATE users
+    SET role=$1
+    WHERE id=$2`;
+  pool.query(update, ['admin', id])
     .then((res) => {
       console.log(res);
       pool.end();
@@ -107,6 +130,7 @@ module.exports = {
   dropParcelTable,
   dropUserTable,
   dropAllTables,
+  upgradeToAdmin,
 };
 
 require('make-runnable');
