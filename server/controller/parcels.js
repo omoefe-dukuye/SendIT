@@ -130,6 +130,36 @@ class routeMethods {
     });
   }
 
+  static status(req, res) {
+    (async () => {
+      if (!req.admin) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const query = 'SELECT * FROM parcels WHERE id = $1';
+      const id = req.params.parcelId;
+      const { status } = req.body;
+      const { rows } = await db(query, [id]);
+      if (!rows[0] || rows[0].status === 'cancelled') {
+        return res.status(404).send({ error: 'Order non-existent or cancelled' });
+      }
+
+      const update = `UPDATE parcels
+        SET status=$1, modified_date=$2
+        WHERE id=$3`;
+      await db(update, [
+        status,
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
+        id,
+      ]);
+      return res.status(200).send({
+        message: `Parcel '${id}' ${status}`,
+      });
+    })().catch((error) => {
+      res.status(400).send({ me: error });
+    });
+  }
+
   static fetchById(req, res) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
