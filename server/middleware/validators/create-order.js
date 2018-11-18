@@ -1,5 +1,5 @@
 import { isEmail } from 'validator';
-import { errorSelector, isValid, isAddress } from '../../helpers/validatorhelp';
+import { errorSelector, isValid, isAddress } from '../../helpers/validator';
 
 class check {
   static isComplete(req, res, next) {
@@ -15,11 +15,11 @@ class check {
       );
     } else if (!isValid(req.body.destination).valid) {
       res.status(400).send(
-        errorSelector(isValid(req.body.location).reason, 'DESTINATION'),
+        errorSelector(isValid(req.body.destination).reason, 'DESTINATION'),
       );
     } else if (!isValid(req.body.description).valid) {
       res.status(400).send(
-        errorSelector(isValid(req.body.location).reason, 'DESCRIPTION'),
+        errorSelector(isValid(req.body.description).reason, 'DESCRIPTION'),
       );
     } else if (!isEmail(req.body.email)) {
       res.status(400).send('Please enter valid email');
