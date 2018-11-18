@@ -1,5 +1,5 @@
-import validator from 'validator';
-import { errorSelector, isValid, isAddress } from '../helpers/validatorhelp';
+import { isEmail } from 'validator';
+import { errorSelector, isValid, isAddress } from '../../helpers/validatorhelp';
 
 class check {
   static isComplete(req, res, next) {
@@ -21,7 +21,7 @@ class check {
       res.status(400).send(
         errorSelector(isValid(req.body.location).reason, 'DESCRIPTION'),
       );
-    } else if (!validator.isEmail(req.body.email)) {
+    } else if (!isEmail(req.body.email)) {
       res.status(400).send('Please enter valid email');
     } else {
       next();
@@ -56,4 +56,4 @@ class check {
 }
 
 
-export default check;
+export default [check.isComplete, check.general, check.location, check.destination];
