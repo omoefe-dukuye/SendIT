@@ -1,7 +1,7 @@
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import db from '../utility/dbconnect';
-import help from '../helpers/userHelp';
+import help from '../helpers/user';
 
 export default {
   create: (req, res) => {
@@ -16,7 +16,7 @@ export default {
         uuidv4(),
         req.body.email,
         hashPassword,
-        moment(new Date()),
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
       ];
 
       const { rows } = await db(createQuery, values);

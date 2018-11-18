@@ -24,8 +24,8 @@ const createParcelTable = () => {
         status VARCHAR(128) NOT NULL,
         sender_id UUID NOT NULL,
         recipient_email VARCHAR(128) NOT NULL,
-        created_date TIMESTAMP,
-        modified_date TIMESTAMP,
+        created_date VARCHAR(128),
+        modified_date VARCHAR(128),
         FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE
     )`;
 
@@ -47,7 +47,7 @@ const createUserTable = () => {
         email VARCHAR(128) UNIQUE NOT NULL,
         password VARCHAR(128) NOT NULL,
         role VARCHAR(128),
-        created_date TIMESTAMP
+        created_date VARCHAR(128)
       )`;
 
   pool.query(queryText)

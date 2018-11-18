@@ -16,7 +16,7 @@ class routeMethods {
           description,
           distance,
           status,
-          sender,
+          sender_id,
           recipient_email,
           created_date,
           modified_date
@@ -33,8 +33,8 @@ class routeMethods {
         'created',
         req.user.id,
         req.body.email,
-        moment(new Date()),
-        moment(new Date()),
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
       ];
 
       const { rows } = await db(query, values);
@@ -53,7 +53,7 @@ class routeMethods {
 
   static fetchAll(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE sender = $1';
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1';
       const { rows, rowCount } = await db(query, [req.user.id]);
       if (rows[0]) {
         res.status(200).send({
@@ -72,6 +72,36 @@ class routeMethods {
         success: false,
         message: e,
       });
+    });
+  }
+
+  static changeDest(req, res) {
+    (async () => {
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
+      const id = req.params.parcelId;
+      const { destination } = req.body;
+      const { rows } = await db(query, [req.user.id, id]);
+      if (!rows[0] || rows[0].status === 'cancelled') {
+        return res.status(404).send({ error: 'Order non-existent or cancelled' });
+      }
+
+      const update = `UPDATE parcels
+        SET destination=$1, distance=$2, modified_date=$3
+        WHERE id=$4
+        RETURNING *`;
+      const updated = await db(update, [
+        destination,
+        req.body.distance,
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
+        id,
+      ]);
+      return res.status(200).send({
+        message: `Destination updated for order '${id}'`,
+        'new distance': req.body.distance,
+        'updated order': updated.rows,
+      });
+    })().catch((error) => {
+      res.status(400).send({ me: error });
     });
   }
 
@@ -102,7 +132,7 @@ class routeMethods {
 
   static fetchById(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE sender = $1 AND id = $2';
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
       const id = req.params.parcelId;
       const { rows } = await db(query, [req.user.id, id]);
       if (rows[0]) {
@@ -127,7 +157,7 @@ class routeMethods {
 
   static cancel(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE sender = $1 AND id = $2';
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
       const id = req.params.parcelId;
       const { rows } = await db(query, [req.user.id, id]);
       if (!rows[0]) {
@@ -155,7 +185,7 @@ class routeMethods {
   static fetchByUser(req, res) {
     (async () => {
       const user = req.params.userId;
-      const query = 'SELECT * FROM parcels WHERE sender = $1';
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1';
       const { rows } = await db(query, [user]);
       if (rows[0]) {
         return res.status(200).send({
