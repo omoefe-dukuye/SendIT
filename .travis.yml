@@ -3,7 +3,11 @@ language: node_js
 node_js:
   - "10.13.0"
 
+services:
+  - postgresql
+
 before_script:
+  - psql -c 'create database SendIT;' -U postgres
   - npm run db-drop && npm run db
  
 after_success:
