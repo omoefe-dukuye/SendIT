@@ -108,16 +108,6 @@ const dropParcelTable = () => {
     });
 };
 
-const createAllTables = () => {
-  createUserTable();
-  createParcelTable();
-};
-
-const dropAllTables = () => {
-  dropUserTable();
-  dropParcelTable();
-};
-
 pool.on('remove', () => {
   console.log('client removed');
   process.exit(0);
@@ -126,10 +116,8 @@ pool.on('remove', () => {
 module.exports = {
   createParcelTable,
   createUserTable,
-  createAllTables,
   dropParcelTable,
   dropUserTable,
-  dropAllTables,
   upgradeToAdmin,
 };
 

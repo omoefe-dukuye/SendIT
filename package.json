@@ -11,8 +11,9 @@
     "dev": "nodemon --exec babel-node server",
     "dev-test": "nodemon --exec npm test",
     "start": "npm run build && node dist",
-    "test": "nyc mocha ./server/**/*test.js --timeout 10000 --require babel-register --exit",
-    "coveralls": "npm run test -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
+    "db": "babel-node ./server/utility/tables.js createUserTable && babel-node ./server/utility/tables.js createParcelTable",
+    "db-drop": "babel-node ./server/utility/tables.js dropParcelTable && babel-node ./server/utility/tables.js dropUserTable",
+    "test": "nyc --reporter=text --reporter=html mocha --recursive ./server/test --timeout 10000 --exit --require babel-register --require babel-polyfill"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "supertest": "^3.3.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",
