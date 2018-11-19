@@ -77,26 +77,52 @@ class routeMethods {
 
   static changeDest(req, res) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
       const id = req.params.parcelId;
-      const { destination } = req.body;
-      const { rows } = await db(query, [req.user.id, id]);
-      if (!rows[0] || rows[0].status === 'cancelled') {
-        return res.status(404).send({ error: 'Order non-existent or cancelled' });
-      }
-
       const update = `UPDATE parcels
         SET destination=$1, distance=$2, modified_date=$3
         WHERE id=$4
         RETURNING *`;
       const updated = await db(update, [
-        destination,
+        req.body.destination,
         req.body.distance,
         moment().format('MMMM Do YYYY, h:mm:ss a'),
         id,
       ]);
       return res.status(200).send({
         message: `Destination updated for order '${id}'`,
+        'new distance': req.body.distance,
+        'updated order': updated.rows,
+      });
+    })().catch((error) => {
+      res.status(400).send({ me: error });
+    });
+  }
+
+  static location(req, res) {
+    (async () => {
+      if (!req.admin) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+      const query = 'SELECT * FROM parcels WHERE id = $1';
+      const id = req.params.parcelId;
+      const { location } = req.body;
+      const { rows } = await db(query, [id]);
+      if (!rows[0] || rows[0].status === 'cancelled') {
+        return res.status(404).send({ error: 'Order non-existent or cancelled' });
+      }
+
+      const update = `UPDATE parcels
+        SET current_location=$1, distance=$2, modified_date=$3
+        WHERE id=$4
+        RETURNING *`;
+      const updated = await db(update, [
+        location,
+        req.body.distance,
+        moment().format('MMMM Do YYYY, h:mm:ss a'),
+        id,
+      ]);
+      return res.status(200).send({
+        message: `Location updated for order '${id}'`,
         'new distance': req.body.distance,
         'updated order': updated.rows,
       });

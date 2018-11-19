@@ -12,11 +12,11 @@ const addDistance = (req, res, next) => {
   if (req.body.locationCoords) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE id = $1';
-      const id = req.params.parcelId;
-      const { rows } = await db(query, [id]);
-      if (!rows[0]) {
-        return res.status(404).send({ error: 'Invalid ID' });
+      const { rows } = await db(query, [req.params.parcelId]);
+      if (!rows[0] || rows[0].status === 'cancelled') {
+        return res.status(404).send({ error: 'Order non-existent or cancelled' });
       }
+
       const { destination } = rows[0];
 
       return isAddress(destination, (address, error, coords) => {
@@ -35,11 +35,10 @@ const addDistance = (req, res, next) => {
 
   if (req.body.destinationCoords) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE id = $1';
-      const id = req.params.parcelId;
-      const { rows } = await db(query, [id]);
-      if (!rows[0]) {
-        return res.status(404).send({ error: 'Invalid ID' });
+      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
+      const { rows } = await db(query, [req.user.id, req.params.parcelId]);
+      if (!rows[0] || rows[0].status === 'cancelled') {
+        return res.status(404).send({ error: 'Order non-existent or cancelled' });
       }
       // eslint-disable-next-line camelcase
       const { current_location } = rows[0];

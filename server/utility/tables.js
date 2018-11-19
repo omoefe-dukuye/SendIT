@@ -4,8 +4,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const string = process.env.NODE_ENV === 'test'
+  ? 'postgres://czdovici:XcuWDGo0NA_moPDLotKnA6GD3ZkKD_FR@elmer.db.elephantsql.com:5432/czdovici'
+  : process.env.DATABASE_URL;
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: string,
 });
 
 pool.on('connect', () => {
@@ -108,16 +112,6 @@ const dropParcelTable = () => {
     });
 };
 
-const createAllTables = () => {
-  createUserTable();
-  createParcelTable();
-};
-
-const dropAllTables = () => {
-  dropUserTable();
-  dropParcelTable();
-};
-
 pool.on('remove', () => {
   console.log('client removed');
   process.exit(0);
@@ -126,10 +120,8 @@ pool.on('remove', () => {
 module.exports = {
   createParcelTable,
   createUserTable,
-  createAllTables,
   dropParcelTable,
   dropUserTable,
-  dropAllTables,
   upgradeToAdmin,
 };
 
