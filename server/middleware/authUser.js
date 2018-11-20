@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import jwt from 'jsonwebtoken';
 import db from '../utility/dbconnect';
 

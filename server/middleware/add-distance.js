@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import computeDistance from '../helpers/distance';
 import { isAddress } from '../helpers/validator';
 import db from '../utility/dbconnect';
