@@ -16,13 +16,13 @@ const router = Router();
 router.post('/api/v1/parcels', verifyToken, ...checkOrder, addDistance, routes.createOrder); // create order
 router.get('/api/v1/parcels', verifyToken, routes.fetchAll); // fetch all orders
 router.get('/api/v1/parcels/:parcelId', verifyToken, routes.fetchById); // fetch specific order
-router.put('/api/v1/parcels/:parcelId/cancel', verifyToken, routes.cancel); // cancel order
-router.get('/api/v1/users/:userId/parcels', routes.fetchByUser); // fetch orders by specific user
+router.patch('/api/v1/parcels/:parcelId/cancel', verifyToken, routes.cancel); // cancel order
+router.get('/api/v1/users/:userId/parcels', verifyToken, routes.fetchByUser); // fetch orders by specific user
 router.post('/api/v1/auth/signup', checkUser, user.create);
-router.post('/api/v1/auth/login', checkUser, user.login);
+router.post('/api/v1/auth/login', user.login);
 router.get('/api/v1/admin/parcels/', verifyToken, routes.adminFetchAll);
-router.put('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, addDistance, routes.changeDest);
-router.put('/api/v1/parcels/:parcelId/presentLocation', verifyToken, ...checkLoc, addDistance, routes.location);
-router.put('/api/v1/parcels/:parcelId/status', verifyToken, checkStatus, routes.status);
+router.patch('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, addDistance, routes.changeDest);
+router.patch('/api/v1/parcels/:parcelId/currentlocation', verifyToken, ...checkLoc, addDistance, routes.location);
+router.patch('/api/v1/parcels/:parcelId/status', verifyToken, checkStatus, routes.status);
 
 export default router;

@@ -1,28 +1,28 @@
-import { isEmail } from 'validator';
 import { errorSelector, isValid, isAddress } from '../../helpers/validator';
 
 class check {
   static isComplete(req, res, next) {
-    return req.body.location && req.body.destination && req.body.email && req.body.description
+    return req.body.location && req.body.destination && req.body.weight
       ? next()
       : res.status(400).send('Please fill all fields.');
   }
 
   static general(req, res, next) {
     if (!isValid(req.body.location).valid) {
-      res.status(400).send(
-        errorSelector(isValid(req.body.location).reason, 'LOCATION'),
-      );
+      res.status(400).json({
+        status: 400,
+        message: errorSelector(isValid(req.body.destination).reason, 'location'),
+      });
     } else if (!isValid(req.body.destination).valid) {
-      res.status(400).send(
-        errorSelector(isValid(req.body.destination).reason, 'DESTINATION'),
-      );
-    } else if (!isValid(req.body.description).valid) {
-      res.status(400).send(
-        errorSelector(isValid(req.body.description).reason, 'DESCRIPTION'),
-      );
-    } else if (!isEmail(req.body.email)) {
-      res.status(400).send('Please enter valid email');
+      res.status(400).json({
+        status: 400,
+        message: errorSelector(isValid(req.body.destination).reason, 'destination'),
+      });
+    } else if (Number.isNaN(Number(req.body.weight))) {
+      res.status(400).json({
+        status: 400,
+        message: 'Use numbers for weight',
+      });
     } else {
       next();
     }
@@ -35,8 +35,10 @@ class check {
         req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        const msg = error === 1 ? 'Network error' : 'Invalid location';
-        res.status(400).send(msg);
+        res.status(400).json({
+          status: 400,
+          message: error,
+        });
       }
     });
   }
@@ -48,8 +50,10 @@ class check {
         req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        const msg = error === 1 ? 'Network error' : 'Invalid destination';
-        res.status(400).send(msg);
+        res.status(400).json({
+          status: 400,
+          message: error,
+        });
       }
     });
   }

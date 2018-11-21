@@ -12,10 +12,13 @@ const addDistance = (req, res, next) => {
   }
   if (req.body.locationCoords) {
     (async () => {
+      if (!req.admin) {
+        return res.status(401).send({ status: 401, error: 'Unauthorized' });
+      }
       const query = 'SELECT * FROM parcels WHERE id = $1';
       const { rows } = await db(query, [req.params.parcelId]);
-      if (!rows[0] || rows[0].status === 'cancelled') {
-        return res.status(404).send({ error: 'Order non-existent or cancelled' });
+      if (!rows[0] || rows[0].status === 'cancelled' || rows[0].status === 'delivered') {
+        return res.status(404).json({ status: 404, error: 'invalid request' });
       }
 
       const { destination } = rows[0];
@@ -29,17 +32,15 @@ const addDistance = (req, res, next) => {
 
         return next();
       });
-    })().catch((error) => {
-      res.status(400).send({ error });
-    });
+    })();
   }
 
   if (req.body.destinationCoords) {
     (async () => {
-      const query = 'SELECT * FROM parcels WHERE sender_id = $1 AND id = $2';
+      const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
       const { rows } = await db(query, [req.user.id, req.params.parcelId]);
-      if (!rows[0] || rows[0].status === 'cancelled') {
-        return res.status(404).send({ error: 'Order non-existent or cancelled' });
+      if (!rows[0] || rows[0].status === 'cancelled' || rows[0].status === 'delivered') {
+        return res.status(404).json({ status: 404, error: 'invalid request' });
       }
       // eslint-disable-next-line camelcase
       const { current_location } = rows[0];
@@ -53,9 +54,7 @@ const addDistance = (req, res, next) => {
 
         return next();
       });
-    })().catch((error) => {
-      res.status(400).send({ error });
-    });
+    })();
   }
   return undefined;
 };
