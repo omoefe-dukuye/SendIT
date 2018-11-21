@@ -1,1 +1,3 @@
-import './routes.test';
+import './general.test';
+import './users.test';
+import './parcels.test';

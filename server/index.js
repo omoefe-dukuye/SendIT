@@ -19,7 +19,7 @@ app.get('/api/v1', (req, res) => {
   res.status(200).send(welcome);
 });
 
-app.get('*', (request, response) => {
+app.all('*', (request, response) => {
   response.status(404).send('<h2>Look what the cat dragged in! <br> please enter a valid route</h2>');
 });
 

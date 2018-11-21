@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import 'babel-polyfill';
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
@@ -20,18 +19,18 @@ pool.on('connect', () => {
 const createParcelTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
     parcels(
-      id UUID PRIMARY KEY,
-        pickup_location TEXT NOT NULL,
-        current_location TEXT NOT NULL,
-        destination TEXT NOT NULL,
-        description TEXT NOT NULL,
-        distance VARCHAR(128) NOT NULL,
-        status VARCHAR(128) NOT NULL,
-        sender_id UUID NOT NULL,
-        recipient_email VARCHAR(128) NOT NULL,
-        created_date VARCHAR(128),
-        modified_date VARCHAR(128),
-        FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE
+      id SERIAL PRIMARY KEY,
+      placed_by INTEGER NOT NULL,
+      weight NUMERIC NOT NULL,
+      weight_metric TEXT DEFAULT 'kg',
+      sent_on VARCHAR(128),
+      delivered_on VARCHAR(128),
+      status VARCHAR(128) NOT NULL,
+      pickup_location TEXT NOT NULL,
+      current_location TEXT NOT NULL,
+      destination TEXT NOT NULL,
+      distance VARCHAR(128) NOT NULL,
+      FOREIGN KEY (placed_by) REFERENCES users (id) ON DELETE CASCADE
     )`;
 
   pool.query(queryText)
@@ -48,11 +47,15 @@ const createParcelTable = () => {
 const createUserTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
     users(
-        id UUID PRIMARY KEY,
-        email VARCHAR(128) UNIQUE NOT NULL,
-        password VARCHAR(128) NOT NULL,
-        role VARCHAR(128),
-        created_date VARCHAR(128)
+      id SERIAL PRIMARY KEY,
+      first_name VARCHAR(128) NOT NULL,
+      last_name VARCHAR(128) NOT NULL,
+      other_names VARCHAR(128),
+      email VARCHAR(128) UNIQUE NOT NULL,
+      username VARCHAR(128) UNIQUE NOT NULL,
+      password VARCHAR(128) NOT NULL,
+      registered VARCHAR(128),
+      is_admin BOOLEAN DEFAULT 'no'
       )`;
 
   pool.query(queryText)
@@ -74,9 +77,9 @@ const upgradeToAdmin = async (id) => {
     console.log('Invalid ID');
   }
   const update = `UPDATE users
-    SET role=$1
+    SET is_admin=$1
     WHERE id=$2`;
-  pool.query(update, ['admin', id])
+  pool.query(update, ['yes', id])
     .then((res) => {
       console.log(res);
       pool.end();
