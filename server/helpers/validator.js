@@ -1,5 +1,11 @@
 import request from 'request';
 
+
+/**
+   * Gets standard address an coordinates for address passed in.
+   * @param {String} address the address to be found.
+   * @param {Function} callback the callback function that is supplied the details.
+   */
 const isAddress = (address, callback) => {
   const codeAddress = encodeURIComponent(address);
 
@@ -21,6 +27,11 @@ const isAddress = (address, callback) => {
   });
 };
 
+/**
+   * Checks input for validity.
+   * @param {String} string the request object.
+   * @return {Object} object with test results
+   */
 const isValid = (string) => {
   const str = string.trim();
   if (!/^[a-zA-Z0-9,. ]*$/.test(str)) {

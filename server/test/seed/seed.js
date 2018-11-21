@@ -4,7 +4,16 @@ import moment from 'moment';
 import db from '../../utility/dbconnect';
 import help from '../../helpers/user';
 
+/** Class for creating new user */
 class User {
+  /**
+   * Use parameters to create new user object.
+   * @param {String} firstName the user's first name.
+   * @param {String} lastName the user's last name.
+   * @param {String} email the user's email.
+   * @param {String} password the user's password.
+   * @param {Boolean} admin the user's role.
+   */
   constructor(firstName, lastName, username, email, password, admin) {
     this.firstName = firstName;
     this.lastName = lastName;

@@ -1,5 +1,11 @@
 const degreesToRadians = degrees => (degrees * Math.PI) / 180;
 
+/**
+   * Changes the destination of a parcel delivery order.
+   * @param {object} startCoords the request object.
+   * @param {object} destCoords the response object.
+   * @return {number}  the distance between two coordinates passed
+   */
 const computeDistance = (startCoords, destCoords) => {
   const startLatRads = degreesToRadians(startCoords.lat);
   const startLongRads = degreesToRadians(startCoords.lng);

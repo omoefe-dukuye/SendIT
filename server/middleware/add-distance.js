@@ -3,6 +3,15 @@ import computeDistance from '../helpers/distance';
 import { isAddress } from '../helpers/validator';
 import db from '../utility/dbconnect';
 
+/**
+   * Add distance to valid address input.
+   * @param {Object} req the request object.
+   * @param {Object} res the response object.
+   * @param {Function} next calls the next middleware
+   * @return {Object} the error object if tests fail
+   * @return {Function} calls the next middleware if test passes,
+   * after adding the distance to the response body
+   */
 const addDistance = (req, res, next) => {
   if (req.body.locationCoords && req.body.destinationCoords) {
     req.body.distance = `${Math.round(

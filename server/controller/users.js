@@ -4,6 +4,11 @@ import db from '../utility/dbconnect';
 import help from '../helpers/user';
 
 export default {
+  /**
+   * Create a user.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   create: (req, res) => {
     (async () => {
       const hashPassword = help.hashPassword(req.body.password);
@@ -24,6 +29,7 @@ export default {
 
       const { rows } = await db(createQuery, values);
       const token = help.generateToken(rows[0].id);
+      delete (rows[0].password);
       return res.status(201).header('x-auth', token).json({
         status: 201,
         data: [{
@@ -37,6 +43,11 @@ export default {
     }));
   },
 
+  /**
+   * Log in a user.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   login: (req, res) => {
     (async () => {
       const text = 'SELECT * FROM users WHERE email = $1';

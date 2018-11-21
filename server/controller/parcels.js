@@ -2,9 +2,13 @@ import 'babel-polyfill';
 import moment from 'moment';
 import db from '../utility/dbconnect';
 
-// make routes into class methods
-
+/** Class representing route methods */
 class routeMethods {
+  /**
+   * Create a parcel delivery  order.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static createOrder(req, res) {
     (async () => {
       const query = `INSERT INTO
@@ -44,6 +48,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Fetch all parcel delivery orders for a particular user.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static fetchAll(req, res) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1';
@@ -59,6 +68,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Change the destination of a parcel delivery order.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static changeDest(req, res) {
     (async () => {
       const id = req.params.parcelId;
@@ -83,6 +97,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Change the location of a parcel.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static location(req, res) {
     (async () => {
       const id = req.params.parcelId;
@@ -108,6 +127,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Enable an admin fetch all parcel delivery orders in the app.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static adminFetchAll(req, res) {
     (async () => {
       if (!req.admin) {
@@ -131,6 +155,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Change the status of a parcel delivery order.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static status(req, res) {
     (async () => {
       if (!req.admin) {
@@ -177,6 +206,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Fetch a parcel delivery order by Id.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static fetchById(req, res) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
@@ -198,6 +232,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Cancel a parcel delivery order.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static cancel(req, res) {
     (async () => {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
@@ -229,6 +268,11 @@ class routeMethods {
     })();
   }
 
+  /**
+   * Fetch orders by user.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
   static fetchByUser(req, res) {
     (async () => {
       if (!req.admin) {
