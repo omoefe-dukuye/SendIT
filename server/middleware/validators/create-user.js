@@ -9,17 +9,19 @@ import { isEmail } from 'validator';
    * @return {Function} calls the next middleware if test passes
    */
 export default (req, res, next) => {
-  if (!req.body.email || !req.body.password || !req.body.firstName
-    || !req.body.lastName || !req.body.username) {
+  const {
+    email, password, firstName, lastName, username,
+  } = req.body;
+  if (!email || !password || !firstName || !lastName || !username) {
     return res.status(400).send('Please fill all fields.');
   }
-  if (!isEmail(req.body.email)) {
+  if (!isEmail(email)) {
     return res.status(400).json({
       status: 400,
       message: 'invalid email',
     });
   }
-  if (req.body.password.length < 6) {
+  if (password.length < 6) {
     return res.status(400).json({
       status: 400,
       message: 'Password should be longer than 5 characters.',

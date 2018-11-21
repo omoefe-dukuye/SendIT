@@ -11,7 +11,8 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static isComplete(req, res, next) {
-    return req.body.location && req.body.destination && req.body.weight
+    const { location, destination, weight } = req.body;
+    return location && destination && weight
       ? next()
       : res.status(400).send('Please fill all fields.');
   }
@@ -23,15 +24,16 @@ class check {
    * @param {Function} next calls the next middleware
    */
   static general(req, res, next) {
-    if (!isValid(req.body.location).valid) {
+    const { location, destination } = req.body;
+    if (!isValid(location).valid) {
       res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(req.body.destination).reason, 'location'),
+        message: errorSelector(isValid(destination).reason, 'location'),
       });
-    } else if (!isValid(req.body.destination).valid) {
+    } else if (!isValid(destination).valid) {
       res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(req.body.destination).reason, 'destination'),
+        message: errorSelector(isValid(destination).reason, 'destination'),
       });
     } else if (Number.isNaN(Number(req.body.weight))) {
       res.status(400).json({
@@ -50,7 +52,8 @@ class check {
    * @param {Function} next calls the next middleware
    */
   static location(req, res, next) {
-    isAddress(req.body.location, (address, error, coords) => {
+    const { location } = req.body;
+    isAddress(location, (address, error, coords) => {
       if (address) {
         req.body.location = address;
         req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
@@ -71,7 +74,8 @@ class check {
    * @param {Function} next calls the next middleware
    */
   static destination(req, res, next) {
-    isAddress(req.body.destination, (address, error, coords) => {
+    const { destination } = req.body;
+    isAddress(destination, (address, error, coords) => {
       if (address) {
         req.body.destination = address;
         req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };

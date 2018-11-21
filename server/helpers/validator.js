@@ -18,8 +18,11 @@ const isAddress = (address, callback) => {
       callback(undefined, 'Invalid location');
     } else {
       const { location } = body.results[0].geometry;
+      // eslint-disable-next-line camelcase
+      const { formatted_address } = body.results[0];
+
       callback(
-        body.results[0].formatted_address,
+        formatted_address,
         undefined,
         { lat: location.lat, lng: location.lng },
       );

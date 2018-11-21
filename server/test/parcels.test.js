@@ -2,13 +2,20 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 import { describe } from 'mocha';
 import app from '../index';
-import user from './seed/seed';
+import createAdmin from './seed/seed';
 
 chai.use(chaiHttp);
 chai.should();
-user.admin();
+createAdmin();
 
+/** Class for creating parcels */
 class Parcel {
+  /**
+   *
+   * @param {String} weight parcel weight
+   * @param {String} location parcel location
+   * @param {String} destination parcel destination
+   */
   constructor(weight, location, destination) {
     this.location = location;
     this.weight = weight;

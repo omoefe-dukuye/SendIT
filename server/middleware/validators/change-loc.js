@@ -12,7 +12,8 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static isComplete(req, res, next) {
-    return req.body.location
+    const { location } = req.body;
+    return location
       ? next()
       : res.status(400).send({ error: 'Empty field.' });
   }
@@ -26,9 +27,10 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static general(req, res, next) {
-    if (!isValid(req.body.location).valid) {
+    const { location } = req.body;
+    if (!isValid(location).valid) {
       return res.status(400).send(
-        errorSelector(isValid(req.body.location).reason, 'destination'),
+        errorSelector(isValid(location).reason, 'destination'),
       );
     }
     return next();
