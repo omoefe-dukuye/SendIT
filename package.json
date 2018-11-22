@@ -10,7 +10,7 @@
     "build": "rm -rf dist/ && babel server/ -d dist/ --ignore server/test",
     "dev": "nodemon --exec babel-node server",
     "dev-test": "nodemon --exec npm test",
-    "start": "npm run db && npm run build && node dist",
+    "start": "npm run refresh-db && npm run build && node dist",
     "db": "babel-node ./server/utility/tables.js createUserTable && babel-node ./server/utility/tables.js createParcelTable",
     "db-drop": "babel-node ./server/utility/tables.js dropParcelTable && babel-node ./server/utility/tables.js dropUserTable",
     "refresh-db": "npm run db-drop && npm run db",
