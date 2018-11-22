@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const string = process.env.NODE_ENV === 'test'
-  ? 'postgres://czdovici:XcuWDGo0NA_moPDLotKnA6GD3ZkKD_FR@elmer.db.elephantsql.com:5432/czdovici'
-  : process.env.DATABASE_URL;
+const { TEST_DATABASE_URL: testDb, DATABASE_URL: db } = process.env;
+
+const string = process.env.NODE_ENV === 'test' ? testDb : db;
 
 const pool = new Pool({
   connectionString: string,
@@ -24,12 +24,14 @@ const createParcelTable = () => {
       weight NUMERIC NOT NULL,
       weight_metric TEXT DEFAULT 'kg',
       sent_on VARCHAR(128),
-      delivered_on VARCHAR(128),
-      status VARCHAR(128) NOT NULL,
+      delivered_on VARCHAR(128) DEFAULT 'not delivered yet',
+      status VARCHAR(128) DEFAULT 'created',
       pickup_location TEXT NOT NULL,
       current_location TEXT NOT NULL,
       destination TEXT NOT NULL,
       distance VARCHAR(128) NOT NULL,
+      distance_metric TEXT DEFAULT 'km',
+      price VARCHAR(128) NOT NULL,
       FOREIGN KEY (placed_by) REFERENCES users (id) ON DELETE CASCADE
     )`;
 

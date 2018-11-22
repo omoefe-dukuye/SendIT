@@ -1,10 +1,10 @@
 import { errorSelector, isValid } from '../../helpers/validator';
-import checkOrder from './create-order';
+import checkOrder from './createOrder';
 
-/** class representing checks for destination change */
+/** class representing checks for location change */
 class check {
   /**
-   * Checks if destination is present.
+   * Check if location is present.
    * @param {Object} req the request object.
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
@@ -12,13 +12,14 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static isComplete(req, res, next) {
-    return req.body.destination
+    const { location } = req.body;
+    return location
       ? next()
-      : res.status(400).send({ error: 'Empty field.' });
+      : res.status(400).send({ error: 'Please fill the new location.' });
   }
 
   /**
-   * Checks if destination is present.
+   * Check if destination is valid.
    * @param {Object} req the request object.
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
@@ -26,9 +27,10 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static general(req, res, next) {
-    if (!isValid(req.body.destination).valid) {
+    const { location } = req.body;
+    if (!isValid(location).valid) {
       return res.status(400).send(
-        errorSelector(isValid(req.body.destination).reason, 'destination'),
+        errorSelector(isValid(location).reason, 'destination'),
       );
     }
     return next();
@@ -36,4 +38,4 @@ class check {
 }
 
 
-export default [check.isComplete, check.general, checkOrder[3]];
+export default [check.isComplete, check.general, checkOrder[2]];

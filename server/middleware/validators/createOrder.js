@@ -11,9 +11,21 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static isComplete(req, res, next) {
-    return req.body.location && req.body.destination && req.body.weight
-      ? next()
-      : res.status(400).send('Please fill all fields.');
+    const { location, destination, weight } = req.body;
+    const requiredFields = [location, destination, weight];
+    if (requiredFields.includes(undefined)) {
+      const required = [
+        'location where the parcel will be picked up from',
+        'destination where the parcel will be delivered to',
+        'parcel weight',
+      ];
+      const i = requiredFields.indexOf(undefined);
+      return res.status(400).json({
+        status: 400,
+        error: `Please enter the ${required[i]}.`
+      });
+    }
+    next();
   }
 
   /**
@@ -21,26 +33,29 @@ class check {
    * @param {Object} req the request object.
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
+   * @return {Function} Sends the adequate error message
    */
   static general(req, res, next) {
-    if (!isValid(req.body.location).valid) {
-      res.status(400).json({
+    const { location, destination } = req.body;
+    if (!isValid(location).valid) {
+      return res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(req.body.destination).reason, 'location'),
+        message: errorSelector(isValid(destination).reason, 'location'),
       });
-    } else if (!isValid(req.body.destination).valid) {
-      res.status(400).json({
+    }
+    if (!isValid(destination).valid) {
+      return res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(req.body.destination).reason, 'destination'),
+        message: errorSelector(isValid(destination).reason, 'destination'),
       });
-    } else if (Number.isNaN(Number(req.body.weight))) {
-      res.status(400).json({
+    }
+    if (Number.isNaN(Number(req.body.weight))) {
+      return res.status(400).json({
         status: 400,
         message: 'Use numbers for weight',
       });
-    } else {
-      next();
     }
+    next();
   }
 
   /**
@@ -50,13 +65,14 @@ class check {
    * @param {Function} next calls the next middleware
    */
   static location(req, res, next) {
-    isAddress(req.body.location, (address, error, coords) => {
+    const { location } = req.body;
+    isAddress(location, (address, error, coords) => {
       if (address) {
         req.body.location = address;
         req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: error,
         });
@@ -71,13 +87,14 @@ class check {
    * @param {Function} next calls the next middleware
    */
   static destination(req, res, next) {
-    isAddress(req.body.destination, (address, error, coords) => {
+    const { destination } = req.body;
+    isAddress(destination, (address, error, coords) => {
       if (address) {
         req.body.destination = address;
         req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: error,
         });
