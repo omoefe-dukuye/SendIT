@@ -10,7 +10,7 @@ const isAddress = (address, callback) => {
   const codeAddress = encodeURIComponent(address);
 
   request({
-    url: `https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyA2UEF_jKSFV1x1xLcA3Z8HNoBEBzGErM8&address=${codeAddress}`,
+    url: `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_KEY}&address=${codeAddress}`,
     json: true,
   },
   (error, response, body) => {
@@ -18,8 +18,11 @@ const isAddress = (address, callback) => {
       callback(undefined, 'Invalid location');
     } else {
       const { location } = body.results[0].geometry;
+
+      const { formatted_address: formattedAddress } = body.results[0];
+
       callback(
-        body.results[0].formatted_address,
+        formattedAddress,
         undefined,
         { lat: location.lat, lng: location.lng },
       );

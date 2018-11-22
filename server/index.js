@@ -16,7 +16,7 @@ app.use(router);
 
 app.get('/api/v1', (req, res) => {
   const welcome = '<h1>Welcome!!! <br> This is the SendIT API Version 1.0</h1> <h2>navigate to https://the-sendit-app.herokuapp.com/ to see the ui templates</h2>';
-  res.status(200).send(welcome);
+  return res.status(200).send(welcome);
 });
 
 app.all('*', (request, response) => {

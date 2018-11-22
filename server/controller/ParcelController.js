@@ -1,51 +1,70 @@
 import 'babel-polyfill';
 import moment from 'moment';
-import db from '../utility/dbconnect';
+import db from '../config/dbconnect';
 
-/** Class representing route methods */
-class routeMethods {
+/** Class representing parcel delivery order route methods */
+class ParcelController {
   /**
    * Create a parcel delivery  order.
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static createOrder(req, res) {
-    (async () => {
+  static async createOrder(req, res) {
+    try {
+      const {
+        weight, location, destination, distance, price,
+      } = req.body;
+
+      const placedBy = req.user;
+
       const query = `INSERT INTO
         parcels(
           placed_by,
           weight,
           sent_on,
-          status,
           pickup_location,
           current_location,
           destination,
-          distance
+          distance,
+          price
         ) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *`;
 
       const values = [
-        req.user.id,
-        req.body.weight,
+        placedBy,
+        weight,
         moment().format('MMMM Do YYYY, h:mm:ss a'),
-        'created',
-        req.body.location,
-        req.body.location,
-        req.body.destination,
-        req.body.distance,
+        location,
+        location,
+        destination,
+        distance,
+        price,
       ];
 
-      const { rows } = await db(query, values);
-      res.status(201).json({
+      const { rows: [parcel], rows: [{ id }] } = await db(query, values);
+
+      delete parcel.placed_by;
+      delete parcel.weight_metric;
+      delete parcel.distance_metric;
+
+      parcel.distance = `${parcel.distance} km`;
+      parcel.weight = `${parcel.weight} kg`;
+
+      return res.status(201).json({
         status: 201,
         data: [{
-          id: rows[0].id,
+          id,
           message: 'order created',
         }, {
-          details: rows[0],
+          parcel,
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -53,19 +72,24 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static fetchAll(req, res) {
-    (async () => {
+  static async fetchAllOrdersForUser(req, res) {
+    try {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-      const { rows, rowCount } = await db(query, [req.user.id]);
-      res.status(200).json({
+      const { rows: orders, rowCount: count } = await db(query, [req.user]);
+      return res.status(200).json({
         status: 200,
         data: [{
-          count: rowCount,
+          count,
         }, {
-          orders: rows,
+          orders,
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -73,28 +97,36 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static changeDest(req, res) {
-    (async () => {
+  static async changeDestination(req, res) {
+    try {
+      const {
+        destination: newDestination, distance: newDistance, price: additionalPrice
+      } = req.body;
       const id = req.params.parcelId;
       const update = `UPDATE parcels
         SET destination=$1, distance=$2
-        WHERE id=$3
-        RETURNING *`;
-      const updated = await db(update, [
-        req.body.destination,
-        req.body.distance,
+        WHERE id=$3`;
+      await db(update, [
+        newDestination,
+        newDistance,
         id,
       ]);
       return res.status(200).json({
         status: 200,
         data: [{
           id,
-          newDestination: updated.rows.destination,
+          newDestination,
           message: 'parcel destination updated',
-          'new distance': req.body.distance,
+          newDistance,
+          additionalPrice,
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -102,29 +134,34 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static location(req, res) {
-    (async () => {
+  static async changeLocation(req, res) {
+    try {
       const id = req.params.parcelId;
-      const { location } = req.body;
+      const { distance: newDistance, location: currentLocation } = req.body;
       const update = `UPDATE parcels
         SET current_location=$1, distance=$2
         WHERE id=$3
         RETURNING *`;
       await db(update, [
-        location,
-        req.body.distance,
+        currentLocation,
+        newDistance,
         id,
       ]);
       return res.status(200).json({
         status: 200,
         data: [{
           id,
-          currentLocation: location,
+          currentLocation,
           message: 'parcel location updated',
-          'new distance': req.body.distance,
+          newDistance,
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -132,8 +169,8 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static adminFetchAll(req, res) {
-    (async () => {
+  static async fetchAllOrdersInApp(req, res) {
+    try {
       if (!req.admin) {
         return res.status(401).json({
           status: 401,
@@ -142,17 +179,21 @@ class routeMethods {
       }
 
       const queryText = 'SELECT * FROM parcels';
-      const { rows, rowCount } = await db(queryText);
+      const { rows: orders, rowCount: count } = await db(queryText);
       res.status(200).json({
         status: 200,
         data: [{
-          count: rowCount,
+          count,
         }, {
-          orders: rows,
+          orders,
         }],
       });
-      return undefined;
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -160,8 +201,8 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static status(req, res) {
-    (async () => {
+  static async changeOrderStatus(req, res) {
+    try {
       if (!req.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
@@ -169,8 +210,9 @@ class routeMethods {
       const query = 'SELECT * FROM parcels WHERE id = $1';
       const id = req.params.parcelId;
       const { status } = req.body;
-      const { rows } = await db(query, [id]);
-      if (!rows[0] || rows[0].status === 'cancelled' || rows[0].status === 'delivered') {
+      const { rows: [parcel], rows: [{ status: existingStatus }] } = await db(query, [id]);
+      const rejectIf = ['cancelled', 'delivered'];
+      if (!parcel || rejectIf.includes(existingStatus)) {
         return res.status(409).json({ status: 409, error: 'invalid request' });
       }
 
@@ -203,7 +245,12 @@ class routeMethods {
           message: 'parcel status changed',
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -211,25 +258,31 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static fetchById(req, res) {
-    (async () => {
+  static async fetchParcelById(req, res) {
+    try {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
-      const id = req.params.parcelId;
-      const { rows } = await db(query, [req.user.id, id]);
+      const { parcelId } = req.params;
+      const id = req.user;
+      const { rows } = await db(query, [id, parcelId]);
       if (rows[0]) {
-        res.status(200).json({
+        delete (rows[0].placed_by);
+        return res.status(200).json({
           status: 200,
           data: [{
             order: rows[0],
           }],
         });
-      } else {
-        res.status(404).json({
-          status: 404,
-          error: 'invalid ID',
-        });
       }
-    })();
+      return res.status(404).json({
+        status: 404,
+        error: 'invalid ID',
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -237,11 +290,12 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static cancel(req, res) {
-    (async () => {
+  static async cancelOrder(req, res) {
+    try {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
-      const id = req.params.parcelId;
-      const { rows } = await db(query, [req.user.id, id]);
+      const { parcelId } = req.params;
+      const id = req.user;
+      const { rows } = await db(query, [id, parcelId]);
       if (!rows[0]) {
         return res.status(404).json({
           status: 404,
@@ -257,15 +311,20 @@ class routeMethods {
       const update = `UPDATE parcels
         SET status=$1
         WHERE id=$2`;
-      await db(update, ['cancelled', id]);
+      await db(update, ['cancelled', parcelId]);
       return res.status(200).send({
         status: 200,
         data: [{
-          id,
+          parcelId,
           message: 'order cancelled',
         }],
       });
-    })();
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 
   /**
@@ -273,19 +332,19 @@ class routeMethods {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  static fetchByUser(req, res) {
-    (async () => {
+  static async adminFetchByUser(req, res) {
+    try {
       if (!req.admin) {
         return res.status(401).json({
           status: 401,
           error: 'Unauthorized',
         });
       }
-      const user = req.params.userId;
+      const { userId } = req.params;
       const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-      const { rows, rowCount } = await db(query, [user]);
+      const { rows, rowCount } = await db(query, [userId]);
       if (rows[0]) {
-        res.status(200).json({
+        return res.status(200).json({
           status: 200,
           data: [{
             count: rowCount,
@@ -293,15 +352,18 @@ class routeMethods {
             orders: rows,
           }],
         });
-      } else {
-        res.status(200).json({
-          status: 200,
-          data: ['No Orders to retrieve'],
-        });
       }
-      return undefined;
-    })();
+      return res.status(200).json({
+        status: 200,
+        data: ['No Orders to retrieve'],
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
   }
 }
 
-export default routeMethods;
+export default ParcelController;
