@@ -1,5 +1,5 @@
 import { errorSelector, isValid } from '../../helpers/validator';
-import checkOrder from './create-order';
+import checkOrder from './createOrder';
 
 /** class representing checks for location change */
 class check {
@@ -15,7 +15,7 @@ class check {
     const { location } = req.body;
     return location
       ? next()
-      : res.status(400).send({ error: 'Empty field.' });
+      : res.status(400).send({ error: 'Please fill the new location.' });
   }
 
   /**

@@ -1,17 +1,17 @@
-/* eslint-disable camelcase */
 import 'babel-polyfill';
 import moment from 'moment';
-import db from '../utility/dbconnect';
+import db from '../config/dbconnect';
 import help from '../helpers/user';
 
-export default {
+/** Controller class for user signup and login */
+class UserController {
   /**
    * Create a user.
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  create: (req, res) => {
-    (async () => {
+  static async createUser(req, res) {
+    try {
       const hashPassword = help.hashPassword(req.body.password);
 
       const {
@@ -34,11 +34,12 @@ export default {
 
       const {
         rows: [user], rows: [{
-          id, first_name, last_name, username, email,
+          id, first_name: userFirstName, last_name: userLastName,
+          username, email, is_admin: isAdmin,
         }]
       } = await db(createQuery, values);
       const token = help.generateToken({
-        id, first_name, last_name, username, email,
+        id, userFirstName, userLastName, username, email, isAdmin,
       });
       delete (user.password);
       return res.status(201).header('x-auth', token).json({
@@ -48,36 +49,39 @@ export default {
           user,
         }],
       });
-    })().catch(() => res.status(409).json({
-      status: 409,
-      message: 'Email already in use',
-    }));
-  },
+    } catch (error) {
+      res.status(409).json({
+        status: 409,
+        message: 'Email already in use',
+      });
+    }
+  }
 
   /**
    * Log in a user.
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  login: (req, res) => {
-    (async () => {
+  static async loginUser(req, res) {
+    try {
       const { username, password: suppliedPassword } = req.body;
       const text = 'SELECT * FROM users WHERE username = $1';
 
       const {
         rows: [user], rows: [{
-          id, first_name, last_name, email, password: existingPassword,
+          id, first_name: userFirstName, last_name: userLastName, email,
+          password: existingPassword, is_admin: isAdmin,
         }]
       } = await db(text, [username]);
 
       if (!user || !help.comparePassword(existingPassword, suppliedPassword)) {
-        return res.status(400).json({
-          error: 400,
-          message: 'incorrect credentials',
+        return res.status(404).json({
+          error: 404,
+          message: 'invalid credentials',
         });
       }
       const token = help.generateToken({
-        id, first_name, last_name, username, email,
+        id, userFirstName, userLastName, username, email, isAdmin,
       });
 
       delete (user.password);
@@ -88,9 +92,12 @@ export default {
           user,
         }],
       });
-    })().catch(() => res.status(404).json({
-      status: 404,
-      message: 'invalid credentials',
-    }));
-  },
-};
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        message: 'invalid credentials',
+      });
+    }
+  }
+}
+export default UserController;

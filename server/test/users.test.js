@@ -104,6 +104,22 @@ describe('User signup', () => {
       });
   });
 
+  it('should not create user with username shorter than 4 characters', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'Paul',
+        username: 'alo',
+        email: 'gokuirayo@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
   it('should not create user with invalid username format', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
@@ -122,26 +138,40 @@ describe('User signup', () => {
 });
 
 describe('User login', () => {
-  it('Should login with the correct details', (done) => {
-    chai.request(app)
+  it('Should login with the correct details', async () => {
+    const res = await chai.request(app)
       .post('/api/v1/auth/login')
-      .send(user1)
-      .end((err, response) => {
-        expect(response).to.have.status(200);
-        done();
-      });
+      .send(user1);
+    expect(res).to.have.status(200);
   });
 
-  it('Should not login user with invalid input', (done) => {
-    chai.request(app)
+  it('Should not login user with invalid input', async () => {
+    const res = await chai.request(app)
       .post('/api/v1/auth/login')
       .send({
-        email: '',
+        username: '',
         password: '',
-      })
-      .end((error, response) => {
-        expect(response).to.have.status(404);
-        done();
       });
+    expect(res).to.have.status(404);
+  });
+
+  it('Should not login user with wrong password', async () => {
+    const res = await chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'aloha',
+        password: 'ae9a9g',
+      });
+    expect(res).to.have.status(404);
+  });
+
+  it('Should not login user with wrong username', async () => {
+    const res = await chai.request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        username: 'alohaa',
+        password: 'batistuta',
+      });
+    expect(res).to.have.status(404);
   });
 });

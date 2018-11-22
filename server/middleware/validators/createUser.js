@@ -1,5 +1,5 @@
 import { isEmail, isAlphanumeric } from 'validator';
-import db from '../../utility/dbconnect';
+import db from '../../config/dbconnect';
 
 /**
    * Check fields for order creation.
@@ -13,19 +13,31 @@ export default async (req, res, next) => {
   const {
     email, password, firstName, lastName, username,
   } = req.body;
-  if (!email || !password || !firstName || !lastName || !username) {
-    return res.status(400).send('Please fill all fields.');
+  const requiredFields = [email, password, firstName, lastName, username];
+  if (requiredFields.includes(undefined)) {
+    const required = ['Email', 'Password', 'First Name', 'Last Name', 'Username'];
+    const i = requiredFields.indexOf(undefined);
+    return res.status(400).json({
+      status: 400,
+      error: `The '${required[i]}' field seems to be empty.`
+    });
   }
   if (!isEmail(email)) {
     return res.status(400).json({
       status: 400,
-      message: 'invalid email',
+      message: 'Please use a valid Email Address.',
     });
   }
   if (!isAlphanumeric(username)) {
     return res.status(400).json({
       status: 400,
-      message: 'use alphanumeric username',
+      message: 'Please use alphabets and numbers for your Username.',
+    });
+  }
+  if (username.length < 4) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Please use a Username longer than 4 characters.',
     });
   }
   if (password.length < 6) {
@@ -37,7 +49,7 @@ export default async (req, res, next) => {
   const text = 'SELECT * FROM users WHERE username = $1';
   const { rows: [exists] } = await db(text, [username]);
   if (exists) {
-    return res.status(409).json({ status: 409, error: 'username already taken' });
+    return res.status(409).json({ status: 409, error: 'This Username is already taken, try something else' });
   }
   return next();
 };

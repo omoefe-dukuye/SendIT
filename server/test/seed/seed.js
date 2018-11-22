@@ -1,7 +1,6 @@
-/* eslint-disable no-console */
 import 'babel-polyfill';
 import moment from 'moment';
-import db from '../../utility/dbconnect';
+import db from '../../config/dbconnect';
 import help from '../../helpers/user';
 
 const create = async (firstName, lastName, password, email, username, admin) => {

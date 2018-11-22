@@ -1,5 +1,5 @@
 import { errorSelector, isValid } from '../../helpers/validator';
-import checkOrder from './create-order';
+import checkOrder from './createOrder';
 
 /** class representing checks for destination change */
 class check {
@@ -14,7 +14,7 @@ class check {
   static isComplete(req, res, next) {
     return req.body.destination
       ? next()
-      : res.status(400).send({ error: 'Empty field.' });
+      : res.status(400).send({ error: 'Please fill the new Destination.' });
   }
 
   /**

@@ -12,9 +12,20 @@ class check {
    */
   static isComplete(req, res, next) {
     const { location, destination, weight } = req.body;
-    return location && destination && weight
-      ? next()
-      : res.status(400).send('Please fill all fields.');
+    const requiredFields = [location, destination, weight];
+    if (requiredFields.includes(undefined)) {
+      const required = [
+        'location where the parcel will be picked up from',
+        'destination where the parcel will be delivered to',
+        'parcel weight',
+      ];
+      const i = requiredFields.indexOf(undefined);
+      return res.status(400).json({
+        status: 400,
+        error: `Please enter the ${required[i]}.`
+      });
+    }
+    next();
   }
 
   /**
@@ -22,27 +33,29 @@ class check {
    * @param {Object} req the request object.
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
+   * @return {Function} Sends the adequate error message
    */
   static general(req, res, next) {
     const { location, destination } = req.body;
     if (!isValid(location).valid) {
-      res.status(400).json({
+      return res.status(400).json({
         status: 400,
         message: errorSelector(isValid(destination).reason, 'location'),
       });
-    } else if (!isValid(destination).valid) {
-      res.status(400).json({
+    }
+    if (!isValid(destination).valid) {
+      return res.status(400).json({
         status: 400,
         message: errorSelector(isValid(destination).reason, 'destination'),
       });
-    } else if (Number.isNaN(Number(req.body.weight))) {
-      res.status(400).json({
+    }
+    if (Number.isNaN(Number(req.body.weight))) {
+      return res.status(400).json({
         status: 400,
         message: 'Use numbers for weight',
       });
-    } else {
-      next();
     }
+    next();
   }
 
   /**
@@ -59,7 +72,7 @@ class check {
         req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: error,
         });
@@ -81,7 +94,7 @@ class check {
         req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           status: 400,
           message: error,
         });
