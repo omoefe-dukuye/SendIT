@@ -26,9 +26,10 @@ class check {
    * @return {Function} calls the next middleware if test passes
    */
   static general(req, res, next) {
-    if (!isValid(req.body.destination).valid) {
+    const { destination } = req.body;
+    if (!isValid(destination).valid) {
       return res.status(400).send(
-        errorSelector(isValid(req.body.destination).reason, 'destination'),
+        errorSelector(isValid(destination).reason, 'destination'),
       );
     }
     return next();

@@ -23,9 +23,9 @@ class Parcel {
   }
 }
 
-const admin = { email: 'chubi.best@gmail.com', password: 'chubibest' };
-const user1 = { email: 'baloney@gmail.com', password: 'blaaaan' };
-const user2 = { email: 'gokuirayol@gmail.com', password: 'batistuta' };
+const admin = { username: 'chubibest', password: 'chubibest' };
+const user1 = { username: 'baloney', password: 'blaaaan' };
+const user2 = { username: 'aloha', password: 'batistuta' };
 const parcel1 = new Parcel('49', 'ogba lagos', 'ikorodu lagos');
 const parcel2 = new Parcel('49', 'ikorodu lagos');
 const parcelShort = new Parcel('49', 'ogba lagos', 'lag');

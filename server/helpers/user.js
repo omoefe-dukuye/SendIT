@@ -6,8 +6,8 @@ export default {
 
   comparePassword: (hashPassword, password) => bcrypt.compareSync(password, hashPassword),
 
-  generateToken: id => jwt.sign(
-    { userId: id },
+  generateToken: payload => jwt.sign(
+    payload,
     process.env.SECRET,
     { expiresIn: '7d' },
   ),

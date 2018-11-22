@@ -6,7 +6,7 @@ import app from '../index';
 chai.use(chaiHttp);
 chai.should();
 
-const user1 = { email: 'gokuirayol@gmail.com', password: 'batistuta' };
+const user1 = { username: 'aloha', password: 'batistuta' };
 // const user2 = { email: 'loremipsum@gmail.com', password: 'ronaldo' };
 
 describe('User signup', () => {
@@ -32,6 +32,22 @@ describe('User signup', () => {
       .send({
         firstName: 'Brozovic',
         lastName: 'Paul',
+        username: 'alohag',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(409);
+        done();
+      });
+  });
+
+  it('should not create user with an already existing username', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'Paul',
         username: 'aloha',
         email: 'gokuirayol@gmail.com',
         password: 'batistuta',
@@ -41,6 +57,7 @@ describe('User signup', () => {
         done();
       });
   });
+
   it('should not create user with an empty firstName field', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
@@ -86,6 +103,22 @@ describe('User signup', () => {
         done();
       });
   });
+
+  it('should not create user with invalid username format', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'Paul',
+        username: 'aloh%"^&£&a',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
 });
 
 describe('User login', () => {
@@ -107,7 +140,7 @@ describe('User login', () => {
         password: '',
       })
       .end((error, response) => {
-        expect(response).to.have.status(400);
+        expect(response).to.have.status(404);
         done();
       });
   });

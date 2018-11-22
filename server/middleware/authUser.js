@@ -8,12 +8,16 @@ export default async (req, res, next) => {
     return res.status(401).json({ status: 401, error: 'No Token' });
   }
   (async () => {
-    const decoded = await jwt.verify(token, process.env.SECRET);
+    const {
+      id, first_name: firstName, last_name: lastName, username, email,
+    } = await jwt.verify(token, process.env.SECRET);
     const text = 'SELECT * FROM users WHERE id = $1';
-    const { rows } = await db(text, [decoded.userId]);
-    req.admin = rows[0].is_admin;
-    req.user = { id: decoded.userId };
+    const { rows: [{ is_admin: isAdmin }] } = await db(text, [id]);
+    req.admin = isAdmin;
+    req.user = {
+      id, firstName, lastName, username, email,
+    };
     return next();
-  })().catch(error => res.status(400).send(error));
+  })().catch(error => res.status(400).json({ status: 400, error, }));
   return undefined;
 };

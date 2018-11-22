@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import 'babel-polyfill';
 import moment from 'moment';
 import db from '../utility/dbconnect';
@@ -14,7 +15,7 @@ export default {
       const hashPassword = help.hashPassword(req.body.password);
 
       const {
-        firstName, lastName, otherNames, email, username,
+        firstName, lastName, otherNames, email: mail, username: userName,
       } = req.body;
 
       const createQuery = `INSERT INTO
@@ -25,20 +26,26 @@ export default {
         firstName,
         lastName,
         otherNames,
-        email,
-        username,
+        mail,
+        userName,
         hashPassword,
         moment().format('MMMM Do YYYY, h:mm:ss a'),
       ];
 
-      const { rows } = await db(createQuery, values);
-      const token = help.generateToken(rows[0].id);
-      delete (rows[0].password);
+      const {
+        rows: [user], rows: [{
+          id, first_name, last_name, username, email,
+        }]
+      } = await db(createQuery, values);
+      const token = help.generateToken({
+        id, first_name, last_name, username, email,
+      });
+      delete (user.password);
       return res.status(201).header('x-auth', token).json({
         status: 201,
         data: [{
           token,
-          user: rows[0],
+          user,
         }],
       });
     })().catch(() => res.status(409).json({
@@ -52,23 +59,38 @@ export default {
    * @param {object} req the request object.
    * @param {object} res the response object.
    */
-  login: async (req, res) => {
-    const { email, password } = req.body;
-    const text = 'SELECT * FROM users WHERE email = $1';
-    const { rows } = await db(text, [email]);
-    if (!rows[0] || !help.comparePassword(rows[0].password, password)) {
-      return res.status(400).json({
-        error: 400,
-        message: 'incorrect credentials',
+  login: (req, res) => {
+    (async () => {
+      const { username, password: suppliedPassword } = req.body;
+      const text = 'SELECT * FROM users WHERE username = $1';
+
+      const {
+        rows: [user], rows: [{
+          id, first_name, last_name, email, password: existingPassword,
+        }]
+      } = await db(text, [username]);
+
+      if (!user || !help.comparePassword(existingPassword, suppliedPassword)) {
+        return res.status(400).json({
+          error: 400,
+          message: 'incorrect credentials',
+        });
+      }
+      const token = help.generateToken({
+        id, first_name, last_name, username, email,
       });
-    }
-    const token = help.generateToken(rows[0].id);
-    return res.status(200).header('x-auth', token).json({
-      status: 200,
-      data: [{
-        token,
-        user: rows[0],
-      }],
-    });
+
+      delete (user.password);
+      return res.status(200).header('x-auth', token).json({
+        status: 200,
+        data: [{
+          token,
+          user,
+        }],
+      });
+    })().catch(() => res.status(404).json({
+      status: 404,
+      message: 'invalid credentials',
+    }));
   },
 };

@@ -14,7 +14,7 @@ class routeMethods {
       weight, location, destination, distance,
     } = req.body;
 
-    const { id } = req.user;
+    const { id: placedBy } = req.user;
 
     const query = `INSERT INTO
       parcels(
@@ -29,7 +29,7 @@ class routeMethods {
       RETURNING *`;
 
     const values = [
-      id,
+      placedBy,
       weight,
       moment().format('MMMM Do YYYY, h:mm:ss a'),
       location,
@@ -38,17 +38,17 @@ class routeMethods {
       distance,
     ];
 
-    const { rows } = await db(query, values);
+    const { rows: [parcel], rows: [{ id }] } = await db(query, values);
 
-    delete (rows[0].placed_by);
+    delete (parcel.placed_by);
 
     res.status(201).json({
       status: 201,
       data: [{
-        id: rows[0].id,
+        id,
         message: 'order created',
       }, {
-        details: rows[0],
+        parcel,
       }],
     });
   }
@@ -60,13 +60,13 @@ class routeMethods {
    */
   static async fetchAll(req, res) {
     const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-    const { rows, rowCount } = await db(query, [req.user.id]);
+    const { rows: orders, rowCount: count } = await db(query, [req.user.id]);
     res.status(200).json({
       status: 200,
       data: [{
-        count: rowCount,
+        count,
       }, {
-        orders: rows,
+        orders,
       }],
     });
   }
@@ -77,24 +77,23 @@ class routeMethods {
    * @param {object} res the response object.
    */
   static async changeDest(req, res) {
-    const { destination, distance } = req.body;
+    const { destination: newDestination, distance: newDistance } = req.body;
     const id = req.params.parcelId;
     const update = `UPDATE parcels
       SET destination=$1, distance=$2
-      WHERE id=$3
-      RETURNING *`;
-    const updated = await db(update, [
-      destination,
-      distance,
+      WHERE id=$3`;
+    await db(update, [
+      newDestination,
+      newDistance,
       id,
     ]);
     return res.status(200).json({
       status: 200,
       data: [{
         id,
-        newDestination: updated.rows.destination,
+        newDestination,
         message: 'parcel destination updated',
-        'new distance': distance,
+        newDistance,
       }],
     });
   }
@@ -106,23 +105,23 @@ class routeMethods {
    */
   static async location(req, res) {
     const id = req.params.parcelId;
-    const { distance, location } = req.body;
+    const { distance: newDistance, location: currentLocation } = req.body;
     const update = `UPDATE parcels
       SET current_location=$1, distance=$2
       WHERE id=$3
       RETURNING *`;
     await db(update, [
-      location,
-      distance,
+      currentLocation,
+      newDistance,
       id,
     ]);
     return res.status(200).json({
       status: 200,
       data: [{
         id,
-        currentLocation: location,
+        currentLocation,
         message: 'parcel location updated',
-        'new distance': distance,
+        newDistance,
       }],
     });
   }
@@ -141,13 +140,13 @@ class routeMethods {
     }
 
     const queryText = 'SELECT * FROM parcels';
-    const { rows, rowCount } = await db(queryText);
+    const { rows: orders, rowCount: count } = await db(queryText);
     res.status(200).json({
       status: 200,
       data: [{
-        count: rowCount,
+        count,
       }, {
-        orders: rows,
+        orders,
       }],
     });
     return undefined;
