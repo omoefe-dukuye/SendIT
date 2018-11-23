@@ -1,0 +1,131 @@
+section, div, .slides p, ul div, main ul, main li, html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.slides {
+  width: 720px;
+  margin: 5rem auto;
+}
+
+.image_slider_content div {
+  display: flex;
+  align-items: center;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 2rem;
+  height: 381px;
+  width: 720px;
+}
+
+
+.slides div > p {
+  text-indent: 1rem;
+}
+
+.first_slide {
+  background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/map.png');
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.second_slide {
+  background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/fast.jpeg');
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.third_slide {
+  background: linear-gradient(0deg,rgba(255,0,255,0.2),rgba(255,0,255,0.2)), url('../images/service.jpg');
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.image_slider {
+  outline: 0.2rem solid #90f;
+  width: 720px;
+  height: 381px;
+  overflow-x: hidden;
+}
+
+.image_slider_content {
+  list-style: none;
+  display: flex;
+  animation-name: slide;
+  animation-duration: 30s;
+  animation-iteration-count: infinite;
+}
+
+@media (min-width: 751px) {
+  @keyframes slide {
+    20% {
+      transform: translateX(0);
+    }
+    30% {
+      transform: translateX(-720px);
+    }
+    50% {
+      transform: translateX(-720px);
+    }
+    60% {
+      transform: translateX(-1440px);
+    }
+    80% {
+      transform: translateX(-1440px);
+    }
+  }
+}
+
+@media (max-width: 750px) {
+  .slides {
+    width: 360px;
+    margin: 3rem auto;
+  }
+
+  .image_slider_content div {
+    height: 190px;
+    width: 360px;
+    background-size: 360px 190px;
+  }
+
+  .image_slider {
+    width: 360px;
+    height: 190px;
+  }
+
+  @keyframes slide {
+    20% {
+      transform: translateX(0);
+    }
+    30% {
+      transform: translateX(-360px);
+    }
+    50% {
+      transform: translateX(-360px);
+    }
+    60% {
+      transform: translateX(-720px);
+    }
+    80% {
+      transform: translateX(-720px);
+    }
+  }
+}
+
+
+.about {
+  font-size: 2rem;
+  width: 70%;
+  margin: 2rem auto;
+  line-height: 1.5;
+  text-indent: 2rem;
+  text-align: center;
+}
+
+.about a {
+  color: white;
+}
+
+@media (max-width: 720px) {
+  .about {
+    font-size: 1.5rem;
+    width: 90%;
+    text-indent: 1rem;
+  }
+}

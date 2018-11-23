@@ -1,0 +1,40 @@
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section {
+  display: block;
+  width: 25%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media(max-width: 1000px) {
+  section {
+    width: 40%;
+  }
+}
+
+@media(max-width: 720px) {
+  section {
+    width: 50%;
+  }
+  section p {
+    font-size: 1.3rem;
+  }
+}
+
+form {
+  width: 100%;
+}
+
+section p {
+  margin: 1rem auto;
+  text-align: right;
+}
+
+.form input[type="submit"] {
+  width: 40%;
+}

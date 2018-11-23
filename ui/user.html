@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="keywords" content="courier, shipping, delivery, parcel">
+  <title>Omoefe | SendIT</title>
+  <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Hind+Madurai|Permanent+Marker" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/user.css">
+  <link rel="stylesheet" href="css/table.css">
+</head>
+<body>
+  <header class="header_footer">
+    <div class="logo_wrapper">
+      <a  class="header_link logo shadow" href="index.html">
+        <h1 class="inline">SendIT</h1>
+        <i class="fas fa-plane-departure"></i>
+      </a>
+      <p class="slogan">
+        ...delivering on time, all the time.
+      </p>
+    </div>
+    <div class="link_wrapper">
+      <ul>
+        <li class="inline">
+          <a class="header_link shadow see_profile" href="#">Omoefe <i class="far fa-user"></i></a>
+        </li>
+        <li class="inline">
+          <a class="header_link shadow" href="index.html">Log out</a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <nav>
+      <ul>
+        <li>
+          <a class="nav active" href="#">Create</a>
+        </li>
+        <li>
+          <a class="nav" href="#">Update</a>
+        </li>
+        <li>
+          <a class="nav" href="#">Details</a>
+        </li>
+        <li>
+          <a class="nav" href="#">Cancel</a>
+        </li>
+        <li>
+          <a class="nav" href="#">All</a>
+        </li>
+      </ul>
+    </nav>
+    <section class="doc">
+      <form class="" action="index.html" method="post">
+        <label for="pickup">Pickup Location:</label>
+        <input id="pickup" type="text" name="" value="">
+        <label for="destination">Destination</label>
+        <input id="destination" type="text" name="" value="">
+        <label for="content">Parcel Description:</label>
+        <input id="content" type="text" name="" value="">
+        <input type="submit" name="" value="Create Order">
+      </form>
+    </section>
+    <section class="doc no_display">
+      <form class="" action="index.html" method="post">
+        <label for="id">Parcel ID:</label>
+        <input id="id" type="text" name="" value="">
+        <label for="destination">New Destination</label>
+        <input id="destination" type="text" name="" value="">
+        <input type="submit" name="" value="Change">
+      </form>
+    </section>
+    <section class="doc no_display">
+      <form class="" action="index.html" method="post">
+        <label for="id">Parcel ID</label>
+        <input id="id "type="text" name="" value="">
+        <input type="submit" name="" value="Get Details">
+      </form>
+      <div class="results">
+
+      </div>
+    </section>
+    <section class="doc no_display">
+      <form class="" action="index.html" method="post">
+        <label for="id">Parcel ID</label>
+        <input id="id "type="text" name="" value="">
+        <input type="submit" name="" value="Cancel">
+      </form>
+      <div class="results">
+
+      </div>
+    </section>
+
+    <section class="doc no_display">
+      <div class="table_results">
+        <ol class="parcels">
+          <li>
+            <table>
+              <tr>
+                <th>ID</th><td>6e4h5544h4</td>
+              </tr>
+              <tr>
+                <th>Description</th><td>1 Mackbook pro</td>
+              </tr>
+              <tr>
+                <th>Destination</th><td>Long Island, New York</td>
+              </tr>
+              <tr>
+                <th>Status</th><td class="delivered">Delivered</td>
+              </tr>
+            </table>
+          </li>
+          <li>
+            <table>
+              <tr>
+                <th>ID</th><td>6e4h5544h4</td>
+              </tr>
+              <tr>
+                <th>Description</th><td>1 Mackbook pro</td>
+              </tr>
+              <tr>
+                <th>Destination</th><td>Long Island, New York</td>
+              </tr>
+              <tr>
+                <th>Status</th><td>Delivered</td>
+              </tr>
+            </table>
+          </li>
+          <li>
+            <table>
+              <tr>
+                <th>ID</th><td>6e4h5544h4</td>
+              </tr>
+              <tr>
+                <th>Description</th><td>1 Mackbook pro</td>
+              </tr>
+              <tr>
+                <th>Destination</th><td>Long Island, New York</td>
+              </tr>
+              <tr>
+                <th>Status</th><td>Delivered</td>
+              </tr>
+            </table>
+          </li>
+          <li>
+            <table>
+              <tr>
+                <th>ID</th><td>6e4h5544h4</td>
+              </tr>
+              <tr>
+                <th>Description</th><td>1 Mackbook pro</td>
+              </tr>
+              <tr>
+                <th>Destination</th><td>Long Island, New York</td>
+              </tr>
+              <tr>
+                <th>Status</th><td>Delivered</td>
+              </tr>
+            </table>
+          </li>
+        </ol>
+      </div>
+    </section>
+    <section class="profile_wrapper no_display">
+      <div class="profile">
+        <button class="profile_close">X</button>
+        <h3>Hello Omoefe!</h3>
+        <p>Parcels en route: 3</p>
+        <p>Parcels delivered: 14</p>
+      </div>
+    </section>
+  </main>
+  <footer class="header_footer">
+    <div class="shadow">
+      <h3 class="center">Contact us:</h3>
+      <ul>
+        <li>call: +2347063308109</li>
+        <li>email: help@sendIT.com</li>
+      </ul>
+    </div>
+  </footer>
+  <script src="js/main.js">
+
+  </script>
+</body>
+</html>
