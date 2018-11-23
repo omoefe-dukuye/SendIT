@@ -62,7 +62,7 @@ export default async (req, res, next) => {
       message: 'Please use letters and numbers for your username.',
     });
   }
-  if (!(username.length > 3 && username.length < 10)) {
+  if (!(username.length > 3 && username.length < 20)) {
     return res.status(400).json({
       status: 400,
       message: 'Please use a username between 4 and 20 characters.',
