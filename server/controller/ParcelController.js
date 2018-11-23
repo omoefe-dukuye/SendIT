@@ -111,13 +111,14 @@ class ParcelController {
         newDistance,
         id,
       ]);
+      const formatted = `${newDistance} km`;
       return res.status(200).json({
         status: 200,
         data: [{
           id,
           newDestination,
           message: 'parcel destination updated',
-          newDistance,
+          newDistance: formatted,
           additionalPrice,
         }],
       });

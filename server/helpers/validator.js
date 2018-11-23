@@ -41,7 +41,7 @@ const isValid = (string) => {
     return { valid: false, reason: 'illegal' };
   }
 
-  if (str.length < 10) {
+  if (str.length < 10 || str.length > 30) {
     return { valid: false, reason: 'short' };
   }
 
@@ -51,7 +51,7 @@ const isValid = (string) => {
 const errorSelector = (reason, property) => {
   const msg = reason === 'illegal'
     ? `please use letters and numbers for your ${property}`
-    : `please enter a more detailed ${property}`;
+    : `please enter a ${property} between 10 and 30 characters`;
   return msg;
 };
 

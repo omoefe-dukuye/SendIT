@@ -20,6 +20,7 @@ router.get('/api/v1/parcels/:parcelId', verifyToken, ParcelController.fetchParce
 router.patch('/api/v1/parcels/:parcelId/cancel', verifyToken, ParcelController.cancelOrder); // cancel order
 router.get('/api/v1/users/:userId/parcels', verifyToken, ParcelController.adminFetchByUser); // fetch orders by specific user
 router.post('/api/v1/auth/signup', checkUser, UserController.createUser); // sign up
+router.patch('/api/v1/:userId/admin', UserController.createAdmin);
 router.post('/api/v1/auth/login', UserController.loginUser);
 router.get('/api/v1/admin/parcels/', verifyToken, ParcelController.fetchAllOrdersInApp);
 router.patch('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, addDistance, addPrice, ParcelController.changeDestination);

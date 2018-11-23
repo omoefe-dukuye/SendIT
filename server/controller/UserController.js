@@ -58,6 +58,45 @@ class UserController {
   }
 
   /**
+   * Upgrade a user to admin.
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
+  static async createAdmin(req, res) {
+    const { params: { userId: id }, body: { password } } = req;
+    const { ADMIN_PASS: adminPass } = process.env;
+    if (password !== adminPass) {
+      return res.status(401).json({
+        status: 401,
+        error: 'Invalid admin key',
+      });
+    }
+    try {
+      const query = 'SELECT * FROM users WHERE id = $1';
+      const { rows } = await db(query, [id]);
+      if (!rows[0]) {
+        return res.status(401).json({
+          status: 401,
+          message: 'Invalid id',
+        });
+      }
+      const update = `UPDATE users
+        SET is_admin=$1
+        WHERE id=$2`;
+      await db(update, ['yes', id]);
+      return res.status(200).json({
+        status: 200,
+        message: `User with the id '${id}' has been upgraded to admin`,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error,
+      });
+    }
+  }
+
+  /**
    * Log in a user.
    * @param {object} req the request object.
    * @param {object} res the response object.
