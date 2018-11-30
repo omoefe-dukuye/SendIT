@@ -44,10 +44,8 @@ class UserController {
       delete (user.password);
       return res.status(201).header('x-auth', token).json({
         status: 201,
-        data: [{
-          token,
-          user,
-        }],
+        token,
+        user,
       });
     } catch (error) {
       res.status(409).json({
@@ -126,10 +124,8 @@ class UserController {
       delete (user.password);
       return res.status(200).header('x-auth', token).json({
         status: 200,
-        data: [{
-          token,
-          user,
-        }],
+        token,
+        user,
       });
     } catch (error) {
       res.status(404).json({

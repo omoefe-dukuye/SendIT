@@ -41,7 +41,7 @@ class ParcelController {
         price,
       ];
 
-      const { rows: [parcel], rows: [{ id }] } = await db(query, values);
+      const { rows: [parcel] } = await db(query, values);
 
       delete parcel.placed_by;
       delete parcel.weight_metric;
@@ -52,12 +52,8 @@ class ParcelController {
 
       return res.status(201).json({
         status: 201,
-        data: [{
-          id,
-          message: 'order created',
-        }, {
-          parcel,
-        }],
+        message: 'order created',
+        parcel,
       });
     } catch (error) {
       res.status(500).json({
@@ -78,11 +74,8 @@ class ParcelController {
       const { rows: orders, rowCount: count } = await db(query, [req.user]);
       return res.status(200).json({
         status: 200,
-        data: [{
-          count,
-        }, {
-          orders,
-        }],
+        count,
+        orders,
       });
     } catch (error) {
       res.status(500).json({
@@ -114,13 +107,11 @@ class ParcelController {
       const formatted = `${newDistance} km`;
       return res.status(200).json({
         status: 200,
-        data: [{
-          id,
-          newDestination,
-          message: 'parcel destination updated',
-          newDistance: formatted,
-          additionalPrice,
-        }],
+        id,
+        message: 'parcel destination updated',
+        newDestination,
+        newDistance: formatted,
+        additionalPrice,
       });
     } catch (error) {
       res.status(500).json({
@@ -150,12 +141,10 @@ class ParcelController {
       ]);
       return res.status(200).json({
         status: 200,
-        data: [{
-          id,
-          currentLocation,
-          message: 'parcel location updated',
-          newDistance,
-        }],
+        id,
+        currentLocation,
+        message: 'parcel location updated',
+        newDistance,
       });
     } catch (error) {
       res.status(500).json({
@@ -183,11 +172,8 @@ class ParcelController {
       const { rows: orders, rowCount: count } = await db(queryText);
       res.status(200).json({
         status: 200,
-        data: [{
-          count,
-        }, {
-          orders,
-        }],
+        count,
+        orders,
       });
     } catch (error) {
       res.status(500).json({
@@ -240,11 +226,9 @@ class ParcelController {
       await db(update, values);
       return res.status(200).json({
         status: 200,
-        data: [{
-          id,
-          status,
-          message: 'parcel status changed',
-        }],
+        id,
+        newStatus: status,
+        message: 'parcel status changed',
       });
     } catch (error) {
       res.status(500).json({
@@ -269,9 +253,7 @@ class ParcelController {
         delete (rows[0].placed_by);
         return res.status(200).json({
           status: 200,
-          data: [{
-            order: rows[0],
-          }],
+          order: rows[0],
         });
       }
       return res.status(404).json({
@@ -315,10 +297,8 @@ class ParcelController {
       await db(update, ['cancelled', parcelId]);
       return res.status(200).send({
         status: 200,
-        data: [{
-          parcelId,
-          message: 'order cancelled',
-        }],
+        parcelId,
+        message: 'order cancelled',
       });
     } catch (error) {
       res.status(500).json({
@@ -356,7 +336,7 @@ class ParcelController {
       }
       return res.status(200).json({
         status: 200,
-        data: ['No Orders to retrieve'],
+        message: 'No Orders to retrieve',
       });
     } catch (error) {
       res.status(500).json({
