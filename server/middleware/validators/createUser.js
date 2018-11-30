@@ -15,7 +15,7 @@ export default async (req, res, next) => {
   } = req.body;
   const requiredFields = [email, password, firstName, lastName, username];
   if (requiredFields.includes(undefined)) {
-    const required = ['Email', 'Password', 'First Name', 'Last Name', 'Username'];
+    const required = ['email', 'password', 'firstName', 'lastName', 'username'];
     const i = requiredFields.indexOf(undefined);
     return res.status(400).json({
       status: 400,
@@ -28,7 +28,7 @@ export default async (req, res, next) => {
   if (!(firstName.length > 1 && firstName.length < 20)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use a fisrt name between 2 and 20 characters',
+      message: 'Please use a first name between 2 and 20 characters',
     });
   }
   if (!/^[a-zA-Z']*$/.test(firstName)) {

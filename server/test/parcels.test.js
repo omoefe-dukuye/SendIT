@@ -54,10 +54,10 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(user2);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
       const res2 = await chai.request(app)
         .post('/api/v1/parcels')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send(parcel1);
       res2.should.have.status(201);
     });
@@ -67,10 +67,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcel2)
             .end((err, response) => {
               response.should.have.status(400);
@@ -84,10 +84,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelShort)
             .end((err, response) => {
               response.should.have.status(400);
@@ -101,10 +101,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelWrongDest)
             .end((err, response) => {
               response.should.have.status(400);
@@ -118,10 +118,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelWrongLoc)
             .end((err, response) => {
               response.should.have.status(400);
@@ -135,10 +135,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelWeight)
             .end((err, response) => {
               response.should.have.status(400);
@@ -152,10 +152,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelfromMars)
             .end((err, response) => {
               response.should.have.status(400);
@@ -169,10 +169,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .post('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send(parcelToMars)
             .end((err, response) => {
               response.should.have.status(400);
@@ -189,10 +189,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .get('/api/v1/parcels')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .end((err, response) => {
               response.should.have.status(200);
               done();
@@ -209,7 +209,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .get('/api/v1/parcels/1')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(200);
     });
 
@@ -220,7 +220,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .get('/api/v1/parcels/50')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(404);
     });
   });
@@ -231,10 +231,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send({ destination: 'leicester city, london' })
             .end((err, response) => {
               response.should.have.status(200);
@@ -248,10 +248,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send({ destination: 'leiyu[guf]^&*(*&itydddjkhyy' })
             .end((err, response) => {
               response.should.have.status(400);
@@ -265,10 +265,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .end((err, response) => {
               response.should.have.status(400);
               done();
@@ -282,10 +282,10 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(admin);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
       const res2 = await chai.request(app)
         .get('/api/v1/admin/parcels/')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(200);
     });
 
@@ -293,10 +293,10 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(user2);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
       const res2 = await chai.request(app)
         .get('/api/v1/admin/parcels/')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(401);
     });
   });
@@ -309,7 +309,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .get('/api/v1/users/2/parcels/')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(200);
     });
 
@@ -317,7 +317,7 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(admin);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
 
       await chai.request(app)
         .post('/api/v1/auth/signup')
@@ -331,20 +331,20 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .get('/api/v1/users/3/parcels/')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(200);
-      res2.body.data[0].should.eql('No Orders to retrieve');
+      res2.body.message.should.eql('No Orders to retrieve');
     });
 
     it('Should not be accessed by non admins', async () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(user2);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
 
       const res2 = await chai.request(app)
         .get('/api/v1/users/2/parcels/')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(401);
     });
   });
@@ -355,10 +355,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(admin)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send({ location: 'manchester city, london' })
             .end((err, response) => {
               response.should.have.status(200);
@@ -372,10 +372,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(admin)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send({ location: 'man' })
             .end((err, response) => {
               response.should.have.status(400);
@@ -389,10 +389,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(admin)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .end((err, response) => {
               response.should.have.status(400);
               done();
@@ -405,10 +405,10 @@ describe('Parcel routes', () => {
         .post('/api/v1/auth/login')
         .send(user2)
         .then((res) => {
-          res.body.data[0].should.have.property('token');
+          res.body.should.have.property('token');
           chai.request(app)
             .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.data[0].token)
+            .set('x-auth', res.body.token)
             .send({ location: 'manchester city, london' })
             .end((err, response) => {
               response.should.have.status(401);
@@ -426,7 +426,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ status: 'in-transit' });
       res2.should.have.status(200);
     });
@@ -438,7 +438,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ status: 'in-transit' });
       res2.should.have.status(401);
     });
@@ -450,7 +450,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ status: 'baloney' });
       res2.should.have.status(400);
     });
@@ -461,11 +461,11 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(user2);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/cancel')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(200);
     });
 
@@ -476,17 +476,17 @@ describe('Parcel routes', () => {
 
       await chai.request(app)
         .post('/api/v1/parcels')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send(parcel1);
 
       await chai.request(app)
         .patch('/api/v1/parcels/2/status')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ status: 'delivered' });
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/2/cancel')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(409);
     });
 
@@ -497,7 +497,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/2/status')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ status: 'created' });
       res2.should.have.status(409);
     });
@@ -509,7 +509,7 @@ describe('Parcel routes', () => {
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/3/cancel')
-        .set('x-auth', res.body.data[0].token);
+        .set('x-auth', res.body.token);
       res2.should.have.status(404);
     });
 
@@ -517,11 +517,11 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(admin);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/currentlocation')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ location: 'manchester city, london' });
       res2.should.have.status(404);
     });
@@ -530,11 +530,11 @@ describe('Parcel routes', () => {
       const res = await chai.request(app)
         .post('/api/v1/auth/login')
         .send(user2);
-      res.body.data[0].should.have.property('token');
+      res.body.should.have.property('token');
 
       const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/destination')
-        .set('x-auth', res.body.data[0].token)
+        .set('x-auth', res.body.token)
         .send({ destination: 'leicester city, london' });
       res2.should.have.status(404);
     });
