@@ -1,7 +1,7 @@
 # SendIT
 ### Build Status  
 [![Build Status](https://travis-ci.org/un-tethered/SendIT.svg?branch=develop)](https://travis-ci.org/un-tethered/SendIT)
-[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=gihub)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=gihub)
+[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=github)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=github)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/un-tethered/SendIT/maintainability)
 
 #### SendIT is an app that helps users deliver parcels to different destinations.
@@ -37,7 +37,7 @@ UI templates are hosted on Github pages [here](https://un-tethered.github.io/Sen
 
   | METHOD  | DESCRIPTION                  |             ENDPOINTS                                |
   | --------| -------------                |          -------------------------------             |
-  | GET     | Get all orders               |      `/api/v1/parcels`                               |
+  | GET     | Get all orders for requester |      `/api/v1/parcels`                               |
   | GET     | Get particular order         |    `/api/v1/parcels/:parcelId`                       |
   | POST    | Create an order              |    `/api/v1/parcels`                                 |
   | PUT     | Cancel order                 |     `/api/v1/parcels/:parcelId`                      | 
