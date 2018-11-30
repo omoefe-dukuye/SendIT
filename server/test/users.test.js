@@ -7,6 +7,13 @@ chai.use(chaiHttp);
 chai.should();
 
 const user1 = { username: 'aloha', password: 'batistuta' };
+const admin = {
+  firstName: 'Chubi',
+  lastName: 'Best',
+  username: 'chubibest',
+  email: 'chubi.best@gmail.com',
+  password: 'chubibest'
+};
 // const user2 = { email: 'loremipsum@gmail.com', password: 'ronaldo' };
 
 describe('User signup', () => {
@@ -72,6 +79,71 @@ describe('User signup', () => {
         done();
       });
   });
+
+  it('should not create user with less than 2 character firstName', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'B',
+        lastName: 'Paul',
+        username: 'aloha',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
+  it('should not create user with illegal characters in firstName', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'B#%%##$#%',
+        lastName: 'Paul',
+        username: 'aloha',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
+  it('should not create user with less than 2 character lastName', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'P',
+        username: 'aloha',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
+  it('should not create user with illegal characters in lastName', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'PE%###^',
+        username: 'aloha',
+        email: 'gokuirayol@gmail.com',
+        password: 'batistuta',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
   it('Should not create user with short password', (done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')
@@ -81,6 +153,22 @@ describe('User signup', () => {
         username: 'aloha',
         email: 'gokuirayol@gmail.com',
         password: 'bat',
+      })
+      .end((error, response) => {
+        expect(response).to.have.status(400);
+        done();
+      });
+  });
+
+  it('Should not accept spaces in password', (done) => {
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'Brozovic',
+        lastName: 'Paul',
+        username: 'aloha',
+        email: 'gokuirayol@gmail.com',
+        password: 'battle field',
       })
       .end((error, response) => {
         expect(response).to.have.status(400);
@@ -173,5 +261,15 @@ describe('User login', () => {
         password: 'batistuta',
       });
     expect(res).to.have.status(404);
+  });
+
+  it('Should upgrade to admin', async () => {
+    await chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send(admin);
+    const res = await chai.request(app)
+      .patch('/api/v1/3/admin')
+      .send({ password: 'stayEPIC' });
+    expect(res).to.have.status(200);
   });
 });
