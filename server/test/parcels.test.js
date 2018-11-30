@@ -2,11 +2,9 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 import { describe } from 'mocha';
 import app from '../index';
-import createAdmin from './seed/seed';
 
 chai.use(chaiHttp);
 chai.should();
-createAdmin();
 
 /** Class for creating parcels */
 class Parcel {
