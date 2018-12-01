@@ -81,9 +81,16 @@ export default async (req, res, next) => {
     });
   }
   const text = 'SELECT * FROM users WHERE username = $1';
-  const { rows: [exists] } = await db(text, [username]);
-  if (exists) {
+  const { rows: [usernameAlreadyExists] } = await db(text, [username]);
+  if (usernameAlreadyExists) {
     return res.status(409).json({ status: 409, error: 'This Username is already taken, try something else' });
   }
+
+  const query = 'SELECT * FROM users WHERE email = $1';
+  const { rows: [emailAlreadyexists] } = await db(query, [email]);
+  if (emailAlreadyexists) {
+    return res.status(409).json({ status: 409, error: 'This email has already been used to open an account' });
+  }
+
   return next();
 };

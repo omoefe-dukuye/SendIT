@@ -198,7 +198,7 @@ describe('Parcel routes', () => {
   describe('GET /api/v1/users/userId/parcels', async () => {
     it('Should get all parcels for particular user if admin', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/users/2/parcels/')
+        .get('/api/v1/users/1/parcels/')
         .set('x-auth', adminToken);
       res.should.have.status(200);
     });

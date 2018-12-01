@@ -48,9 +48,9 @@ class UserController {
         user,
       });
     } catch (error) {
-      res.status(409).json({
-        status: 409,
-        message: 'Email already in use',
+      res.status(500).json({
+        status: 500,
+        error,
       });
     }
   }
@@ -73,8 +73,8 @@ class UserController {
       const query = 'SELECT * FROM users WHERE id = $1';
       const { rows } = await db(query, [id]);
       if (!rows[0]) {
-        return res.status(401).json({
-          status: 401,
+        return res.status(400).json({
+          status: 400,
           message: 'Invalid id',
         });
       }

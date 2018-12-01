@@ -28,7 +28,7 @@ class User {
 const user1 = { username: 'aloha', password: 'batistuta' };
 const admin = new User('Chubi', 'Best', 'chubibest', 'chubi.best@gmail.com', 'chubibest');
 const user = new User('Brozovic', 'Paul', 'aloha', 'gokuirayol@gmail.com', 'batistuta');
-const existingEmail = new User('Brozovic', 'Paul', 'aloha', 'gokuirayol@gmail.com', 'batistuta');
+const existingEmail = new User('Brozovic', 'Paul', 'alohag', 'gokuirayol@gmail.com', 'batistuta');
 const noFirstname = new User(undefined, 'Paul', 'aloha', 'gokuirayol@gmail.com', 'batistuta');
 const shortFirstname = new User('B', 'Paul', 'aloha', 'gokuirayol@gmail.com', 'batistuta');
 const illegalFirstname = new User('B#%%##$#%', 'Paul', 'aloha', 'gokuirayol@gmail.com', 'batistuta');
@@ -184,5 +184,19 @@ describe('Upgrade to Admin', () => {
       .patch('/api/v1/2/admin')
       .send({ password: 'stayEPIC' });
     expect(res).to.have.status(200);
+  });
+
+  it('Should not upgrade to admin if invalid pass', async () => {
+    const res = await chai.request(app)
+      .patch('/api/v1/2/admin')
+      .send({ password: 'stayEPI' });
+    expect(res).to.have.status(401);
+  });
+
+  it('Should not upgrade to admin if invalid id', async () => {
+    const res = await chai.request(app)
+      .patch('/api/v1/50/admin')
+      .send({ password: 'stayEPIC' });
+    expect(res).to.have.status(400);
   });
 });
