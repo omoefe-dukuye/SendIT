@@ -56,10 +56,7 @@ class ParcelController {
         parcel,
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -72,16 +69,9 @@ class ParcelController {
     try {
       const query = 'SELECT * FROM parcels WHERE placed_by = $1';
       const { rows: orders, rowCount: count } = await db(query, [req.user]);
-      return res.status(200).json({
-        status: 200,
-        count,
-        orders,
-      });
+      return res.status(200).json({ status: 200, count, orders });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -99,11 +89,7 @@ class ParcelController {
       const update = `UPDATE parcels
         SET destination=$1, distance=$2
         WHERE id=$3`;
-      await db(update, [
-        newDestination,
-        newDistance,
-        id,
-      ]);
+      await db(update, [newDestination, newDistance, id]);
       const formatted = `${newDistance} km`;
       return res.status(200).json({
         status: 200,
@@ -114,10 +100,7 @@ class ParcelController {
         additionalPrice,
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -134,11 +117,7 @@ class ParcelController {
         SET current_location=$1, distance=$2
         WHERE id=$3
         RETURNING *`;
-      await db(update, [
-        currentLocation,
-        newDistance,
-        id,
-      ]);
+      await db(update, [currentLocation, newDistance, id]);
       return res.status(200).json({
         status: 200,
         id,
@@ -147,10 +126,7 @@ class ParcelController {
         newDistance,
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -162,24 +138,14 @@ class ParcelController {
   static async fetchAllOrdersInApp(req, res) {
     try {
       if (!req.admin) {
-        return res.status(401).json({
-          status: 401,
-          error: 'Unauthorized',
-        });
+        return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
 
       const queryText = 'SELECT * FROM parcels';
       const { rows: orders, rowCount: count } = await db(queryText);
-      res.status(200).json({
-        status: 200,
-        count,
-        orders,
-      });
+      res.status(200).json({ status: 200, count, orders });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -218,10 +184,7 @@ class ParcelController {
       } else {
         update = `UPDATE parcels
           SET status=$1 WHERE id=$2`;
-        values = [
-          status,
-          id,
-        ];
+        values = [status, id];
       }
       await db(update, values);
       return res.status(200).json({
@@ -231,10 +194,7 @@ class ParcelController {
         message: 'parcel status changed',
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -251,20 +211,11 @@ class ParcelController {
       const { rows } = await db(query, [id, parcelId]);
       if (rows[0]) {
         delete (rows[0].placed_by);
-        return res.status(200).json({
-          status: 200,
-          order: rows[0],
-        });
+        return res.status(200).json({ status: 200, order: rows[0] });
       }
-      return res.status(404).json({
-        status: 404,
-        error: 'invalid ID',
-      });
+      return res.status(404).json({ status: 404, error: 'invalid ID' });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -280,31 +231,16 @@ class ParcelController {
       const id = req.user;
       const { rows } = await db(query, [id, parcelId]);
       if (!rows[0]) {
-        return res.status(404).json({
-          status: 404,
-          error: 'invalid ID',
-        });
+        return res.status(404).json({ status: 404, error: 'invalid ID' });
       }
       if (rows[0].status === 'delivered') {
-        return res.status(409).json({
-          status: 409,
-          error: 'already delivered',
-        });
+        return res.status(409).json({ status: 409, error: 'already delivered' });
       }
-      const update = `UPDATE parcels
-        SET status=$1
-        WHERE id=$2`;
+      const update = 'UPDATE parcels SET status=$1 WHERE id=$2';
       await db(update, ['cancelled', parcelId]);
-      return res.status(200).send({
-        status: 200,
-        parcelId,
-        message: 'order cancelled',
-      });
+      return res.status(200).send({ status: 200, parcelId, message: 'order cancelled' });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 
@@ -316,33 +252,20 @@ class ParcelController {
   static async adminFetchByUser(req, res) {
     try {
       if (!req.admin) {
-        return res.status(401).json({
-          status: 401,
-          error: 'Unauthorized',
-        });
+        return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
       const { userId } = req.params;
       const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-      const { rows, rowCount } = await db(query, [userId]);
-      if (rows[0]) {
-        return res.status(200).json({
-          status: 200,
-          data: [{
-            count: rowCount,
-          }, {
-            orders: rows,
-          }],
-        });
+      const { rows: orders, rowCount: count } = await db(query, [userId]);
+      if (orders[0]) {
+        return res.status(200).json({ status: 200, count, orders });
       }
       return res.status(200).json({
         status: 200,
         message: 'No Orders to retrieve',
       });
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error,
-      });
+      res.status(500).json({ status: 500, error });
     }
   }
 }
