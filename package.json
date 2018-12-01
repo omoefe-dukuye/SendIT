@@ -4,7 +4,7 @@
   "description": "SendIT is a courier service that helps users deliver parcels to different destinations.",
   "main": "index.js",
   "engines": {
-    "node": "10.13.0"
+    "node": "10.14.1"
   },
   "scripts": {
     "build": "rm -rf dist/ && babel server/ -d dist/ --ignore server/test",

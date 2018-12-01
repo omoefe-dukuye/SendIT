@@ -1,7 +1,10 @@
 language: node_js
 
 node_js:
-  - "10.13.0"
+  - "10.14.1"
+
+services:
+  - postgresql
 
 before_script:
   - psql -c 'create database SendIT;' -U postgres
