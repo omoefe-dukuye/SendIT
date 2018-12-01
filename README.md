@@ -1,7 +1,7 @@
 # SendIT
 ### Build Status  
 [![Build Status](https://travis-ci.org/un-tethered/SendIT.svg?branch=develop)](https://travis-ci.org/un-tethered/SendIT)
-[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=github)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=github)
+[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=githu)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=githu)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/un-tethered/SendIT/maintainability)
 
 #### SendIT is an app that helps users deliver parcels to different destinations.
