@@ -5,7 +5,6 @@ import app from '../index';
 
 chai.use(chaiHttp);
 chai.should();
-
 /** Class for creating parcels */
 class Parcel {
   /**
@@ -32,8 +31,22 @@ const parcelWrongDest = new Parcel('49', 'ogba lagos', 'lag&^%$%^&*(%$)(*&  ^&^'
 const parcelToMars = new Parcel('49', 'ogba lagos', 'obarisiadjdaaasgadslljhaelr');
 const parcelfromMars = new Parcel('49', 'obarisiadjdaaasgadslljhaelr', 'ogba lagos');
 const parcelWeight = new Parcel('hyju', 'ogba lagos', 'ikorodu lagos');
+let adminToken;
+let user2Token;
 
 describe('Parcel routes', () => {
+  before(async () => {
+    const { body: { token: aToken } } = await chai.request(app)
+      .post('/api/v1/auth/login')
+      .send(admin);
+    adminToken = aToken;
+
+    const { body: { token: u2Token } } = await chai.request(app)
+      .post('/api/v1/auth/login')
+      .send(user2);
+    user2Token = u2Token;
+  });
+
   describe('POST /api/v1/parcels', () => {
     it('should report 401 on users not logged in', async () => {
       const res = await chai.request(app)
@@ -52,491 +65,275 @@ describe('Parcel routes', () => {
 
     it('should create order for logged in user', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-      res.body.should.have.property('token');
-      const res2 = await chai.request(app)
         .post('/api/v1/parcels')
-        .set('x-auth', res.body.token)
+        .set('x-auth', user2Token)
         .send(parcel1);
-      res2.should.have.status(201);
+      res.should.have.status(201);
     });
 
-    it('should not create when feild is omitted', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcel2)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create when feild is omitted', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcel2);
+      status.should.eql(400);
     });
 
-    it('should not create if destination is too concise', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelShort)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if destination is too concise', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelShort);
+      status.should.eql(400);
     });
 
-    it('should not create if illegal characters are used for location', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelWrongDest)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if illegal characters are used for location', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelWrongDest);
+      status.should.eql(400);
     });
 
-    it('should not create if illegal characters are used for destination', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelWrongLoc)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if illegal characters are used for destination', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelWrongLoc);
+      status.should.eql(400);
     });
 
-    it('should not create if non integers are used for weight', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelWeight)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if non integers are used for weight', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelWeight);
+      status.should.eql(400);
     });
 
-    it('should not create if location is unknown', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelfromMars)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if location is unknown', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelfromMars);
+      status.should.eql(400);
     });
 
-    it('should not create if destination is unknown', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .post('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .send(parcelToMars)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('should not create if destination is unknown', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelToMars);
+      status.should.eql(400);
     });
   });
 
 
   describe('GET /api/v1/parcels', () => {
-    it('should get all orders for logged in user', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .get('/api/v1/parcels')
-            .set('x-auth', res.body.token)
-            .end((err, response) => {
-              response.should.have.status(200);
-              done();
-            });
-        });
+    it('should get all orders for logged in user', async () => {
+      const { status } = await chai.request(app)
+        .get('/api/v1/parcels')
+        .set('x-auth', user2Token);
+      status.should.eql(200);
     });
   });
 
   describe('GET /api/v1/parcels/parcelId', () => {
     it('should get particular order for logged in user', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-
-      const res2 = await chai.request(app)
         .get('/api/v1/parcels/1')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(200);
+        .set('x-auth', user2Token);
+      res.should.have.status(200);
     });
 
     it('Should should throw a 404 if unassigned ID is supplied', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-
-      const res2 = await chai.request(app)
         .get('/api/v1/parcels/50')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(404);
+        .set('x-auth', user2Token);
+      res.should.have.status(404);
     });
   });
 
   describe('PATCH /api/v1/parcels/:parcelId/destination', () => {
-    it('Should change destination for authorized user', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.token)
-            .send({ destination: 'leicester city, london' })
-            .end((err, response) => {
-              response.should.have.status(200);
-              done();
-            });
-        });
+    it('Should change destination for authorized user', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/destination')
+        .set('x-auth', user2Token)
+        .send({ destination: 'leicester city, london' });
+      status.should.eql(200);
     });
 
-    it('Should change not change destination if invalid', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.token)
-            .send({ destination: 'leiyu[guf]^&*(*&itydddjkhyy' })
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('Should change not change destination if invalid', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/destination')
+        .set('x-auth', user2Token)
+        .send({ destination: 'leiyu[guf]^&*(*&itydddjkhyy' });
+      status.should.eql(400);
     });
 
-    it('Should change not change destination if value not provided', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/destination')
-            .set('x-auth', res.body.token)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('Should change not change destination if value not provided', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/destination')
+        .set('x-auth', user2Token);
+      status.should.eql(400);
     });
   });
 
   describe('GET /api/v1/admin/parcels', () => {
     it('Should get all parcels in the app if admin', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-      res.body.should.have.property('token');
-      const res2 = await chai.request(app)
         .get('/api/v1/admin/parcels/')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(200);
+        .set('x-auth', adminToken);
+      res.should.have.status(200);
     });
 
     it('Should not get parcels if not admin', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-      res.body.should.have.property('token');
-      const res2 = await chai.request(app)
         .get('/api/v1/admin/parcels/')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(401);
+        .set('x-auth', user2Token);
+      res.should.have.status(401);
     });
   });
 
   describe('GET /api/v1/users/userId/parcels', async () => {
     it('Should get all parcels for particular user if admin', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-
-      const res2 = await chai.request(app)
         .get('/api/v1/users/2/parcels/')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(200);
+        .set('x-auth', adminToken);
+      res.should.have.status(200);
     });
 
     it('Should indicate if there are no orders by the user', async () => {
-      const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-      res.body.should.have.property('token');
-
-      await chai.request(app)
-        .post('/api/v1/auth/signup')
-        .send({
-          firstName: 'Brozovic',
-          lastName: 'Paul',
-          username: 'papaya',
-          email: 'barkley@gmail.com',
-          password: 'batistuta',
-        });
-
-      const res2 = await chai.request(app)
-        .get('/api/v1/users/3/parcels/')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(200);
-      res2.body.message.should.eql('No Orders to retrieve');
+      const { status, body: { message } } = await chai.request(app)
+        .get('/api/v1/users/2/parcels/')
+        .set('x-auth', adminToken);
+      status.should.eql(200);
+      message.should.eql('No Orders to retrieve');
     });
 
     it('Should not be accessed by non admins', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-      res.body.should.have.property('token');
-
-      const res2 = await chai.request(app)
         .get('/api/v1/users/2/parcels/')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(401);
+        .set('x-auth', user2Token);
+      res.should.have.status(401);
     });
   });
 
   describe('/api/v1/parcels/:parcelId/currentlocation', () => {
-    it('Should change location if admin', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.token)
-            .send({ location: 'manchester city, london' })
-            .end((err, response) => {
-              response.should.have.status(200);
-              done();
-            });
-        });
+    it('Should change location if admin', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/currentlocation')
+        .set('x-auth', adminToken)
+        .send({ location: 'manchester city, london' });
+      status.should.eql(200);
     });
 
-    it('Should change not change location if invalid', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.token)
-            .send({ location: 'man' })
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('Should change not change location if invalid', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/currentlocation')
+        .set('x-auth', adminToken)
+        .send({ location: 'man' });
+      status.should.eql(400);
     });
 
-    it('Should change not change location if value not provided', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.token)
-            .end((err, response) => {
-              response.should.have.status(400);
-              done();
-            });
-        });
+    it('Should change not change location if value not provided', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/currentlocation')
+        .set('x-auth', adminToken);
+      status.should.eql(400);
     });
 
-    it('Should not change location if not admin', (done) => {
-      chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2)
-        .then((res) => {
-          res.body.should.have.property('token');
-          chai.request(app)
-            .patch('/api/v1/parcels/1/currentlocation')
-            .set('x-auth', res.body.token)
-            .send({ location: 'manchester city, london' })
-            .end((err, response) => {
-              response.should.have.status(401);
-              done();
-            });
-        });
+    it('Should not change location if not admin', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/1/currentlocation')
+        .set('x-auth', user2Token)
+        .send({ location: 'manchester city, london' });
+      status.should.eql(401);
     });
   });
 
   describe('/api/v1/parcels/:parcelId/status', () => {
     it('Should change status if admin', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.token)
+        .set('x-auth', adminToken)
         .send({ status: 'in-transit' });
-      res2.should.have.status(200);
+      res.should.have.status(200);
     });
 
     it('Should not change status if not admin', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.token)
+        .set('x-auth', user2Token)
         .send({ status: 'in-transit' });
-      res2.should.have.status(401);
+      res.should.have.status(401);
     });
 
     it('Should throw error on invalid status', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/status')
-        .set('x-auth', res.body.token)
+        .set('x-auth', adminToken)
         .send({ status: 'baloney' });
-      res2.should.have.status(400);
+      res.should.have.status(400);
     });
   });
 
   describe('PATCH /api/v1/parcels/:parcelId/cancel', () => {
-    it('Should cancel order for authorized user', async () => {
-      const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-      res.body.should.have.property('token');
-
-      const res2 = await chai.request(app)
-        .patch('/api/v1/parcels/1/cancel')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(200);
-    });
-
-    it('Should not cancel delivered parcels', async () => {
-      const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-
+    before(async () => {
       await chai.request(app)
         .post('/api/v1/parcels')
-        .set('x-auth', res.body.token)
+        .set('x-auth', user2Token)
         .send(parcel1);
 
       await chai.request(app)
         .patch('/api/v1/parcels/2/status')
-        .set('x-auth', res.body.token)
+        .set('x-auth', adminToken)
         .send({ status: 'delivered' });
+    });
 
-      const res2 = await chai.request(app)
+    it('Should cancel order for authorized user', async () => {
+      const res = await chai.request(app)
+        .patch('/api/v1/parcels/1/cancel')
+        .set('x-auth', user2Token);
+      res.should.have.status(200);
+    });
+
+    it('Should not cancel delivered parcels', async () => {
+      const res = await chai.request(app)
         .patch('/api/v1/parcels/2/cancel')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(409);
+        .set('x-auth', user2Token);
+      res.should.have.status(409);
     });
 
     it('Should not be able to change status of delivered order', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/2/status')
-        .set('x-auth', res.body.token)
+        .set('x-auth', adminToken)
         .send({ status: 'created' });
-      res2.should.have.status(409);
+      res.should.have.status(409);
     });
 
     it('Should should throw a 404 if unassigned ID is supplied', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/3/cancel')
-        .set('x-auth', res.body.token);
-      res2.should.have.status(404);
+        .set('x-auth', user2Token);
+      res.should.have.status(404);
     });
 
     it('Should not change location if admin and order cancelled', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(admin);
-      res.body.should.have.property('token');
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/currentlocation')
-        .set('x-auth', res.body.token)
+        .set('x-auth', adminToken)
         .send({ location: 'manchester city, london' });
-      res2.should.have.status(404);
+      res.should.have.status(404);
     });
 
     it('Should not change destination for cancelled order', async () => {
       const res = await chai.request(app)
-        .post('/api/v1/auth/login')
-        .send(user2);
-      res.body.should.have.property('token');
-
-      const res2 = await chai.request(app)
         .patch('/api/v1/parcels/1/destination')
-        .set('x-auth', res.body.token)
+        .set('x-auth', user2Token)
         .send({ destination: 'leicester city, london' });
-      res2.should.have.status(404);
+      res.should.have.status(404);
     });
   });
 });
