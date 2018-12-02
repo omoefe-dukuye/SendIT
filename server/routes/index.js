@@ -7,14 +7,14 @@ import checkDest from '../middleware/validators/changeDestination';
 import checkLoc from '../middleware/validators/changeLocation';
 import checkUser from '../middleware/validators/createUser';
 import checkStatus from '../middleware/validators/changeStatus';
-import addDistance from '../middleware/addDistance';
+import AddDistance from '../middleware/AddDistance';
 import addPrice from '../middleware/addPrice';
 
 const router = Router();
 
 // set endpoint callbacks to their respective methods
 
-router.post('/api/v1/parcels', verifyToken, ...checkOrder, addDistance.forCreatedOrder, addPrice, ParcelController.createOrder); // create order
+router.post('/api/v1/parcels', verifyToken, ...checkOrder, AddDistance.forCreatedOrder, addPrice, ParcelController.createOrder); // create order
 router.get('/api/v1/parcels', verifyToken, ParcelController.fetchAllOrdersForUser); // fetch all orders
 router.get('/api/v1/parcels/:parcelId', verifyToken, ParcelController.fetchParcelById); // fetch specific order
 router.patch('/api/v1/parcels/:parcelId/cancel', verifyToken, ParcelController.cancelOrder); // cancel order
@@ -23,8 +23,8 @@ router.post('/api/v1/auth/signup', checkUser, UserController.createUser); // sig
 router.patch('/api/v1/:userId/admin', UserController.createAdmin);
 router.post('/api/v1/auth/login', UserController.loginUser);
 router.get('/api/v1/admin/parcels/', verifyToken, ParcelController.fetchAllOrdersInApp);
-router.patch('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, addDistance.forDestinationChange, addPrice, ParcelController.changeDestination);
-router.patch('/api/v1/parcels/:parcelId/currentlocation', verifyToken, ...checkLoc, addDistance.forLocationChange, ParcelController.changeLocation);
+router.patch('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, AddDistance.forDestinationChange, addPrice, ParcelController.changeDestination);
+router.patch('/api/v1/parcels/:parcelId/currentlocation', verifyToken, ...checkLoc, AddDistance.forLocationChange, ParcelController.changeLocation);
 router.patch('/api/v1/parcels/:parcelId/status', verifyToken, checkStatus, ParcelController.changeOrderStatus);
 
 export default router;
