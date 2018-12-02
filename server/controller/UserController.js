@@ -41,7 +41,10 @@ class UserController {
       const token = help.generateToken({
         id, userFirstName, userLastName, username, email, isAdmin,
       });
-      delete (user.password);
+      delete user.password;
+      if (user.other_names === null) {
+        delete user.other_names;
+      }
       return res.status(201).header('x-auth', token).json({
         status: 201,
         token,
@@ -122,6 +125,9 @@ class UserController {
       });
 
       delete (user.password);
+      if (user.other_names === null) {
+        delete user.other_names;
+      }
       return res.status(200).header('x-auth', token).json({
         status: 200,
         token,

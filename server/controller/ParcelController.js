@@ -123,7 +123,7 @@ class ParcelController {
         id,
         currentLocation,
         message: 'parcel location updated',
-        newDistance,
+        newDistance: `${newDistance} km`,
       });
     } catch (error) {
       res.status(500).json({ status: 500, error });
