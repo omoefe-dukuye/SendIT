@@ -1,6 +1,10 @@
 import 'babel-polyfill';
 import moment from 'moment';
 import db from '../config/dbconnect';
+import {
+  createOrder, updateToDelivered, selectByPlacedby, changeDestination,
+  changeLocation, selectAllParcels, updateStatus, selectByParcelId, selectByPlacedbyAndId,
+} from '../utility/queries';
 
 /** Class representing parcel delivery order route methods */
 class ParcelController {
@@ -14,34 +18,12 @@ class ParcelController {
       const {
         weight, location, destination, distance, price,
       } = req.body;
-
       const placedBy = req.user;
 
-      const query = `INSERT INTO
-        parcels(
-          placed_by,
-          weight,
-          sent_on,
-          pickup_location,
-          current_location,
-          destination,
-          distance,
-          price
-        ) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING *`;
+      const values = [placedBy, weight, moment().format('MMMM Do YYYY, h:mm:ss a'),
+        location, location, destination, distance, price];
 
-      const values = [
-        placedBy,
-        weight,
-        moment().format('MMMM Do YYYY, h:mm:ss a'),
-        location,
-        location,
-        destination,
-        distance,
-        price,
-      ];
-
-      const { rows: [parcel] } = await db(query, values);
+      const { rows: [parcel] } = await db(createOrder, values);
 
       delete parcel.placed_by;
       delete parcel.weight_metric;
@@ -50,11 +32,7 @@ class ParcelController {
       parcel.distance = `${parcel.distance} km`;
       parcel.weight = `${parcel.weight} kg`;
 
-      return res.status(201).json({
-        status: 201,
-        message: 'order created',
-        parcel,
-      });
+      return res.status(201).json({ status: 201, message: 'order created', parcel });
     } catch (error) {
       res.status(500).json({ status: 500, error });
     }
@@ -67,8 +45,7 @@ class ParcelController {
    */
   static async fetchAllOrdersForUser(req, res) {
     try {
-      const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-      const { rows: orders, rowCount: count } = await db(query, [req.user]);
+      const { rows: orders, rowCount: count } = await db(selectByPlacedby, [req.user]);
       return res.status(200).json({ status: 200, count, orders });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -83,21 +60,14 @@ class ParcelController {
   static async changeDestination(req, res) {
     try {
       const {
-        destination: newDestination, distance: newDistance, price: additionalPrice
-      } = req.body;
-      const id = req.params.parcelId;
-      const update = `UPDATE parcels
-        SET destination=$1, distance=$2
-        WHERE id=$3`;
-      await db(update, [newDestination, newDistance, id]);
-      const formatted = `${newDistance} km`;
+        params: { parcelId: id },
+        body: { destination: newDestination, distance, price: additionalPrice }
+      } = req;
+      await db(changeDestination, [newDestination, distance, id]);
+      const newDistance = `${distance} km`;
+      const message = 'parcel destination updated';
       return res.status(200).json({
-        status: 200,
-        id,
-        message: 'parcel destination updated',
-        newDestination,
-        newDistance: formatted,
-        additionalPrice,
+        status: 200, id, message, newDestination, newDistance, additionalPrice,
       });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -111,19 +81,15 @@ class ParcelController {
    */
   static async changeLocation(req, res) {
     try {
-      const id = req.params.parcelId;
-      const { distance: newDistance, location: currentLocation } = req.body;
-      const update = `UPDATE parcels
-        SET current_location=$1, distance=$2
-        WHERE id=$3
-        RETURNING *`;
-      await db(update, [currentLocation, newDistance, id]);
+      const {
+        params: { parcelId: id },
+        body: { distance, location: currentLocation }
+      } = req;
+      await db(changeLocation, [currentLocation, distance, id]);
+      const newDistance = `${distance} km`;
+      const message = 'parcel location updated';
       return res.status(200).json({
-        status: 200,
-        id,
-        currentLocation,
-        message: 'parcel location updated',
-        newDistance: `${newDistance} km`,
+        status: 200, id, currentLocation, message, newDistance,
       });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -140,9 +106,7 @@ class ParcelController {
       if (!req.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
-
-      const queryText = 'SELECT * FROM parcels';
-      const { rows: orders, rowCount: count } = await db(queryText);
+      const { rows: orders, rowCount: count } = await db(selectAllParcels);
       res.status(200).json({ status: 200, count, orders });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -159,39 +123,24 @@ class ParcelController {
       if (!req.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
-
-      const query = 'SELECT * FROM parcels WHERE id = $1';
-      const id = req.params.parcelId;
-      const { status } = req.body;
-      const { rows: [parcel], rows: [{ status: existingStatus }] } = await db(query, [id]);
+      const { body: { status: newStatus }, params: { parcelId: id } } = req;
+      const {
+        rows: [parcel], rows: [{ status: existingStatus }]
+      } = await db(selectByParcelId, [id]);
       const rejectIf = ['cancelled', 'delivered'];
       if (!parcel || rejectIf.includes(existingStatus)) {
         return res.status(409).json({ status: 409, error: 'invalid request' });
       }
 
-      let update;
-      let values;
+      const update = newStatus === 'delivered' ? updateToDelivered : updateStatus;
+      const values = newStatus === 'delivered'
+        ? [newStatus, id, moment().format('MMMM Do YYYY, h:mm:ss a')]
+        : [newStatus, id];
 
-      if (status === 'delivered') {
-        update = `UPDATE parcels
-          SET status=$1, delivered_on=$3
-          WHERE id=$2`;
-        values = [
-          status,
-          id,
-          moment().format('MMMM Do YYYY, h:mm:ss a'),
-        ];
-      } else {
-        update = `UPDATE parcels
-          SET status=$1 WHERE id=$2`;
-        values = [status, id];
-      }
+      const message = 'parcel status changed';
       await db(update, values);
       return res.status(200).json({
-        status: 200,
-        id,
-        newStatus: status,
-        message: 'parcel status changed',
+        status: 200, id, newStatus, message,
       });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -205,13 +154,11 @@ class ParcelController {
    */
   static async fetchParcelById(req, res) {
     try {
-      const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
-      const { parcelId } = req.params;
-      const id = req.user;
-      const { rows } = await db(query, [id, parcelId]);
-      if (rows[0]) {
-        delete (rows[0].placed_by);
-        return res.status(200).json({ status: 200, order: rows[0] });
+      const { params: { parcelId }, user: id } = req;
+      const { rows: [parcel] } = await db(selectByPlacedbyAndId, [id, parcelId]);
+      if (parcel) {
+        delete (parcel.placed_by);
+        return res.status(200).json({ status: 200, parcel });
       }
       return res.status(404).json({ status: 404, error: 'invalid ID' });
     } catch (error) {
@@ -226,18 +173,15 @@ class ParcelController {
    */
   static async cancelOrder(req, res) {
     try {
-      const query = 'SELECT * FROM parcels WHERE placed_by = $1 AND id = $2';
-      const { parcelId } = req.params;
-      const id = req.user;
-      const { rows } = await db(query, [id, parcelId]);
-      if (!rows[0]) {
+      const { params: { parcelId }, user: id } = req;
+      const { rows: [parcel] } = await db(selectByPlacedbyAndId, [id, parcelId]);
+      if (!parcel) {
         return res.status(404).json({ status: 404, error: 'invalid ID' });
       }
-      if (rows[0].status === 'delivered') {
+      if (parcel.status === 'delivered') {
         return res.status(409).json({ status: 409, error: 'already delivered' });
       }
-      const update = 'UPDATE parcels SET status=$1 WHERE id=$2';
-      await db(update, ['cancelled', parcelId]);
+      await db(updateStatus, ['cancelled', parcelId]);
       return res.status(200).send({ status: 200, parcelId, message: 'order cancelled' });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -255,8 +199,7 @@ class ParcelController {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
       const { userId } = req.params;
-      const query = 'SELECT * FROM parcels WHERE placed_by = $1';
-      const { rows: orders, rowCount: count } = await db(query, [userId]);
+      const { rows: orders, rowCount: count } = await db(selectByPlacedby, [userId]);
       if (orders[0]) {
         return res.status(200).json({ status: 200, count, orders });
       }
