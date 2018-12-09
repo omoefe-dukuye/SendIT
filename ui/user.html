@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="css/table.css">
 </head>
 <body>
-  <header class="header_footer">
+  <header class="header_footer header">
     <div class="logo_wrapper">
       <a  class="header_link logo shadow" href="index.html">
         <h1 class="inline">SendIT</h1>
@@ -26,7 +26,7 @@
     <div class="link_wrapper">
       <ul>
         <li class="inline">
-          <a class="header_link shadow see_profile" href="#">Omoefe <i class="far fa-user"></i></a>
+          <a class="header_link shadow see_profile" href="#"><span></span><i class="far fa-user"></i></a>
         </li>
         <li class="inline">
           <a class="header_link shadow" href="index.html">Log out</a>
@@ -51,129 +51,68 @@
           <a class="nav" href="#">Cancel</a>
         </li>
         <li>
-          <a class="nav" href="#">All</a>
+          <a class="nav" id="getAll" href="#">All</a>
         </li>
       </ul>
     </nav>
+    <div></div>
     <section class="doc">
-      <form class="" action="index.html" method="post">
-        <label for="pickup">Pickup Location:</label>
-        <input id="pickup" type="text" name="" value="">
+      <form class="createOrder">
+        <label for="location">Pickup Location:</label>
+        <input id="location" type="text" name="location" value="">
         <label for="destination">Destination</label>
-        <input id="destination" type="text" name="" value="">
-        <label for="content">Parcel Description:</label>
-        <input id="content" type="text" name="" value="">
-        <input type="submit" name="" value="Create Order">
+        <input id="destination" type="text" name="destination">
+        <label for="weight">Weight (in KG):</label>
+        <input id="weight" type="number" name="weight">
+        <input class="createOrderButton" type="submit" name="" value="Create Order">
       </form>
     </section>
     <section class="doc no_display">
-      <form class="" action="index.html" method="post">
+      <form class="changeDest">
         <label for="id">Parcel ID:</label>
-        <input id="id" type="text" name="" value="">
+        <input id="id" type="number" name="id">
         <label for="destination">New Destination</label>
-        <input id="destination" type="text" name="" value="">
-        <input type="submit" name="" value="Change">
+        <input id="destination" type="text" name="destination">
+        <input class="changeDestButton" type="submit" value="Change">
       </form>
     </section>
     <section class="doc no_display">
-      <form class="" action="index.html" method="post">
-        <label for="id">Parcel ID</label>
-        <input id="id "type="text" name="" value="">
-        <input type="submit" name="" value="Get Details">
-      </form>
-      <div class="results">
-
+      <div>
+        <form class="FetchById">
+          <label for="id">Parcel ID</label>
+          <input id="id "type="number" name="id">
+          <input type="submit" value="Get Details">
+        </form>
+        <div class="results">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam ducimus porro neque maxime ipsam numquam! Excepturi facere voluptatum eius expedita optio aperiam minima deleniti tenetur qui. Labore quos beatae libero.</p>
+        </div>
       </div>
     </section>
     <section class="doc no_display">
-      <form class="" action="index.html" method="post">
+      <form class="cancel">
         <label for="id">Parcel ID</label>
-        <input id="id "type="text" name="" value="">
-        <input type="submit" name="" value="Cancel">
+        <input id="id "type="number" name="id">
+        <input type="submit" value="Cancel">
       </form>
-      <div class="results">
-
-      </div>
     </section>
 
     <section class="doc no_display">
       <div class="table_results">
-        <ol class="parcels">
-          <li>
-            <table>
-              <tr>
-                <th>ID</th><td>6e4h5544h4</td>
-              </tr>
-              <tr>
-                <th>Description</th><td>1 Mackbook pro</td>
-              </tr>
-              <tr>
-                <th>Destination</th><td>Long Island, New York</td>
-              </tr>
-              <tr>
-                <th>Status</th><td class="delivered">Delivered</td>
-              </tr>
-            </table>
-          </li>
-          <li>
-            <table>
-              <tr>
-                <th>ID</th><td>6e4h5544h4</td>
-              </tr>
-              <tr>
-                <th>Description</th><td>1 Mackbook pro</td>
-              </tr>
-              <tr>
-                <th>Destination</th><td>Long Island, New York</td>
-              </tr>
-              <tr>
-                <th>Status</th><td>Delivered</td>
-              </tr>
-            </table>
-          </li>
-          <li>
-            <table>
-              <tr>
-                <th>ID</th><td>6e4h5544h4</td>
-              </tr>
-              <tr>
-                <th>Description</th><td>1 Mackbook pro</td>
-              </tr>
-              <tr>
-                <th>Destination</th><td>Long Island, New York</td>
-              </tr>
-              <tr>
-                <th>Status</th><td>Delivered</td>
-              </tr>
-            </table>
-          </li>
-          <li>
-            <table>
-              <tr>
-                <th>ID</th><td>6e4h5544h4</td>
-              </tr>
-              <tr>
-                <th>Description</th><td>1 Mackbook pro</td>
-              </tr>
-              <tr>
-                <th>Destination</th><td>Long Island, New York</td>
-              </tr>
-              <tr>
-                <th>Status</th><td>Delivered</td>
-              </tr>
-            </table>
-          </li>
-        </ol>
+        <ol class="parcels"></ol>
       </div>
     </section>
-    <section class="profile_wrapper no_display">
-      <div class="profile">
-        <button class="profile_close">X</button>
-        <h3>Hello Omoefe!</h3>
-        <p>Parcels en route: 3</p>
-        <p>Parcels delivered: 14</p>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
       </div>
-    </section>
+    </div>
+
+    <div class="loaderBg">
+      <div class="loader">
+      </div>
+    </div>
   </main>
   <footer class="header_footer">
     <div class="shadow">
@@ -185,7 +124,8 @@
     </div>
   </footer>
   <script src="js/main.js">
-
+  </script>
+  <script src="js/user.js">
   </script>
 </body>
 </html>

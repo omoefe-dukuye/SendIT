@@ -14,8 +14,10 @@ const isAddress = (address, callback) => {
     json: true,
   },
   (error, response, body) => {
-    if (body.status !== 'OK') {
-      callback(undefined, 'Invalid location');
+    if (error) {
+      callback(undefined, 1);
+    } else if (body.status !== 'OK') {
+      callback(undefined, 2);
     } else {
       const { location } = body.results[0].geometry;
 

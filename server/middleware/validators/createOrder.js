@@ -37,22 +37,36 @@ class check {
    */
   static general(req, res, next) {
     const { location, destination } = req.body;
+    req.body.weight = req.body.weight.trim();
+    const { weight } = req.body;
     if (!isValid(location).valid) {
       return res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(destination).reason, 'location'),
+        error: errorSelector(isValid(location).reason, 'location'),
       });
     }
     if (!isValid(destination).valid) {
       return res.status(400).json({
         status: 400,
-        message: errorSelector(isValid(destination).reason, 'destination'),
+        error: errorSelector(isValid(destination).reason, 'destination'),
       });
     }
-    if (Number.isNaN(Number(req.body.weight))) {
+    if (weight.length < 1) {
       return res.status(400).json({
         status: 400,
-        message: 'Use numbers for weight',
+        error: 'Please add weight.',
+      });
+    }
+    if (Number.isNaN(Number(weight))) {
+      return res.status(400).json({
+        status: 400,
+        error: 'Use numbers for weight.',
+      });
+    }
+    if (weight <= 0) {
+      return res.status(400).json({
+        status: 400,
+        error: 'Weight cannot be zero or less.',
       });
     }
     next();
@@ -66,15 +80,18 @@ class check {
    */
   static location(req, res, next) {
     const { location } = req.body;
-    isAddress(location, (address, error, coords) => {
+    isAddress(location, (address, errorMessage, coords) => {
       if (address) {
         req.body.location = address;
         req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
+        const error = errorMessage === 1
+          ? 'Network error, Please check your connection'
+          : 'The address for your pickup location doesn\'t seem to exist, Please crosscheck';
         return res.status(400).json({
           status: 400,
-          message: error,
+          error,
         });
       }
     });
@@ -88,15 +105,18 @@ class check {
    */
   static destination(req, res, next) {
     const { destination } = req.body;
-    isAddress(destination, (address, error, coords) => {
+    isAddress(destination, (address, errorMessage, coords) => {
       if (address) {
         req.body.destination = address;
         req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };
         next();
       } else {
+        const error = errorMessage === 1
+          ? 'Network error, Please check your connection'
+          : 'The address for your destination doesn\'t seem to exist, Please crosscheck';
         return res.status(400).json({
           status: 400,
-          message: error,
+          error,
         });
       }
     });

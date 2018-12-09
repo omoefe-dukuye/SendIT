@@ -7,8 +7,8 @@ html {
 
 body {
   background-image: url(../images/parcel.jpg);
+  background-attachment: fixed;
   background-size: cover;
-  background-repeat: no-repeat;
   font: 1.5rem/1.5 'Hind Madurai', sans-serif;
   color: white;
   height: 100%;

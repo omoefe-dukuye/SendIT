@@ -325,7 +325,7 @@ describe('Parcel routes', () => {
         .patch('/api/v1/parcels/1/currentlocation')
         .set('x-auth', adminToken)
         .send({ location: 'manchester city, london' });
-      res.should.have.status(404);
+      res.should.have.status(409);
     });
 
     it('Should not change destination for cancelled order', async () => {
@@ -333,7 +333,7 @@ describe('Parcel routes', () => {
         .patch('/api/v1/parcels/1/destination')
         .set('x-auth', user2Token)
         .send({ destination: 'leicester city, london' });
-      res.should.have.status(404);
+      res.should.have.status(409);
     });
   });
 });

@@ -176,10 +176,10 @@ class ParcelController {
       const { params: { parcelId }, user: id } = req;
       const { rows: [parcel] } = await db(selectByPlacedbyAndId, [id, parcelId]);
       if (!parcel) {
-        return res.status(404).json({ status: 404, error: 'invalid ID' });
+        return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, Please crosscheck.' });
       }
       if (parcel.status === 'delivered') {
-        return res.status(409).json({ status: 409, error: 'already delivered' });
+        return res.status(409).json({ status: 409, error: 'That parcel has already been delivered' });
       }
       await db(updateStatus, ['cancelled', parcelId]);
       return res.status(200).send({ status: 200, parcelId, message: 'order cancelled' });

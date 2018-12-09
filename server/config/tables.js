@@ -31,15 +31,13 @@ const createParcelTable = () => {
       FOREIGN KEY (placed_by) REFERENCES users (id) ON DELETE CASCADE
     )`;
 
-  pool.query(queryText)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
+  pool.query(queryText).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 };
 
 const createUserTable = () => {
@@ -56,15 +54,13 @@ const createUserTable = () => {
       is_admin BOOLEAN DEFAULT 'no'
       )`;
 
-  pool.query(queryText)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
+  pool.query(queryText).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 };
 
 

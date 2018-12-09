@@ -23,7 +23,7 @@ form {
   }
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="number"], input[type="email"] {
   display: block;
   border: none;
   border-bottom: 1px solid #bbb;
@@ -39,13 +39,14 @@ input[type="text"], input[type="password"] {
   font-weight: bold;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, input[type="email"]:focus {
   border-color: #90f;
 }
 
 input[type="submit"] {
   background-color: rgba(153, 0, 255, 0.1);
   color: white;
+  cursor: pointer;
   width: 50%;
   height: 3rem;
   border: 1px solid #90f;

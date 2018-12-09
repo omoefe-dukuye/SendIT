@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/form.css">
 </head>
 <body>
-  <header class="header_footer">
+  <header class="header_footer header">
     <div class="logo_wrapper">
       <a  class="header_link logo shadow" href="index.html">
         <h1 class="inline">SendIT</h1>
@@ -38,18 +38,24 @@
     <section>
       <form class="form" action="index.html" method="post">
         <label for="firstname">First Name:</label>
-        <input id="firstname" type="text" name="" value="">
+        <input id="firstname" type="text" name="firstname">
+
         <label for="lastname">Last Name:</label>
-        <input id="lastname" type="text" name="" value="">
+        <input id="lastname" type="text" name="lastname">
+
         <label for="email">Email Address</label>
-        <input id="email" type="text" name="" value="">
+        <input id="email" type="email" name="email">
+
         <label for="username">Username:</label>
-        <input id="username" type="text" name="" value="">
+        <input id="username" type="text" name="username">
+
         <label for="password">Password:</label>
-        <input id="password" type="password" name="" value="">
+        <input id="password" type="password" name="password">
+
         <label for="confirm_password">Confirm password:</label>
-        <input id="confirm_password" type="password" name="" value="">
-        <input type="submit" name="" value="Sign Up">
+        <input id="confirm_password" type="password">
+        
+        <input type="submit" value="Sign Up">
       </form>
     </section>
   </main>
@@ -62,5 +68,6 @@
       </ul>
     </div>
   </footer>
+  <script src='js/signup.js'></script>
 </body>
 </html>
