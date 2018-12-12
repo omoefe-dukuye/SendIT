@@ -12,6 +12,6 @@ export default async (req, res, next) => {
     req.user = id;
     return next();
   } catch (error) {
-    return res.status(400).json({ status: 400, error, });
+    return res.status(400).json({ status: 400, error });
   }
 };

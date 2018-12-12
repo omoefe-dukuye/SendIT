@@ -27,9 +27,9 @@ input[type="text"], input[type="password"], input[type="number"], input[type="em
   display: block;
   border: none;
   border-bottom: 1px solid #bbb;
-  background-color: transparent !important;
+  background-color: transparent ;
   font-size: 1.5rem;
-  color: white !important;
+  color: white ;
   height: 2rem;
   margin-top: 1rem;
   padding: 4px 1rem;
@@ -57,4 +57,20 @@ input[type="submit"] {
 input[type="submit"]:hover {
 background-color: rgba(153, 0, 255, 0.5);
 color: #fff;
+}
+
+input.red, input.red:focus {
+  border-bottom-color: red;
+}
+
+@-webkit-keyframes autofill {
+  to {
+      color: white;
+      background: transparent;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
 }

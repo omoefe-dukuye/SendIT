@@ -39,11 +39,11 @@ const isAddress = (address, callback) => {
    */
 const isValid = (string) => {
   const str = string.trim();
-  if (!/^[a-zA-Z0-9,. ]*$/.test(str)) {
+  if (!/^[a-zA-Z0-9]+[a-zA-Z0-9,. ]*$/.test(str)) {
     return { valid: false, reason: 'illegal' };
   }
 
-  if (str.length < 10 || str.length > 30) {
+  if (str.length < 10 || str.length > 60) {
     return { valid: false, reason: 'short' };
   }
 
@@ -52,8 +52,8 @@ const isValid = (string) => {
 
 const errorSelector = (reason, property) => {
   const msg = reason === 'illegal'
-    ? `please use letters and numbers for your ${property}`
-    : `please enter a ${property} between 10 and 30 characters`;
+    ? `Please use letters and numbers for your ${property}.`
+    : `Please enter a ${property} between 10 and 30 characters.`;
   return msg;
 };
 

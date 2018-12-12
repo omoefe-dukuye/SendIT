@@ -36,41 +36,128 @@
 
   <main>
     <section>
-      <form class="form" action="index.html" method="post">
+      <form class="form">
         <label for="firstname">First Name:</label>
-        <input id="firstname" type="text" name="firstname" pattern="[a-zA-Z]{0,15}'?[a-zA-Z]{0,15}"
-        title="John" required autofocus>
+        <input id="firstname" type="text" maxlength="30" name="firstname" pattern="[a-zA-Z]+'?[a-zA-Z]+"
+        title="John" onblur="checkName(this)" required autofocus>
 
         <label for="lastname">Last Name:</label>
-        <input id="lastname" type="text" name="lastname" pattern="[a-zA-Z]{0,15}'?[a-zA-Z]{0,15}"
-        title="Doe" required>
+        <input id="lastname" type="text" maxlength="30" name="lastname" pattern="[a-zA-Z]+'?[a-zA-Z]+"
+        title="Doe" onblur="checkName(this)" required>
+        <script>
+          function checkName(input) {
+            if (!/^[a-zA-Z]+'?[a-zA-Z]+$/.test(input.value)) {
+              input.classList.add('red', 'checkNameOnInput');
+              input.removeAttribute('onblur');
+              input.setAttribute('oninput', 'CheckNameOnInput(this)');
+            }
+          }
+          function CheckNameOnInput(input) {
+            if (/^[a-zA-Z]+'?[a-zA-Z]+$/.test(input.value)) {
+              input.classList.remove('red');
+            } else {
+              input.classList.add('red');
+            }
+          }
+        </script>
 
         <label for="email">Email Address</label>
-        <input id="email" type="email" name="email" pattern="[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}\.[a-zA-Z0-9]{1,10}"
-        title="example@example.com" required>
+        <input id="email" type="email" name="email" pattern="[a-zA-Z0-9.]{3,30}@[a-zA-Z0-9]{3,30}\.[a-zA-Z0-9]{1,10}"
+        title="example@example.com" oninput="confirmEmailUnique(this)" onblur="checkEmail(this)" required>
+        <script>
+          async function confirmEmailUnique(input) {
+            try {
+              const res = await fetch(`/api/v1/users/checkEmail/${input.value}`, { method: 'GET' });
+              const body = await res.json();
+              if (res.status === 409) {
+                input.setCustomValidity(body.error);
+                input.classList.add('red');
+              } else {
+                input.setCustomValidity('');
+                input.classList.remove('red');
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          function checkEmail(input) {
+            if (!/^[a-zA-Z0-9.]{3,30}@[a-zA-Z0-9]{3,30}\.[a-zA-Z0-9]{1,10}$/.test(input.value)) {
+              input.classList.add('red');
+            } else {
+              confirmEmailUnique(input);
+            }
+          }
+      </script>
 
         <label for="username">Username:</label>
-        <input id="username" type="text" name="username" pattern="[a-zA-Z]{2,15}[a-zA-Z0-9]{0,5}"
-        title="john123" required>
+        <input id="username" type="text" maxlength="20" name="username" pattern="[a-zA-Z]{2,15}[a-zA-Z0-9]{0,5}"
+        title="john123" oninput="usernameIsUnique(this)" onblur="usernameIsValid(this)" required>
+        <script>
+          async function usernameIsUnique(input) {
+            try {
+              const res = await fetch(`/api/v1/users/checkUsername/${input.value}`, { method: 'GET' });
+              const body = await res.json();
+              if (res.status === 409) {
+                input.setCustomValidity(body.error);
+                input.classList.add('red');
+              } else {
+                input.setCustomValidity('');
+                input.classList.remove('red');
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+
+          function usernameIsValid(input) {
+            if (!/^[a-zA-Z]{2,15}[a-zA-Z0-9]{0,5}$/.test(input.value)) {
+              input.classList.add('red');
+            } else {
+              usernameIsUnique(input);
+            }
+          }
+      </script>
 
         <label for="password">Password:</label>
-        <input id="password" type="password" name="password" pattern="[\S]{5,20}"
-        title="Between 5 and 20 characters, no spaces allowed" required>
-
-        <label for="confirm_password">Confirm password:</label>
-        <input id="confirm_password" type="password" oninput="check(this)">
+        <input id="password" type="password" name="password" pattern=".{5,20}" maxlength="20"
+        title="Between 5 and 20 characters." onblur="checkPassword(this)" required>
         <script>
-            function check(input) {
-                if (input.value != document.getElementById('password').value) {
-                    input.setCustomValidity('Password don\'t match, please crosscheck.');
-                } else {
-                    input.setCustomValidity('');
-                }
+          function checkPassword(input) {
+            if (!/^.{5,20}$/.test(input.value)) {
+              input.classList.add('red');
+            } else {
+              input.classList.remove('red');
             }
+          }
         </script>
-        <input type="submit" value="Sign Up">
+        <label for="confirm_password">Confirm password:</label>
+        <input id="confirm_password" type="password" oninput="confirmPassword(this)" required>
+        <script>
+          function confirmPassword(input) {
+            if (input.value != document.getElementById('password').value) {
+              input.setCustomValidity('Passwords don\'t match, please crosscheck.');
+              input.classList.add('red');
+            } else {
+              input.setCustomValidity('');
+              input.classList.remove('red');
+            }
+          }
+        </script>
+        <input class="submit" type="submit" value="Sign Up">
       </form>
     </section>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
+      </div>
+    </div>
+
+    <div class="loaderBg">
+      <div class="loader">
+      </div>
+    </div>
   </main>
   <footer class="header_footer">
     <div class="shadow">
@@ -81,6 +168,6 @@
       </ul>
     </div>
   </footer>
-  <script src='js/signup.js'></script>
+  <script type="module" src='js/signup.js'></script>
 </body>
 </html>

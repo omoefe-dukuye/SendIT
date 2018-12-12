@@ -37,13 +37,26 @@
         <section>
           <form class = "form" action="index.html" method="post">
             <label for="username">Username</label>
-            <input id="username" type="text" name="username">
+            <input id="username" type="text" name="username" pattern="[a-zA-Z]{2,15}[a-zA-Z0-9]{0,5}"
+            title="john123" required autofocus>
             <label for="password">Password</label>
-            <input id="password" type="password" name="password">
+            <input id="password" type="password" name="password" pattern="[\S]{5,20}"
+            title="Between 5 and 20 characters, no spaces allowed" required>
             <input class="submit" type="submit" value="Log in">
           </form>
           <p>Don't have an account? <a href="signup.html">Sign up</a></p>
         </section>
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
+          </div>
+        </div>
+    
+        <div class="loaderBg">
+          <div class="loader">
+          </div>
+        </div>
       </main>
       <footer class="header_footer">
         <div class="shadow">
@@ -54,6 +67,6 @@
           </ul>
         </div>
       </footer>
-      <script src='js/login.js'></script>
+      <script type="module" src='js/login.js'></script>
   </body>
 </html>
