@@ -75,6 +75,10 @@ footer {
   margin: 0;
 }
 
+header ul {
+  padding-left: 0;
+}
+
 header li {
   margin: 1rem;
   padding: 0.2rem 0.2rem;
@@ -99,9 +103,8 @@ header li {
     text-align: center;
   }
 
-  .slogan_line2 {
-    display: block;
-    text-align: right;
+  .slogan {
+    font-size: 0.9rem;
   }
 }
 
