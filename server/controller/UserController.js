@@ -41,6 +41,40 @@ class UserController {
   }
 
   /**
+   * Check if email is already in use, for dynamic form validation
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
+  static async checkEmail(req, res) {
+    const { email } = req.params;
+    try {
+      const query = 'SELECT * FROM users WHERE email = $1';
+      const { rows: [Alreadyexists] } = await db(query, [email]);
+      if (Alreadyexists) {
+        return res.status(409).json({ status: 409, error: 'An account already exists with that email.' });
+      }
+      res.status(200).json({ status: 'ok' });
+    } catch (error) { res.status(500).json({ status: 500, error }); }
+  }
+
+  /**
+   * Check if username is already in use, for dynamic form validation
+   * @param {object} req the request object.
+   * @param {object} res the response object.
+   */
+  static async checkUsername(req, res) {
+    const { username } = req.params;
+    try {
+      const query = 'SELECT * FROM users WHERE username = $1';
+      const { rows: [Alreadyexists] } = await db(query, [username]);
+      if (Alreadyexists) {
+        return res.status(409).json({ status: 409, error: 'Oops, already taken. Try something else' });
+      }
+      res.status(200).json({ status: 'ok' });
+    } catch (error) { res.status(500).json({ status: 500, error }); }
+  }
+
+  /**
    * Upgrade a user to admin.
    * @param {object} req the request object.
    * @param {object} res the response object.
@@ -49,12 +83,12 @@ class UserController {
     const { params: { userId: id }, body: { password } } = req;
     const { ADMIN_PASS: adminPass } = process.env;
     if (password !== adminPass) {
-      return res.status(401).json({ status: 401, error: 'Invalid admin key' });
+      return res.status(401).json({ status: 401, error: 'Invalid admin key.' });
     }
     try {
       const { rows } = await db(selectById, [id]);
       if (!rows[0]) {
-        return res.status(400).json({ status: 400, message: 'Invalid id' });
+        return res.status(400).json({ status: 400, error: 'No users with that ID.' });
       }
       await db(upgradeToAdmin, ['yes', id]);
       return res.status(200).json({
@@ -81,7 +115,7 @@ class UserController {
         }]
       } = await db(selectByUsername, [username]);
       if (!user || !help.comparePassword(existingPassword, suppliedPassword)) {
-        return res.status(404).json({ error: 404, message: 'invalid credentials' });
+        return res.status(404).json({ status: 404, error: 'Invalid credentials, please crosscheck.' });
       }
       const token = help.generateToken({
         id, userFirstName, userLastName, username, email, isAdmin,
@@ -92,7 +126,7 @@ class UserController {
       }
       return res.status(200).header('x-auth', token).json({ status: 200, token, user });
     } catch (error) {
-      res.status(404).json({ status: 404, message: 'invalid credentials' });
+      res.status(404).json({ status: 404, error: 'Invalid credentials, please crosscheck.' });
     }
   }
 }

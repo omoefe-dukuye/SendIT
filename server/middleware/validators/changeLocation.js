@@ -15,7 +15,7 @@ class check {
     const { location } = req.body;
     return location
       ? next()
-      : res.status(400).send({ error: 'Please fill the new location.' });
+      : res.status(400).json({ error: 'Please fill the new location.' });
   }
 
   /**
@@ -29,9 +29,9 @@ class check {
   static general(req, res, next) {
     const { location } = req.body;
     if (!isValid(location).valid) {
-      return res.status(400).send(
-        errorSelector(isValid(location).reason, 'destination'),
-      );
+      return res.status(400).json({
+        error: errorSelector(isValid(location).reason, 'destination'),
+      });
     }
     return next();
   }

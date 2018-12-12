@@ -1,5 +1,7 @@
 const nav = document.querySelectorAll('.nav');
 const doc = document.querySelectorAll('.doc');
+const focus = document.querySelectorAll('.focus');
+
 const headerLink1 = document.querySelector('.header_link1');
 const headerLink2 = document.querySelector('.header_link2');
 
@@ -9,6 +11,7 @@ for (let i = 0; i < nav.length; i += 1) {
   nav[i].addEventListener('click', (e) => {
     e.target.setAttribute('class', 'nav active'); // on click add to 'active' class, show content
     doc[i].setAttribute('class', 'doc');
+    if (i < 4) focus[i].focus();
     for (let j = 0; j < nav.length; j += 1) {
       // remove 'active' class from non-active tags, hide content
       if (nav[j] !== e.target) {

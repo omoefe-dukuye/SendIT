@@ -124,12 +124,15 @@ class ParcelController {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
       const { body: { status: newStatus }, params: { parcelId: id } } = req;
-      const {
-        rows: [parcel], rows: [{ status: existingStatus }]
-      } = await db(selectByParcelId, [id]);
+      const { rows: [parcel] } = await db(selectByParcelId, [id]);
+      if (!parcel) {
+        return res.status(400).json({ status: 400, error: 'No parcels match that ID, please crosscheck.' });
+      }
+
+      const { status: existingStatus } = parcel;
       const rejectIf = ['cancelled', 'delivered'];
-      if (!parcel || rejectIf.includes(existingStatus)) {
-        return res.status(409).json({ status: 409, error: 'invalid request' });
+      if (rejectIf.includes(existingStatus)) {
+        return res.status(409).json({ status: 409, error: `That parcel has already been ${existingStatus}` });
       }
 
       const update = newStatus === 'delivered' ? updateToDelivered : updateStatus;
@@ -160,7 +163,7 @@ class ParcelController {
         delete (parcel.placed_by);
         return res.status(200).json({ status: 200, parcel });
       }
-      return res.status(404).json({ status: 404, error: 'invalid ID' });
+      return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, please crosscheck.' });
     } catch (error) {
       res.status(500).json({ status: 500, error });
     }

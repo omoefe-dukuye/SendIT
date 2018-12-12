@@ -26,5 +26,8 @@ router.get('/api/v1/admin/parcels/', verifyToken, ParcelController.fetchAllOrder
 router.patch('/api/v1/parcels/:parcelId/destination', verifyToken, ...checkDest, AddDistance.forDestinationChange, addPrice, ParcelController.changeDestination);
 router.patch('/api/v1/parcels/:parcelId/currentlocation', verifyToken, ...checkLoc, AddDistance.forLocationChange, ParcelController.changeLocation);
 router.patch('/api/v1/parcels/:parcelId/status', verifyToken, checkStatus, ParcelController.changeOrderStatus);
+router.get('/api/v1/users/checkEmail/:email', UserController.checkEmail);
+router.get('/api/v1/users/checkUsername/:username', UserController.checkUsername);
+
 
 export default router;

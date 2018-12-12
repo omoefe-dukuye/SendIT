@@ -65,28 +65,31 @@
     <section class="doc">
       <form class="createOrder">
         <label for="location">Pickup Location:</label>
-        <input id="location" type="text" name="location" value="">
+        <input id="location" class="focus" type="text" name="location" maxlength="30"
+        pattern="[0-9]+[a-zA-Z0-9,. ]+" title="235 Ikorodu road, Lagos" required autofocus>
         <label for="destination">Destination</label>
-        <input id="destination" type="text" name="destination">
+        <input id="destination" type="text" name="destination" maxlength="60"
+        pattern="[0-9]+[a-zA-Z0-9,. ]*" title="235 Ikorodu road, Lagos" required>
         <label for="weight">Weight (in KG):</label>
-        <input id="weight" type="number" step="0.01" name="weight">
+        <input id="weight" type="number" step="0.01" name="weight" required>
         <input class="createOrderButton" type="submit" name="" value="Create Order">
       </form>
     </section>
     <section class="doc no_display">
       <form class="changeDest">
-        <label for="id">Parcel ID:</label>
-        <input id="id" type="number" step="0.01" name="id">
+        <label for="idDest">Parcel ID:</label>
+        <input id="idDest" class="focus" type="number" name="id" required>
         <label for="destination">New Destination</label>
-        <input id="destination" type="text" name="destination">
+        <input id="destination" type="text" name="destination" maxlength="60"
+        pattern="[0-9]+[a-zA-Z0-9,. ]+" title="235 Ikorodu road, Lagos" required>
         <input class="changeDestButton" type="submit" value="Change">
       </form>
     </section>
     <section class="doc no_display">
       <div>
         <form class="FetchById">
-          <label for="id">Parcel ID</label>
-          <input id="id "type="number" step="0.01" name="id">
+          <label for="idFetch">Parcel ID</label>
+          <input id="idFetch"  class="focus" type="number" name="id" required>
           <input type="submit" value="Get Details">
         </form>
         <div class="results">
@@ -96,8 +99,8 @@
     </section>
     <section class="doc no_display">
       <form class="cancel">
-        <label for="id">Parcel ID</label>
-        <input id="id "type="number" step="0.01" name="id">
+        <label for="idCancel">Parcel ID</label>
+        <input id="idCancel"  class="focus" type="number" name="id" required>
         <input type="submit" value="Cancel">
       </form>
     </section>
@@ -110,7 +113,7 @@
 
     <div id="myModal" class="modal">
       <div class="modal-content">
-        <span class="display_name" class="close">&times;</span>
+        <span class="close">&times;</span>
         <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
       </div>
     </div>
@@ -131,7 +134,7 @@
   </footer>
   <script src="js/main.js">
   </script>
-  <script src="js/user.js">
+  <script type="module" src="js/user.js">
   </script>
 </body>
 </html>

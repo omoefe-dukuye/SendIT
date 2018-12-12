@@ -28,56 +28,56 @@ export default async (req, res, next) => {
   if (!(firstName.length > 1 && firstName.length < 20)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use a first name between 2 and 20 characters',
+      error: 'Please use a first name between 2 and 20 characters',
     });
   }
   if (!/^[a-zA-Z']*$/.test(firstName)) {
     return res.status(400).json({
       status: 400,
-      message: 'Only letters and apostrophes are allowed for first name',
+      error: 'Only letters and apostrophes are allowed for first name',
     });
   }
   if (!(lastName.length > 1 && lastName.length < 20)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use a last name between 2 and 20 characters',
+      error: 'Please use a last name between 2 and 20 characters',
     });
   }
   if (!/^[a-zA-Z']*$/.test(lastName)) {
     return res.status(400).json({
       status: 400,
-      message: 'Only letters and apostrophes are allowed for last name',
+      error: 'Only letters and apostrophes are allowed for last name',
     });
   }
 
   if (!isEmail(email)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use a valid Email Address.',
+      error: 'Please use a valid Email Address.',
     });
   }
   if (!isAlphanumeric(username)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use letters and numbers for your username.',
+      error: 'Please use letters and numbers for your username.',
     });
   }
   if (!(username.length > 3 && username.length < 20)) {
     return res.status(400).json({
       status: 400,
-      message: 'Please use a username between 4 and 20 characters.',
+      error: 'Please use a username between 4 and 20 characters.',
     });
   }
   if (!(password.length > 4 && password.length < 20)) {
     return res.status(400).json({
       status: 400,
-      message: 'Password should be between 5 and 20 characters.',
+      error: 'Password should be between 5 and 20 characters.',
     });
   }
   if (password.indexOf(' ') > -1) {
     return res.status(400).json({
       status: 400,
-      message: 'No use of spaces in password.',
+      error: 'No use of spaces in password.',
     });
   }
   const text = 'SELECT * FROM users WHERE username = $1';

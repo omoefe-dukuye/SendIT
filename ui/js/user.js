@@ -1,39 +1,13 @@
-/* eslint-disable no-plusplus */
+/* eslint-disable-next-line import/extensions */
+import utility from './UtilityFunctions.js';
+
 const createOrder = document.querySelector('.createOrder');
 const changeDest = document.querySelector('.changeDest');
 const fetchById = document.querySelector('.fetchById');
 const cancelOrder = document.querySelector('.cancel');
 const getAll = document.querySelector('#getAll');
 const parcelList = document.querySelector('.parcels');
-const loader = document.querySelector('.loaderBg');
 const { token } = localStorage;
-
-const modalController = (content, color) => {
-  const modal = document.querySelector('#myModal');
-  const close = document.querySelector('.close');
-  const modalContent = document.querySelector('.modal-text');
-  const modalWrapper = document.querySelector('.modal-content');
-
-  modal.style.display = 'flex';
-  modalWrapper.style.boxShadow = `2px 2px 6px ${color}, -2px -2px 6px ${color}`;
-  close.onclick = () => {
-    modal.style.display = 'none';
-  };
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  };
-  modalContent.innerHTML = content;
-};
-
-const loaderStart = () => {
-  loader.style.display = 'flex';
-};
-
-const loaderStop = () => {
-  loader.style.display = 'none';
-};
 
 const orderCreationHandler = async ({
   location: { value: location }, destination: { value: destination }, weight: { value: weight }
@@ -41,7 +15,7 @@ const orderCreationHandler = async ({
   const json = JSON.stringify({ location, destination, weight });
   const createOrderButton = document.querySelector('.createOrderButton');
   createOrderButton.disabled = true;
-  loaderStart();
+  utility.loaderStart();
   try {
     const res = await fetch('/api/v1/parcels', {
       method: 'POST',
@@ -52,7 +26,7 @@ const orderCreationHandler = async ({
       body: json,
     });
     createOrderButton.disabled = false;
-    loaderStop();
+    utility.loaderStop();
     const body = await res.json();
     console.log(body);
     if (res.status !== 201) {
@@ -70,16 +44,16 @@ const orderCreationHandler = async ({
       <strong>Distance:</strong> ${distance} <br>
       <strong>Price:</strong> ${price} <br>
       <strong>Created On:</strong> ${createdOn}`;
-    modalController(modalText, 'green');
+    utility.modalController(modalText, 'green');
   } catch ({ error }) {
-    modalController(error, 'red');
+    utility.modalController(error, 'red');
   }
 };
 
 const changeDestHandler = async ({ id: { value: id }, destination: { value: destination } }) => {
   const changeDestButton = document.querySelector('.changeDestButton');
   changeDestButton.disabled = true;
-  loaderStart();
+  utility.loaderStart();
   const json = JSON.stringify({ destination });
   try {
     const res = await fetch(`/api/v1/parcels/${id}/destination`, {
@@ -91,7 +65,7 @@ const changeDestHandler = async ({ id: { value: id }, destination: { value: dest
       body: json,
     });
     changeDestButton.disabled = false;
-    loaderStop();
+    utility.loaderStop();
     const body = await res.json();
     console.log(body);
     if (res.status !== 200) {
@@ -101,38 +75,38 @@ const changeDestHandler = async ({ id: { value: id }, destination: { value: dest
     const modalText = `Parcel with ID '<strong>${id}</strong>' will now head to <strong>${newDestination}</strong>. <br>
       <strong>New Distance:</strong> ${newDistance} <br>
       <strong>Additional Price:</strong> ${additionalPrice}`;
-    modalController(modalText, 'green');
+    utility.modalController(modalText, 'green');
   } catch ({ error }) {
-    modalController(error, 'red');
+    utility.modalController(error, 'red');
   }
 };
 
 const cancelHandler = async ({ id: { value: id } }) => {
   const changeDestButton = document.querySelector('.changeDestButton');
   changeDestButton.disabled = true;
-  loaderStart();
+  utility.loaderStart();
   try {
     const res = await fetch(`/api/v1/parcels/${id}/cancel`, {
       method: 'PATCH',
       headers: { 'x-auth': token },
     });
     changeDestButton.disabled = false;
-    loaderStop();
+    utility.loaderStop();
     const body = await res.json();
     console.log(body);
     if (res.status !== 200) {
       throw body;
     }
     const modalText = `Parcel with ID '<strong>${id}</strong>' has been cancelled`;
-    modalController(modalText, 'green');
+    utility.modalController(modalText, 'green');
   } catch ({ error }) {
-    modalController(error, 'red');
+    utility.modalController(error, 'red');
   }
 };
 
 const getAllHandler = async () => {
   parcelList.textContent = '';
-  loaderStart();
+  utility.loaderStart();
   const res = await fetch('/api/v1/parcels', {
     method: 'GET',
     headers: {
@@ -234,7 +208,7 @@ const getAllHandler = async () => {
     parcelListItem.appendChild(parcelTable);
     parcelList.appendChild(parcelListItem);
   });
-  loaderStop();
+  utility.loaderStop();
 };
 
 const navbar = document.querySelector('nav');
