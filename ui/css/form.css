@@ -70,7 +70,16 @@ input.red, input.red:focus {
   }
 }
 
+@keyframes autofill {
+  to {
+      color: white;
+      background: transparent;
+  }
+}
+
 input:-webkit-autofill {
   -webkit-animation-name: autofill;
+  animation-name: autofill;
   -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }

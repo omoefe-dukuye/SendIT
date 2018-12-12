@@ -22,7 +22,6 @@ for (let i = 0; i < nav.length; i += 1) {
   });
 }
 
-console.log(localStorage.token);
 
 if (localStorage.token) {
   headerLink1.innerHTML = '<span class="display_name"></span><i class="far fa-user"></i>';

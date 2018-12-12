@@ -12,7 +12,7 @@ body {
   display: grid;
   grid-template-rows: auto 1fr auto;
   margin: 0;
-  min-width: 375px;
+  min-width: 300px;
 }
 
 main {
@@ -97,6 +97,11 @@ header li {
     display: block;
     width: 100%;
     text-align: center;
+  }
+
+  .slogan_line2 {
+    display: block;
+    text-align: right;
   }
 }
 
