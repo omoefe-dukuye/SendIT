@@ -1,5 +1,4 @@
 /* eslint-disable no-plusplus */
-const displayName = document.querySelector('span');
 const createOrder = document.querySelector('.createOrder');
 const changeDest = document.querySelector('.changeDest');
 const fetchById = document.querySelector('.fetchById');
@@ -8,7 +7,6 @@ const getAll = document.querySelector('#getAll');
 const parcelList = document.querySelector('.parcels');
 const loader = document.querySelector('.loaderBg');
 const { token } = localStorage;
-const { userFirstName: firstName } = JSON.parse(window.atob(token.split('.')[1]));
 
 const modalController = (content, color) => {
   const modal = document.querySelector('#myModal');
@@ -172,7 +170,7 @@ const getAllHandler = async () => {
 
     const tableRow3 = document.createElement('tr');
     const tableRow3Col1 = document.createElement('th');
-    tableRow3Col1.textContent = 'Current Location';
+    tableRow3Col1.textContent = 'Location';
     tableRow3.appendChild(tableRow3Col1);
     const tableRow3Col2 = document.createElement('td');
     tableRow3Col2.textContent = currentLocation;
@@ -238,9 +236,6 @@ const getAllHandler = async () => {
   });
   loaderStop();
 };
-
-
-displayName.textContent = `${firstName} `;
 
 const navbar = document.querySelector('nav');
 const sticky = navbar.offsetTop;

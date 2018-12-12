@@ -10,6 +10,10 @@ th {
   width: 20%;
 }
 
+th, td {
+  padding-left: 1rem;
+}
+
 ol li {
   margin-bottom: 1rem;
 }

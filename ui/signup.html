@@ -25,10 +25,10 @@
     <div class="link_wrapper">
       <ul>
         <li class="inline">
-          <a class="header_link shadow" href="login.html">Log In</a>
+          <a class="header_link1" href="login.html">Log In</a>
         </li>
         <li class="inline">
-          <a class="header_link shadow" href="signup.html">Create Account</a>
+          <a class="header_link2" href="signup.html">Create Account</a>
         </li>
       </ul>
     </div>
@@ -38,23 +38,36 @@
     <section>
       <form class="form" action="index.html" method="post">
         <label for="firstname">First Name:</label>
-        <input id="firstname" type="text" name="firstname">
+        <input id="firstname" type="text" name="firstname" pattern="[a-zA-Z]{0,15}'?[a-zA-Z]{0,15}"
+        title="John" required autofocus>
 
         <label for="lastname">Last Name:</label>
-        <input id="lastname" type="text" name="lastname">
+        <input id="lastname" type="text" name="lastname" pattern="[a-zA-Z]{0,15}'?[a-zA-Z]{0,15}"
+        title="Doe" required>
 
         <label for="email">Email Address</label>
-        <input id="email" type="email" name="email">
+        <input id="email" type="email" name="email" pattern="[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}\.[a-zA-Z0-9]{1,10}"
+        title="example@example.com" required>
 
         <label for="username">Username:</label>
-        <input id="username" type="text" name="username">
+        <input id="username" type="text" name="username" pattern="[a-zA-Z]{2,15}[a-zA-Z0-9]{0,5}"
+        title="john123" required>
 
         <label for="password">Password:</label>
-        <input id="password" type="password" name="password">
+        <input id="password" type="password" name="password" pattern="[\S]{5,20}"
+        title="Between 5 and 20 characters, no spaces allowed" required>
 
         <label for="confirm_password">Confirm password:</label>
-        <input id="confirm_password" type="password">
-        
+        <input id="confirm_password" type="password" oninput="check(this)">
+        <script>
+            function check(input) {
+                if (input.value != document.getElementById('password').value) {
+                    input.setCustomValidity('Password don\'t match, please crosscheck.');
+                } else {
+                    input.setCustomValidity('');
+                }
+            }
+        </script>
         <input type="submit" value="Sign Up">
       </form>
     </section>

@@ -27,9 +27,9 @@ input[type="text"], input[type="password"], input[type="number"], input[type="em
   display: block;
   border: none;
   border-bottom: 1px solid #bbb;
-  background-color: transparent;
+  background-color: transparent !important;
   font-size: 1.5rem;
-  color: white;
+  color: white !important;
   height: 2rem;
   margin-top: 1rem;
   padding: 4px 1rem;

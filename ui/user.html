@@ -11,25 +11,31 @@
   <link rel="stylesheet" href="css/form.css">
   <link rel="stylesheet" href="css/user.css">
   <link rel="stylesheet" href="css/table.css">
+  <script>
+    if (!localStorage.token) {
+      window.location.href = '/login.html';
+    }
+  </script>
 </head>
 <body>
   <header class="header_footer header">
     <div class="logo_wrapper">
-      <a  class="header_link logo shadow" href="index.html">
-        <h1 class="inline">SendIT</h1>
-        <i class="fas fa-plane-departure"></i>
-      </a>
-      <p class="slogan">
-        ...delivering on time, all the time.
-      </p>
+        <a class="header_link logo" href="index.html">
+          <h1 class="inline">SendIT</h1>
+          <i class="fas fa-plane-departure"></i>
+        </a>
+        <p class="slogan">
+          ...delivering on time, all the time.
+        </p>
     </div>
+
     <div class="link_wrapper">
       <ul>
         <li class="inline">
-          <a class="header_link shadow see_profile" href="#"><span></span><i class="far fa-user"></i></a>
+          <a class="header_link1 see_profile" href="user.html"><span class="display_name"></span><i class="far fa-user"></i></a>
         </li>
         <li class="inline">
-          <a class="header_link shadow" href="index.html">Log out</a>
+          <a class="header_link2 logout" href="#">Log out</a>
         </li>
       </ul>
     </div>
@@ -63,14 +69,14 @@
         <label for="destination">Destination</label>
         <input id="destination" type="text" name="destination">
         <label for="weight">Weight (in KG):</label>
-        <input id="weight" type="number" name="weight">
+        <input id="weight" type="number" step="0.01" name="weight">
         <input class="createOrderButton" type="submit" name="" value="Create Order">
       </form>
     </section>
     <section class="doc no_display">
       <form class="changeDest">
         <label for="id">Parcel ID:</label>
-        <input id="id" type="number" name="id">
+        <input id="id" type="number" step="0.01" name="id">
         <label for="destination">New Destination</label>
         <input id="destination" type="text" name="destination">
         <input class="changeDestButton" type="submit" value="Change">
@@ -80,7 +86,7 @@
       <div>
         <form class="FetchById">
           <label for="id">Parcel ID</label>
-          <input id="id "type="number" name="id">
+          <input id="id "type="number" step="0.01" name="id">
           <input type="submit" value="Get Details">
         </form>
         <div class="results">
@@ -91,7 +97,7 @@
     <section class="doc no_display">
       <form class="cancel">
         <label for="id">Parcel ID</label>
-        <input id="id "type="number" name="id">
+        <input id="id "type="number" step="0.01" name="id">
         <input type="submit" value="Cancel">
       </form>
     </section>
@@ -104,7 +110,7 @@
 
     <div id="myModal" class="modal">
       <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="display_name" class="close">&times;</span>
         <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
       </div>
     </div>
