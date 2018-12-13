@@ -36,6 +36,7 @@ if (localStorage.token) {
   const { userFirstName: firstName } = JSON.parse(window.atob(localStorage.token.split('.')[1]));
   const displayName = document.querySelector('.display_name');
   displayName.textContent = `${firstName} `;
+  document.title = `${firstName} | SendIT`;
 
 
   const logout = document.querySelector('.logout');
