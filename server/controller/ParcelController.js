@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import moment from 'moment';
 import db from '../config/dbconnect';
+import { isAddress } from '../helpers/validator';
 import {
   createOrder, updateToDelivered, selectByPlacedby, changeDestination,
   changeLocation, selectAllParcels, updateStatus, selectByParcelId, selectByPlacedbyAndId,
@@ -160,8 +161,23 @@ class ParcelController {
       const { params: { parcelId }, user: id } = req;
       const { rows: [parcel] } = await db(selectByPlacedbyAndId, [id, parcelId]);
       if (parcel) {
-        delete (parcel.placed_by);
-        return res.status(200).json({ status: 200, parcel });
+        const { pickup_location: from, current_location: location } = parcel;
+        isAddress(location, (address, errorMessage, locationCoords) => {
+          if (address) {
+            return isAddress(from, (address2, errorMessage2, pickupCoords) => {
+              if (address2) {
+                parcel.coords = [pickupCoords, locationCoords];
+                delete parcel.placed_by;
+                return res.status(200).json({ status: 200, parcel });
+              }
+              const error = 'Network error, Please check your connection';
+              res.status(400).json({ status: 400, error });
+            });
+          }
+          const error = 'Network error, Please check your connection';
+          res.status(400).json({ status: 400, error });
+        });
+        return;
       }
       return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, please crosscheck.' });
     } catch (error) {

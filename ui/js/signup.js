@@ -1,5 +1,5 @@
 /* eslint-disable-next-line import/extensions */
-import utility from './UtilityFunctions.js';
+import utility from './helpers/UtilityFunctions.js';
 
 const signupForm = document.querySelector('.form');
 const submit = document.querySelector('.submit');

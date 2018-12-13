@@ -13,6 +13,15 @@ nav, nav ul {
 }
 
 @media (max-width: 720px) {
+  section {
+    height: auto;
+  }
+
+  main {
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
   .dummy {
     display: none;
   }
@@ -100,4 +109,17 @@ nav, nav ul {
 
 .sticky ~ section {
   padding-top: 4.5rem;
+}
+
+.idfetch_wrapper {
+  width: 100%;
+}
+
+.idfetch_wrapper p {
+  text-align: center;
+}
+
+.results {
+  display: grid;
+  grid-template-rows: 1fr 2fr;
 }
