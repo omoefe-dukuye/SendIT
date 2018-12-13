@@ -209,6 +209,7 @@ const getAllHandler = async () => {
     parcelList.appendChild(parcelListItem);
   });
   utility.loaderStop();
+  return false;
 };
 
 const navbar = document.querySelector('nav');
@@ -226,16 +227,19 @@ window.addEventListener('scroll', () => {
 createOrder.addEventListener('submit', (e) => {
   e.preventDefault();
   orderCreationHandler(createOrder);
+  return false;
 });
 
 changeDest.addEventListener('submit', (e) => {
   e.preventDefault();
   changeDestHandler(changeDest);
+  return false;
 });
 
 cancelOrder.addEventListener('submit', (e) => {
   e.preventDefault();
   cancelHandler(cancelOrder);
+  return false;
 });
 
 getAll.addEventListener('click', getAllHandler);
