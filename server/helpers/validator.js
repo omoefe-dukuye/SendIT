@@ -53,7 +53,7 @@ const isValid = (string) => {
 const errorSelector = (reason, property) => {
   const msg = reason === 'illegal'
     ? `Please use letters and numbers for your ${property}.`
-    : `Please enter a ${property} between 10 and 30 characters.`;
+    : `Please enter a more descriptive ${property} (between 10 and 30 characters).`;
   return msg;
 };
 
