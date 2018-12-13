@@ -83,7 +83,7 @@ class check {
     isAddress(location, (address, errorMessage, coords) => {
       if (address) {
         req.body.location = address;
-        req.body.locationCoords = { lat: coords.lat, lng: coords.lng };
+        req.body.locationCoords = coords;
         next();
       } else {
         const error = errorMessage === 1
@@ -108,7 +108,7 @@ class check {
     isAddress(destination, (address, errorMessage, coords) => {
       if (address) {
         req.body.destination = address;
-        req.body.destinationCoords = { lat: coords.lat, lng: coords.lng };
+        req.body.destinationCoords = coords;
         next();
       } else {
         const error = errorMessage === 1

@@ -19,15 +19,10 @@ const isAddress = (address, callback) => {
     } else if (body.status !== 'OK') {
       callback(undefined, 2);
     } else {
-      const { location } = body.results[0].geometry;
-
+      const coords = body.results[0].geometry.location;
       const { formatted_address: formattedAddress } = body.results[0];
 
-      callback(
-        formattedAddress,
-        undefined,
-        { lat: location.lat, lng: location.lng },
-      );
+      callback(formattedAddress, undefined, coords);
     }
   });
 };
