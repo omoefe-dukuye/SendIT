@@ -34,4 +34,5 @@ const submitData = async ({
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   submitData(loginForm);
+  return false;
 });
