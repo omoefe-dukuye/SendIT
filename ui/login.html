@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/form.css">
     <link rel="stylesheet" href="css/login.css">
+    <script>
+    if (localStorage.token) {
+      window.location.href = '/user.html';
+    }
+    </script>
   </head>
   <body>
       <header class="header_footer header">
