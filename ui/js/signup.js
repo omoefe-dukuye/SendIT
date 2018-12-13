@@ -40,4 +40,5 @@ const submitData = async ({
 signupForm.addEventListener('submit', (e) => {
   e.preventDefault();
   submitData(signupForm);
+  return false;
 });
