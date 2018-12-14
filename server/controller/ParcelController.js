@@ -161,12 +161,18 @@ class ParcelController {
       const { params: { parcelId }, user: id } = req;
       const { rows: [parcel] } = await db(selectByPlacedbyAndId, [id, parcelId]);
       if (parcel) {
-        const { current_location: location } = parcel;
-        isAddress(location, (address, errorMessage, coords) => {
+        const { pickup_location: from, current_location: location } = parcel;
+        isAddress(location, (address, errorMessage, locationCoords) => {
           if (address) {
-            parcel.coords = coords;
-            delete parcel.placed_by;
-            return res.status(200).json({ status: 200, parcel });
+            return isAddress(from, (address2, errorMessage2, pickupCoords) => {
+              if (address2) {
+                parcel.coords = [pickupCoords, locationCoords];
+                delete parcel.placed_by;
+                return res.status(200).json({ status: 200, parcel });
+              }
+              const error = 'Network error, Please check your connection';
+              res.status(400).json({ status: 400, error });
+            });
           }
           const error = 'Network error, Please check your connection';
           res.status(400).json({ status: 400, error });
