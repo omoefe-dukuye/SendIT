@@ -21,7 +21,7 @@ class HtmlProvider {
   static changeLocation({ id, currentLocation: location }) {
     return `
       Parcel ID: <strong>${id}</strong> <br>
-      <strong>Location:</strong> ${location} <br>
+      Location:<strong> ${location}</strong> <br>
     `;
   }
 
