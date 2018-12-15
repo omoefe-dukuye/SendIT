@@ -4,39 +4,137 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="keywords" content="courier, shipping, delivery, parcel">
-  <title>Admin | SendIT</title>
-  <link href="https://fonts.googleapis.com/css?family=Hind+Madurai" rel="stylesheet">
+  <title>Omoefe | SendIT</title>
+  <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|Hind+Madurai|Permanent+Marker" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/user.css">
+  <link rel="stylesheet" href="css/table.css">
+  <script>
+    if (!localStorage.token) window.location.href = '/login.html';
+    if (!JSON.parse(window.atob(localStorage.token.split('.')[1])).isAdmin) {
+      localStorage.clear();
+      window.location.href = '/login.html';
+    }
+  </script>
 </head>
 <body>
   <header class="header_footer header">
     <div class="logo_wrapper">
-      <a  class="header_link logo shadow" href="index.html">
-        <h1 class="inline">SendIT</h1>
-        <i class="fas fa-plane-departure"></i>
-      </a>
-      <p class="slogan">
-        ...delivering on time, all the time.
-      </p>
+        <a class="header_link logo" href="index.html">
+          <h1 class="inline">SendIT</h1>
+          <i class="fas fa-plane-departure"></i>
+        </a>
+        <p class="slogan">
+          ...delivering on time, all the time.
+        </p>
+    </div>
+
+    <div class="link_wrapper">
+      <ul>
+        <li class="inline">
+          <a class="header_link1" href="user.html"><span class="display_name"></span><i class="far fa-user"></i></a>
+        </li>
+        <li class="inline">
+          <a class="header_link2 logout" href="#">Log out</a>
+        </li>
+      </ul>
     </div>
   </header>
+
   <main>
-    <section class="form">
-      <form class="" action="index.html" method="post">
-        <label for="id">Parcel ID</label>
-        <input id="id" type="text" name="" value="">
-        <label for="status">Status</label>
-        <select id="status" name="status">
-          <option value="transit">In transit</option>
+    <nav>
+      <ul>
+        <li>
+          <a class="nav active" href="#">Status</a>
+        </li>
+        <li>
+          <a class="nav" href="#">Location</a>
+        </li>
+        <li>
+          <a class="nav" href="#">Details</a>
+        </li>
+        <li>
+          <a class="nav" href="#">User</a>
+        </li>
+        <li>
+          <a class="nav" id="getAll" href="#">All</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="dummy"></div>
+    <section class="doc">
+      <form class="change_status">
+        <label for="id_status">Parcel ID</label>
+        <input id="id_status" class="focus" type="number" max="2000000000" name="id" required autofocus>
+        <label for="status">New Status:</label>
+        <select id="status" name="status" required>
+          <option value="created">Created</option>
+          <option value="in-transit">In transit</option>
+          <option value="cancelled">Cancelled</option>
           <option value="delivered">Delivered</option>
         </select>
-        <label for="location">Location</label>
-        <input id="location" type="text" name="" value="">
-        <input type="submit" name="" value="Change">
+        <input class="change_status_button" type="submit" value="Change">
       </form>
     </section>
+    <section class="doc no_display">
+      <form class="change_location">
+        <label for="id_location">Parcel ID</label>
+        <input id="id_location" class="focus" type="number" max="2000000000" name="id" required>
+        <label for="location">New Location</label>
+        <input id="location" type="text" name="location" maxlength="60"
+        pattern="[a-zA-Z0-9,. ]+" title="235 Ikorodu road, Lagos" required>
+        <input class="change_location_button" type="submit" value="Change">
+      </form>
+    </section>
+    <section class="doc no_display">
+      <div class="idfetch_wrapper">
+        <form class="fetch_by_id">
+          <label for="idFetch">Parcel ID</label>
+          <input id="idFetch"  class="focus" type="number" max="2000000000" name="id" required>
+          <input type="submit" class="details_button" value="Get Details">
+        </form>
+        <div class="results">
+          <p class="results_text"></p>
+          <div class="mapdiv"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc no_display">
+      <div class="idfetch_wrapper">
+        <form class="fetch_by_user_id">
+          <label for="user_id">User ID</label>
+          <input id="user_id"  class="focus" type="number" max="2000000000" name="id" required>
+          <input type="submit" class="fetch_by_user_button" value="Fetch">
+        </form>
+        <div class="user_results">
+          <p class="user_results_text"></p>
+          <div class="parcel_tables_wrapper">
+            <ol class="user_parcels"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc no_display">
+      <div class="table_results">
+        <ol class="parcels"></ol>
+      </div>
+    </section>
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p class="modal-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit quisquam eius explicabo sit pariatur, accusamus cupiditate. Consectetur necessitatibus fugiat blanditiis perspiciatis commodi explicabo! Dolorem suscipit, ipsum tempore ex vitae enim.</p>
+      </div>
+    </div>
+
+    <div class="loaderBg">
+      <div class="loader">
+      </div>
+    </div>
   </main>
   <footer class="header_footer">
     <div class="shadow">
@@ -47,5 +145,33 @@
       </ul>
     </div>
   </footer>
+  <script src="js/main.js"></script>
+  <script type="module" src="js/admin.js"></script>
+  <script>
+    function myMap () {
+          const { lat, lng } = coords[1];
+          const mapProp = {
+            center: new google.maps.LatLng(lat, lng),
+            zoom: 5,
+          };
+          const map = new google.maps.Map(document.querySelector('.mapdiv'), mapProp);
+
+          const marker = new google.maps.Marker({
+          position: { lat, lng },
+          map: map,
+          title: 'Current location.'
+        });
+
+        const flightPath = new google.maps.Polyline({
+          path: coords,
+          geodesic: true,
+          strokeColor: '#f00',
+          strokeOpacity: 0.7,
+          strokeWeight: 1
+        });
+
+        flightPath.setMap(map);
+        }
+  </script>
 </body>
 </html>

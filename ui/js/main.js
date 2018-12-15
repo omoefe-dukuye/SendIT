@@ -24,8 +24,10 @@ for (let i = 0; i < nav.length; i += 1) {
 
 
 if (localStorage.token) {
-  headerLink1.innerHTML = '<span class="display_name"></span><i class="far fa-user"></i>';
-  headerLink1.classList.add('see_profile');
+  const fontAwesome = JSON.parse(window.atob(localStorage.token.split('.')[1])).isAdmin
+    ? 'fas fa-user-tie'
+    : 'far fa-user';
+  headerLink1.innerHTML = `<span class="display_name"></span><i class="${fontAwesome}"></i>`;
   headerLink1.setAttribute('href', 'user.html');
 
   headerLink2.textContent = 'Log Out';

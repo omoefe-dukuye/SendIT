@@ -25,7 +25,9 @@ const submitData = async ({
       throw body;
     }
     localStorage.setItem('token', body.token);
-    window.location.href = '/user.html';
+    window.location.href = JSON.parse(window.atob(localStorage.token.split('.')[1])).isAdmin
+      ? '/admin.html'
+      : '/user.html';
   } catch ({ error }) {
     utility.modalController(error, 'red');
   }

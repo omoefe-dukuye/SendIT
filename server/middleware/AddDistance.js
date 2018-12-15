@@ -71,7 +71,7 @@ class AddDistance {
    */
   static async forDestinationChange(req, res, next) {
     const { user: userId, params: { parcelId }, body: { destinationCoords } } = req;
-    const { rows: [parcel] } = await db(selectByPlacedbyAndId, [userId, parcelId]);
+    const { rows: [parcel] } = await db(selectByPlacedbyAndId, [parcelId, userId]);
 
     if (!parcel) {
       return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, Please crosscheck.' });

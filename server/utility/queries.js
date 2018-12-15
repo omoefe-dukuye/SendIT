@@ -11,8 +11,6 @@ const selectByUsername = 'SELECT * FROM users WHERE username = $1';
 
 const selectByPlacedby = 'SELECT * FROM parcels WHERE placed_by = $1';
 
-const selectByPlacedbyAndId = `${selectByPlacedby} AND id = $2`;
-
 const createOrder = `INSERT INTO
   parcels(
     placed_by,
@@ -33,6 +31,8 @@ const changeLocation = 'UPDATE parcels SET current_location=$1, distance=$2 WHER
 const selectAllParcels = 'SELECT * FROM parcels';
 
 const selectByParcelId = 'SELECT * FROM parcels WHERE id = $1';
+
+const selectByPlacedbyAndId = `${selectByParcelId} AND placed_by = $2`;
 
 const updateToDelivered = 'UPDATE parcels SET status=$1, delivered_on=$3 WHERE id=$2';
 
