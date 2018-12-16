@@ -137,28 +137,49 @@
   <script type="module" src="js/user.js"></script>
   <script>
     function myMap () {
-          const { lat, lng } = coords[1];
+          const [{ lat: fromLat, lng: fromLng }, { lat, lng }, { lat: toLat, lng: toLng }] = coords;
           const mapProp = {
             center: new google.maps.LatLng(lat, lng),
             zoom: 5,
           };
           const map = new google.maps.Map(document.querySelector('.mapdiv'), mapProp);
-
-          const marker = new google.maps.Marker({
+          
+          const fromMarker = new google.maps.Marker({
+          position: { lat: fromLat, lng: fromLng },
+          map: map,
+          title: 'Pickup location.'
+        });
+        const atMarker = new google.maps.Marker({
           position: { lat, lng },
           map: map,
+          animation: google.maps.Animation.BOUNCE,
           title: 'Current location.'
         });
+          const toMarker = new google.maps.Marker({
+          position: { lat: toLat, lng: toLng },
+          map: map,
+          title: 'Destination.'
+        });
 
-        const flightPath = new google.maps.Polyline({
-          path: coords,
+        const coveredDistance = new google.maps.Polyline({
+          path: [coords[0], coords[1]],
+          geodesic: true,
+          strokeColor: '#90f',
+          strokeOpacity: 0.7,
+          strokeWeight: 1.5
+        });
+
+        const distanceLeft = new google.maps.Polyline({
+          path: [coords[1], coords[2]],
           geodesic: true,
           strokeColor: '#f00',
           strokeOpacity: 0.7,
-          strokeWeight: 1
+          strokeWeight: 1.5
         });
 
-        flightPath.setMap(map);
+        
+        coveredDistance.setMap(map);
+        distanceLeft.setMap(map);
         }
   </script>
 </body>

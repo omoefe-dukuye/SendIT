@@ -4,26 +4,30 @@ import request from 'request';
 /**
    * Gets standard address an coordinates for address passed in.
    * @param {String} address the address to be found.
-   * @param {Function} callback the callback function that is supplied the details.
+   * @return {Object} callback the callback function that is supplied the details.
    */
-const isAddress = (address, callback) => {
+const isAddress = (address) => {
   const codeAddress = encodeURIComponent(address);
 
-  request({
-    url: `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_KEY}&address=${codeAddress}`,
-    json: true,
-  },
-  (error, response, body) => {
-    if (error) {
-      callback(undefined, 1);
-    } else if (body.status !== 'OK') {
-      callback(undefined, 2);
-    } else {
-      const coords = body.results[0].geometry.location;
-      const { formatted_address: formattedAddress } = body.results[0];
+  return new Promise((resolve, reject) => {
+    request({
+      url: `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_KEY}&address=${codeAddress}`,
+      json: true,
+    },
+    (error, response, body) => {
+      if (error) {
+        const err = new Error(1);
+        reject(err);
+      } else if (body.status !== 'OK') {
+        const err = new Error(2);
+        reject(err);
+      } else {
+        const coords = body.results[0].geometry.location;
+        const { formatted_address: formattedAddress } = body.results[0];
 
-      callback(formattedAddress, undefined, coords);
-    }
+        resolve({ formattedAddress, coords });
+      }
+    });
   });
 };
 

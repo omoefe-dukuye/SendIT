@@ -78,23 +78,19 @@ class check {
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
    */
-  static location(req, res, next) {
+  static async location(req, res, next) {
     const { location } = req.body;
-    isAddress(location, (address, errorMessage, coords) => {
-      if (address) {
-        req.body.location = address;
-        req.body.locationCoords = coords;
-        next();
-      } else {
-        const error = errorMessage === 1
-          ? 'Network error, Please check your connection'
-          : 'The address for your pickup location doesn\'t seem to exist, Please crosscheck';
-        return res.status(400).json({
-          status: 400,
-          error,
-        });
-      }
-    });
+    try {
+      const { formattedAddress: address, coords } = await isAddress(location);
+      req.body.location = address;
+      req.body.locationCoords = coords;
+    } catch (err) {
+      const error = err.message === 1
+        ? 'Network error, Please check your connection'
+        : 'The address for your pickup location doesn\'t seem to exist, Please crosscheck';
+      res.status(400).json({ status: 400, error });
+    }
+    next();
   }
 
   /**
@@ -103,23 +99,19 @@ class check {
    * @param {Object} res the response object.
    * @param {Function} next calls the next middleware
    */
-  static destination(req, res, next) {
+  static async destination(req, res, next) {
     const { destination } = req.body;
-    isAddress(destination, (address, errorMessage, coords) => {
-      if (address) {
-        req.body.destination = address;
-        req.body.destinationCoords = coords;
-        next();
-      } else {
-        const error = errorMessage === 1
-          ? 'Network error, Please check your connection'
-          : 'The address for your destination doesn\'t seem to exist, Please crosscheck';
-        return res.status(400).json({
-          status: 400,
-          error,
-        });
-      }
-    });
+    try {
+      const { formattedAddress: address, coords } = await isAddress(destination);
+      req.body.destination = address;
+      req.body.destinationCoords = coords;
+    } catch (err) {
+      const error = err.message === 1
+        ? 'Network error, Please check your connection'
+        : 'The address for your destination doesn\'t seem to exist, Please crosscheck';
+      res.status(400).json({ status: 400, error });
+    }
+    next();
   }
 }
 

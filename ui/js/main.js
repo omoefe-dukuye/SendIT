@@ -24,11 +24,12 @@ for (let i = 0; i < nav.length; i += 1) {
 
 
 if (localStorage.token) {
-  const fontAwesome = JSON.parse(window.atob(localStorage.token.split('.')[1])).isAdmin
+  const admin = JSON.parse(window.atob(localStorage.token.split('.')[1])).isAdmin;
+  const fontAwesome = admin
     ? 'fas fa-user-tie'
     : 'far fa-user';
   headerLink1.innerHTML = `<span class="display_name"></span><i class="${fontAwesome}"></i>`;
-  headerLink1.setAttribute('href', 'user.html');
+  headerLink1.setAttribute('href', `${admin ? 'admin' : 'user'}.html`);
 
   headerLink2.textContent = 'Log Out';
   headerLink2.classList.add('logout');

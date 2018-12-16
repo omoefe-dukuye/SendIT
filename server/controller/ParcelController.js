@@ -157,33 +157,32 @@ class ParcelController {
    * @param {object} res the response object.
    */
   static async fetchParcelById(req, res) {
+    const { admin, params: { parcelId }, user: id } = req;
+    const query = admin ? selectByParcelId : selectByPlacedbyAndId;
+    const values = admin ? [parcelId] : [parcelId, id];
+    let parcel;
     try {
-      const { admin, params: { parcelId }, user: id } = req;
-      const query = admin ? selectByParcelId : selectByPlacedbyAndId;
-      const values = admin ? [parcelId] : [parcelId, id];
-      const { rows: [parcel] } = await db(query, values);
-      if (parcel) {
-        const { pickup_location: from, current_location: location } = parcel;
-        isAddress(location, (address, errorMessage, locationCoords) => {
-          if (address) {
-            return isAddress(from, (address2, errorMessage2, pickupCoords) => {
-              if (address2) {
-                parcel.coords = [pickupCoords, locationCoords];
-                if (!admin) delete parcel.placed_by;
-                return res.status(200).json({ status: 200, parcel });
-              }
-              const error = 'Network error, Please check your connection';
-              res.status(400).json({ status: 400, error });
-            });
-          }
-          const error = 'Network error, Please check your connection';
-          res.status(400).json({ status: 400, error });
-        });
-        return;
-      }
-      return res.status(404).json({ status: 404, error: `No${!admin ? 'ne of your' : ''} parcels match that ID, please crosscheck.` });
+      const { rows: [order] } = await db(query, values);
+      parcel = order;
     } catch (error) {
-      res.status(500).json({ status: 500, error });
+      console.log(error);
+      return res.status(500).json({ status: 500, error });
+    }
+    if (!parcel) {
+      return res.status(404).json({ status: 404, error: `No${!admin ? 'ne of your' : ''} parcels match that ID, please crosscheck.` });
+    }
+    const { pickup_location: from, current_location: location, destination: to } = parcel;
+    try {
+      const { coords: pickupCoords } = await isAddress(from);
+      const { coords: locationCoords } = await isAddress(location);
+      const { coords: destinationCoords } = await isAddress(to);
+
+      parcel.coords = [pickupCoords, locationCoords, destinationCoords];
+      if (!admin) delete parcel.placed_by;
+      res.status(200).json({ status: 200, parcel });
+    } catch (err) {
+      const error = 'Network error, Please check your connection';
+      res.status(400).json({ status: 400, error });
     }
   }
 

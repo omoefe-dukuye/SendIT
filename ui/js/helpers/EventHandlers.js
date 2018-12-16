@@ -101,7 +101,7 @@ class EventHanders {
       window.coords = coords;
       const script = document.createElement('script');
       script.setAttribute('class', 'map_script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCcq4XFmV_ANiIJp8RUY6NgpMbj3WO0J0k&callback=myMap';
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA2UEF_jKSFV1x1xLcA3Z8HNoBEBzGErM8&callback=myMap';
       document.body.appendChild(script);
     } catch ({ error }) {
       Utility.modalController(error, 'red');

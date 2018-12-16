@@ -38,26 +38,28 @@ class AddDistance {
     if (!admin) {
       return res.status(401).send({ status: 401, error: 'Unauthorized' });
     }
-
-    const { rows: [parcel] } = await db(selectByParcelId, [parcelId]);
-
+    let parcel;
+    try {
+      const { rows: [order] } = await db(selectByParcelId, [parcelId]);
+      parcel = order;
+    } catch (error) {
+      return res.status(500).json({ status: 500, error });
+    }
     if (!parcel) {
       return res.status(404).json({ status: 404, error: 'No parcels match that ID, Please crosscheck.' });
     }
-
     const { destination, status } = parcel;
-
     if (rejectIf.includes(status)) {
       return res.status(409).json({ status: 409, error: `The parcel has already been ${status}.` });
     }
-
-    return isAddress(destination, (address, error, { lng, lat }) => {
-      const existingDestinationCoords = { lng, lat };
-
+    try {
+      const { coords: existingDestinationCoords } = await isAddress(destination);
       req.body.distance = Math.round(computeDistance(locationCoords, existingDestinationCoords));
-
-      return next();
-    });
+    } catch (err) {
+      const error = 'Network error, Please check your connection';
+      res.status(400).json({ status: 400, error });
+    }
+    next();
   }
 
   /**
@@ -71,26 +73,29 @@ class AddDistance {
    */
   static async forDestinationChange(req, res, next) {
     const { user: userId, params: { parcelId }, body: { destinationCoords } } = req;
-    const { rows: [parcel] } = await db(selectByPlacedbyAndId, [parcelId, userId]);
-
+    let parcel;
+    try {
+      const { rows: [order] } = await db(selectByPlacedbyAndId, [parcelId, userId]);
+      parcel = order;
+    } catch (error) {
+      return res.status(500).json({ status: 500, error });
+    }
     if (!parcel) {
       return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, Please crosscheck.' });
     }
-
     const { current_location: currentLocation, weight, status } = parcel;
-
     if (rejectIf.includes(status)) {
       return res.status(409).json({ status: 409, error: `That parcel has already been ${status}.` });
     }
-
-    return isAddress(currentLocation, (address, error, { lng, lat }) => {
-      const currentLocationCoords = { lat, lng };
-
+    try {
+      const { coords: currentLocationCoords } = await isAddress(currentLocation);
       req.body.distance = Math.round(computeDistance(currentLocationCoords, destinationCoords));
-
       req.body.weight = weight;
-      return next();
-    });
+    } catch (err) {
+      const error = 'Network error, Please check your connection';
+      res.status(400).json({ status: 400, error });
+    }
+    next();
   }
 }
 
