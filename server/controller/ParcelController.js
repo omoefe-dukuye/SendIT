@@ -3,9 +3,13 @@ import moment from 'moment';
 import db from '../config/dbconnect';
 import { isAddress } from '../helpers/validator';
 import {
-  createOrder, updateToDelivered, selectByPlacedby, changeDestination,
+  createOrder, updateToDelivered, selectByPlacedby, changeDestination, selectById,
   changeLocation, selectAllParcels, updateStatus, selectByParcelId, selectByPlacedbyAndId,
 } from '../utility/queries';
+import mailer from '../helpers/mailer';
+import messages from '../helpers/emailMessages';
+
+const { location: locationMail, status: statusMail } = messages;
 
 /** Class representing parcel delivery order route methods */
 class ParcelController {
@@ -19,7 +23,7 @@ class ParcelController {
       const {
         weight, location, destination, distance, price,
       } = req.body;
-      const placedBy = req.user;
+      const placedBy = req.user.id;
 
       const values = [placedBy, weight, moment().format('MMMM Do YYYY, h:mm:ss a'),
         location, location, destination, distance, price];
@@ -46,7 +50,7 @@ class ParcelController {
    */
   static async fetchAllOrdersForUser(req, res) {
     try {
-      const { rows: orders, rowCount: count } = await db(selectByPlacedby, [req.user]);
+      const { rows: orders, rowCount: count } = await db(selectByPlacedby, [req.user.id]);
       return res.status(200).json({ status: 200, count, orders });
     } catch (error) {
       res.status(500).json({ status: 500, error });
@@ -84,14 +88,22 @@ class ParcelController {
     try {
       const {
         params: { parcelId: id },
-        body: { distance, location: currentLocation }
+        body: { distance, location: currentLocation },
       } = req;
-      await db(changeLocation, [currentLocation, distance, id]);
+
+      const {
+        rows: [{ placed_by: owner }]
+      } = await db(changeLocation, [currentLocation, distance, id]);
+
       const newDistance = `${distance} km`;
       const message = 'parcel location updated';
-      return res.status(200).json({
+      res.status(200).json({
         status: 200, id, currentLocation, message, newDistance,
       });
+      const { rows: [{ first_name: name, email: to }] } = await db(selectById, [owner]);
+      const email = locationMail(currentLocation, id, name);
+      email.to = to;
+      mailer(email);
     } catch (error) {
       res.status(500).json({ status: 500, error });
     }
@@ -104,7 +116,7 @@ class ParcelController {
    */
   static async fetchAllOrdersInApp(req, res) {
     try {
-      if (!req.admin) {
+      if (!req.user.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
       const { rows: orders, rowCount: count } = await db(selectAllParcels);
@@ -121,10 +133,12 @@ class ParcelController {
    */
   static async changeOrderStatus(req, res) {
     try {
-      if (!req.admin) {
+      if (!req.user.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
-      const { body: { status: newStatus }, params: { parcelId: id } } = req;
+      const {
+        body: { status: newStatus }, params: { parcelId: id },
+      } = req;
       const { rows: [parcel] } = await db(selectByParcelId, [id]);
       if (!parcel) {
         return res.status(400).json({ status: 400, error: 'No parcels match that ID, please crosscheck.' });
@@ -142,10 +156,20 @@ class ParcelController {
         : [newStatus, id];
 
       const message = 'parcel status changed';
-      await db(update, values);
-      return res.status(200).json({
+
+      const { rows: [{ placed_by: owner }] } = await db(update, values);
+
+      res.status(200).json({
         status: 200, id, newStatus, message,
       });
+
+      const toGetMail = ['in-transit', 'delivered'];
+      if (toGetMail.includes(newStatus)) {
+        const { rows: [{ first_name: name, email: to }] } = await db(selectById, [owner]);
+        const email = statusMail(id, name, newStatus);
+        email.to = to;
+        mailer(email);
+      }
     } catch (error) {
       res.status(500).json({ status: 500, error });
     }
@@ -157,7 +181,7 @@ class ParcelController {
    * @param {object} res the response object.
    */
   static async fetchParcelById(req, res) {
-    const { admin, params: { parcelId }, user: id } = req;
+    const { params: { parcelId }, user: { id, admin } } = req;
     const query = admin ? selectByParcelId : selectByPlacedbyAndId;
     const values = admin ? [parcelId] : [parcelId, id];
     let parcel;
@@ -193,7 +217,7 @@ class ParcelController {
    */
   static async cancelOrder(req, res) {
     try {
-      const { params: { parcelId }, user: id } = req;
+      const { params: { parcelId }, user: { id } } = req;
       const { rows: [parcel] } = await db(selectByPlacedbyAndId, [parcelId, id]);
       if (!parcel) {
         return res.status(404).json({ status: 404, error: 'None of your parcels match that ID, Please crosscheck.' });
@@ -215,7 +239,7 @@ class ParcelController {
    */
   static async adminFetchByUser(req, res) {
     try {
-      if (!req.admin) {
+      if (!req.user.admin) {
         return res.status(401).json({ status: 401, error: 'Unauthorized' });
       }
       const { userId } = req.params;

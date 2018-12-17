@@ -34,7 +34,7 @@ class AddDistance {
    * after adding the distance to the response body
    */
   static async forLocationChange(req, res, next) {
-    const { params: { parcelId }, body: { locationCoords }, admin } = req;
+    const { params: { parcelId }, body: { locationCoords }, user: { admin } } = req;
     if (!admin) {
       return res.status(401).send({ status: 401, error: 'Unauthorized' });
     }
@@ -55,11 +55,11 @@ class AddDistance {
     try {
       const { coords: existingDestinationCoords } = await isAddress(destination);
       req.body.distance = Math.round(computeDistance(locationCoords, existingDestinationCoords));
+      next();
     } catch (err) {
       const error = 'Network error, Please check your connection';
       res.status(400).json({ status: 400, error });
     }
-    next();
   }
 
   /**
@@ -72,7 +72,7 @@ class AddDistance {
    * after adding the distance to the response body
    */
   static async forDestinationChange(req, res, next) {
-    const { user: userId, params: { parcelId }, body: { destinationCoords } } = req;
+    const { user: { id: userId }, params: { parcelId }, body: { destinationCoords } } = req;
     let parcel;
     try {
       const { rows: [order] } = await db(selectByPlacedbyAndId, [parcelId, userId]);
@@ -91,11 +91,11 @@ class AddDistance {
       const { coords: currentLocationCoords } = await isAddress(currentLocation);
       req.body.distance = Math.round(computeDistance(currentLocationCoords, destinationCoords));
       req.body.weight = weight;
+      next();
     } catch (err) {
       const error = 'Network error, Please check your connection';
       res.status(400).json({ status: 400, error });
     }
-    next();
   }
 }
 
