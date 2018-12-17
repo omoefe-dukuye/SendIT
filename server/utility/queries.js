@@ -34,9 +34,9 @@ const selectByParcelId = 'SELECT * FROM parcels WHERE id = $1';
 
 const selectByPlacedbyAndId = `${selectByParcelId} AND placed_by = $2`;
 
-const updateToDelivered = 'UPDATE parcels SET status=$1, delivered_on=$3 WHERE id=$2';
+const updateToDelivered = 'UPDATE parcels SET status=$1, delivered_on=$3 WHERE id=$2 RETURNING *';
 
-const updateStatus = 'UPDATE parcels SET status=$1 WHERE id=$2';
+const updateStatus = 'UPDATE parcels SET status=$1 WHERE id=$2 RETURNING *';
 
 export {
   createUser, selectById, upgradeToAdmin, selectByUsername, createOrder, updateToDelivered,

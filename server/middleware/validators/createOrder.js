@@ -84,13 +84,13 @@ class check {
       const { formattedAddress: address, coords } = await isAddress(location);
       req.body.location = address;
       req.body.locationCoords = coords;
+      next();
     } catch (err) {
       const error = err.message === 1
         ? 'Network error, Please check your connection'
         : 'The address for your pickup location doesn\'t seem to exist, Please crosscheck';
       res.status(400).json({ status: 400, error });
     }
-    next();
   }
 
   /**
@@ -105,13 +105,13 @@ class check {
       const { formattedAddress: address, coords } = await isAddress(destination);
       req.body.destination = address;
       req.body.destinationCoords = coords;
+      next();
     } catch (err) {
       const error = err.message === 1
         ? 'Network error, Please check your connection'
         : 'The address for your destination doesn\'t seem to exist, Please crosscheck';
       res.status(400).json({ status: 400, error });
     }
-    next();
   }
 }
 
