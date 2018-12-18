@@ -1,0 +1,437 @@
+swagger: '2.0'
+info:
+  description: |
+    This is an app for a courier service that helps users deliver parcels to different destinations.
+  version: 1.0.0
+  title: sendIT
+  termsOfService: http://the-sendit-app.herokuapp.com
+  contact:
+    email: omoefe.dukuye@andela.com
+# host: the-sendit-app.herokuapp.com
+# basePath: /api/v1
+tags:
+- name: parcels
+  description: Parcel routes
+- name: user
+  description: User routes
+# schemes:
+# - http
+paths:
+  /parcels:
+    post:
+      tags:
+      - parcels
+      summary: Create a parcel delivery order
+      operationId: createOrder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Parcel delivery order data object
+        required: true
+        schema:
+          type: object
+          properties:
+            pickupLocation:
+              type: string
+            destination:
+              type: string
+            weight:
+              type: string
+      responses:
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+        201:
+          description: Order created successfully
+          schema:
+              $ref: '#/definitions/Parcels'
+      security:
+      - UserSecurity: []
+
+    get:
+      tags:
+      - parcels
+      summary: Fetche all parcel delivery orders made by the user
+      operationId: getAllOrders
+      produces:
+      - application/json
+      responses:
+        404:
+          description: No orders found
+        401:
+          description: Unauthorized
+        200:
+          description: successfully fetched orders
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Parcels'
+      security:
+      - AdminSecurity: []
+
+  /parcels/{parcelId}:
+    get:
+      tags:
+      - parcels
+      summary: Find and fetch a parcel by ID
+      description: Returns a single parcel
+      operationId: getOneOrder
+      produces:
+      - application/json
+      parameters:
+      - name: parcelId
+        in: path
+        description: ID of parcel to return
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful
+          schema:
+            $ref: '#/definitions/Parcels'
+        400:
+          description: Invalid ID
+        401:
+          description: Unauthorized
+        404:
+          description: Order not found
+      security:
+      - UserSecurity: []
+    
+  /parcel/{parcelId}/cancel:
+    patch:
+      tags:
+      - parcels
+      summary: Cancels a parcel delivery order by ID
+      description: Changes the status of a parcel delivery order to 'cancelled' 
+      operationId: cancelOrder
+      produces:
+      - application/json
+      parameters:
+      - name: parcelId
+        in: path
+        description: ID of parcel to cancel
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful
+          schema:
+            $ref: '#/definitions/Parcels'
+        401:
+          description: Unauthorized access due to no token or invalid token
+        404:
+          description: No parcels found with provided ID
+      security:
+      - UserSecurity: []
+
+  /parcels/{parcelId}/destination:
+    patch:
+      tags:
+      - parcels
+      summary: Changes destination of a parcel delivery order that has not been cancelled or delivered
+      operationId: changeDestination
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: destination Object
+        description: new destination of parcel
+        required: true
+        schema:
+          type: object
+          properties:
+            destination:
+              type: string
+      - in: path
+        name: parcelId
+        description: ID of parcel to change destination
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful
+          schema:
+            $ref: '#/definitions/Parcels'
+        400:
+          description: Invalid destination provided or the parcel has already been delivered or cancelled
+        404:
+          description: Parcel with the given ID not found
+        401:
+          description: Unauthorized access if there is no token provided (user not logged in) or an invalid token is provided
+      security:
+      - UserSecurity: []
+  /parcels/{parcelId}/status:
+    patch:
+      tags:
+      - parcels
+      summary: Updates the status of a parcel delivery order
+      operationId: status
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: status
+        description: new status of the parcel delivery order
+        required: true
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - delivered
+              - in transit
+      - in: path
+        name: parcelId
+        description: ID of parcel to be updated with its latest status
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Parcels'
+        400:
+          description: Invalid status provided or the parcel has already been delivered or cancelled
+        404:
+          description: Parcel with the given ID not found
+        401:
+          description: Unauthorized access if there is no token provided (user not logged in) or an invalid token is provided, or the user is not an admin
+      security:
+      - AdminSecurity: []
+  /parcels/{parcelId}/currentlocation:
+    patch:
+      tags:
+      - parcels
+      summary: Updates the present location of a parcel by ID
+      description: Updates the present location of a parcel in transit
+      operationId: changePresentLocation
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: parcelId
+        in: path
+        description: ID of parcel that needs to be updated with the changed present location
+        required: true
+        type: integer
+        minimum: 1.0
+        format: int64
+      - name: presentLocation
+        in: body
+        description: Object with the present location to be updated
+        required: true
+        schema:
+          type: object
+          properties:
+            presentLocation:
+              type: string
+      responses:
+        200:
+          description: successful
+          schema:
+            $ref: '#/definitions/Parcels'
+        400:
+          description: Invalid ID supplied
+        404:
+          description: Order with the given parcel ID not found
+        401:
+          description: Unauthorized access if a token was not provided(user not registered or logged in) or an invalid token was provided, or not an admin token
+      security:
+      - AdminSecurity: []
+
+  /auth/signup:
+    post:
+      tags:
+      - user
+      summary: Creates a user
+      description: Creats a new user.
+      operationId: signUpUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Sign up request object
+        required: true
+        schema:
+          type: object
+          properties:
+            fullname:
+              type: string
+            email:
+              type: string
+            phoneNo:
+              type: string
+            password:
+              type: string
+      responses:
+        201:
+          description: Successfully creates a user
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid input by the user
+        409:
+          description: Email/username Already taken
+      
+  
+  /auth/login:
+    post:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: signInUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Sign in request object
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: Invalid username/password supplied
+
+  /users/{userId}/parcels:
+    get:
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user whose parcels are to be fetched
+        required: true
+        type: integer
+        minimum: 1.0
+        format: int64
+      tags:
+      - user
+      summary: Gets all parcel delivery orders for a given user
+      operationId: getAllUserOrders
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Parcels'
+        400:
+          description: Invalid userid supplied
+        401: 
+          description: Invalid token, no token, or not an admin
+        404:
+          description: No parcel found for user
+      security:
+      - AdminSecurity: []
+
+securityDefinitions:
+  UserSecurity:
+    type: apiKey
+    in: header
+    name: x-auth
+  AdminSecurity:
+    type: apiKey
+    in: header
+    name: x-auth
+
+definitions:
+  Parcels:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      placed_by:
+        type: integer
+        format: int64
+      weight:
+        type: integer
+        format: int64
+      pickup_location:
+        type: string
+      destination:
+        type: string
+      distance:
+        type: integer
+        format: int64
+      price:
+        type: integer
+        format: int64
+      status:
+        type: string
+        description: Order Status
+        enum:
+        - cancelled
+        - created
+        - in-transit
+        - delivered
+      current_location:
+        type: string
+      sent_on:
+        type: string
+        format: date-time
+      delivered_on:
+        type: string
+        format: date-time
+  User:
+    type: object
+    properties:
+      token:
+        type: string
+      user:
+        type: object
+        properties:
+          id:
+            type: string
+          first_name:
+            type: string
+          last_name:
+            type: string
+          email:
+            type: string
+          username:
+            type: string
+          isadmin:
+            type: boolean
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+schemes:
+ - https
+# Added by API Auto Mocking Plugin
+# host: the-sendit-app.herokuapp.com
+# basePath: /api/v1
+# Added by API Auto Mocking Plugin
+host: the-sendit-app.herokuapp.com
+basePath: /api/v1
