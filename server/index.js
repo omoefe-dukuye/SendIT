@@ -1,16 +1,21 @@
 import 'babel-polyfill';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import router from './routes/index';
 
 const app = express();
-
+const swaggerDoc = YAML.load(path.join(process.cwd(), './server/docs/docs.yaml'));
 const PORT = process.env.PORT || 3000;
 
 // parse incoming requests with middleware
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('ui'));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 // use express router middleware
 app.use(router);
 
