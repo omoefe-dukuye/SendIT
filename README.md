@@ -1,8 +1,11 @@
 # SendIT
 ### Build Status  
 [![Build Status](https://travis-ci.org/un-tethered/SendIT.svg?branch=develop)](https://travis-ci.org/un-tethered/SendIT)
-[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop&service=githu)](https://coveralls.io/github/un-tethered/SendIT?branch=develop&service=githu)
+[![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop)](https://coveralls.io/github/un-tethered/SendIT?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/un-tethered/SendIT/maintainability)
+
+### Full app hosted here:
+https://the-sendit-app.herokuapp.com
 
 #### SendIT is an app that helps users deliver parcels to different destinations.
 
@@ -10,15 +13,18 @@
 ## Implemented Features
 * Users can create a parcel delivery order
 * Users can fetch all parcel delivery orders they have made
-* Users can fetch a specific order to view details
+* Users can fetch a specific order to view details(Google maps included)
 * Users can cancel an order
+* Users can change the destination of a parcel
+* Users can cancel a parcel delivery order
+* Admin can change the status of a parcel delivery order
+* Admin can change the current location of a parcel
+* Admin can access all orders in the app
+* Users get a mail when admin changes the status or location of a parcel
 
 
 ## Project Management
 Project is managed [here](https://www.pivotaltracker.com/n/projects/2223621) using the project management tool, [Pivotal Tracker](https://www.pivotaltracker.com).
-
-## Templates
-UI templates are hosted on Github pages [here](https://un-tethered.github.io/SendIT/UI)
 
 ## Technologies Used
 * [Node.js](https://nodejs.org) - A runtime environment based off of Chrome's V8 Engine for writing Javascript code on the server.
@@ -33,25 +39,17 @@ UI templates are hosted on Github pages [here](https://un-tethered.github.io/Sen
 * [nyc](https://github.com/istanbuljs/nyc) - Istanbul's command line interface.
 
 ## API Infomormation
-   Heroku  https://the-sendit-app.herokuapp.com/
-
-  | METHOD  | DESCRIPTION                  |             ENDPOINTS                                |
-  | --------| -------------                |          -------------------------------             |
-  | GET     | Get all orders for requester |      `/api/v1/parcels`                               |
-  | GET     | Get particular order         |    `/api/v1/parcels/:parcelId`                       |
-  | POST    | Create an order              |    `/api/v1/parcels`                                 |
-  | PUT     | Cancel order                 |     `/api/v1/parcels/:parcelId`                      | 
-  | GET     | Fetch all orders by a user   |     `/api/users/:userId/parcels`                     | 
+   https://the-sendit-app.herokuapp.com/docs
  
 
-## How to install and checkout the app
+## How to install and checkout the app locally
 
 ### Installation
 * Install [NodeJs](https://nodejs.org/en/download/) .
 * Clone this repository using `git clone https://github.com/un-tethered/SendIT.git`.
 * Run `npm install` to install all dependencies.
 * Run `npm start` to start the server.
-* Navigate to [`localhost:3000/api/v1`](localhost:3000/api/v1) in your browser to access the application.
+* Navigate to [`localhost:3000`](localhost:3000) in your browser to access the application.
 
 ### Testing the application
 Requirements
@@ -59,7 +57,7 @@ Requirements
 
 Testing with Postman
 * Install Postman by following the link above.
-* Navigate to `localhost:3000` in Postman to access the application(Check endpoint details above for routes)
+* Navigate to `localhost:3000` in Postman to access the application(Check api information above for routes)
 
 
 Running unit tests.
