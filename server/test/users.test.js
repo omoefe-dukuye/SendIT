@@ -200,3 +200,29 @@ describe('Upgrade to Admin', () => {
     expect(res).to.have.status(400);
   });
 });
+
+describe('Already existing username or password', () => {
+  it('Should upgrade to admin', async () => {
+    const res = await chai.request(app)
+      .get('/api/v1/users/checkEmail/omo789@gmail.com');
+    expect(res).to.have.status(200);
+  });
+
+  it('Should upgrade to admin', async () => {
+    const res = await chai.request(app)
+      .get('/api/v1/users/checkEmail/chubi.best@gmail.com');
+    expect(res).to.have.status(409);
+  });
+
+  it('Should upgrade to admin', async () => {
+    const res = await chai.request(app)
+      .get('/api/v1/users/checkUsername/chubibest');
+    expect(res).to.have.status(409);
+  });
+
+  it('Should upgrade to admin', async () => {
+    const res = await chai.request(app)
+      .get('/api/v1/users/checkUsername/jhgfdfghj');
+    expect(res).to.have.status(200);
+  });
+});

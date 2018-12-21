@@ -205,8 +205,7 @@ class ParcelController {
       if (!admin) delete parcel.placed_by;
       res.status(200).json({ status: 200, parcel });
     } catch (err) {
-      const error = 'Network error, Please check your connection';
-      res.status(400).json({ status: 400, error });
+      res.status(400).json({ status: 400, error: 'Network error, Please check your connection' });
     }
   }
 

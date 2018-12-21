@@ -31,6 +31,8 @@ const parcelWrongDest = new Parcel('49', 'ogba lagos', 'lag&^%$%^&*(%$)(*&  ^&^'
 const parcelToMars = new Parcel('49', 'ogba lagos', 'obarisiadjdaaasgadslljhaelr');
 const parcelfromMars = new Parcel('49', 'obarisiadjdaaasgadslljhaelr', 'ogba lagos');
 const parcelWeight = new Parcel('hyju', 'ogba lagos', 'ikorodu lagos');
+const parcelEmptyWeight = new Parcel('', 'ogba lagos', 'ikorodu lagos');
+const parcelZeroWeight = new Parcel('0', 'ogba lagos', 'ikorodu lagos');
 let adminToken;
 let user2Token;
 
@@ -111,6 +113,22 @@ describe('Parcel routes', () => {
       status.should.eql(400);
     });
 
+    it('should not create if weight field is empty', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelEmptyWeight);
+      status.should.eql(400);
+    });
+
+    it('should not create if weight is equal or less than zero', async () => {
+      const { status } = await chai.request(app)
+        .post('/api/v1/parcels')
+        .set('x-auth', user2Token)
+        .send(parcelZeroWeight);
+      status.should.eql(400);
+    });
+
     it('should not create if location is unknown', async () => {
       const { status } = await chai.request(app)
         .post('/api/v1/parcels')
@@ -169,6 +187,14 @@ describe('Parcel routes', () => {
         .set('x-auth', user2Token)
         .send({ destination: 'leiyu[guf]^&*(*&itydddjkhyy' });
       status.should.eql(400);
+    });
+
+    it('Should change not change destination if id not valid', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/100/destination')
+        .set('x-auth', user2Token)
+        .send({ destination: 'lagos, nigeria' });
+      status.should.eql(404);
     });
 
     it('Should change not change destination if value not provided', async () => {
@@ -234,6 +260,14 @@ describe('Parcel routes', () => {
         .set('x-auth', adminToken)
         .send({ location: 'man' });
       status.should.eql(400);
+    });
+
+    it('Should change not change location if parcel id does not exist', async () => {
+      const { status } = await chai.request(app)
+        .patch('/api/v1/parcels/100/currentlocation')
+        .set('x-auth', adminToken)
+        .send({ location: 'manchester city, london' });
+      status.should.eql(404);
     });
 
     it('Should change not change location if value not provided', async () => {

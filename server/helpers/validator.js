@@ -16,8 +16,7 @@ const isAddress = (address) => {
     },
     (error, response, body) => {
       if (error) {
-        const err = new Error(1);
-        reject(err);
+        reject(new Error(1));
       } else if (body.status !== 'OK') {
         const err = new Error(2);
         reject(err);

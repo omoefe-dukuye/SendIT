@@ -57,8 +57,7 @@ class AddDistance {
       req.body.distance = Math.round(computeDistance(locationCoords, existingDestinationCoords));
       next();
     } catch (err) {
-      const error = 'Network error, Please check your connection';
-      res.status(400).json({ status: 400, error });
+      res.status(400).json({ status: 400, error: 'Network error, Please check your connection' });
     }
   }
 
@@ -93,8 +92,7 @@ class AddDistance {
       req.body.weight = weight;
       next();
     } catch (err) {
-      const error = 'Network error, Please check your connection';
-      res.status(400).json({ status: 400, error });
+      res.status(400).json({ status: 400, error: 'Network error, Please check your connection' });
     }
   }
 }
