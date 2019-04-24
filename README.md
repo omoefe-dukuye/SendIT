@@ -4,9 +4,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/un-tethered/SendIT/badge.svg?branch=develop)](https://coveralls.io/github/un-tethered/SendIT?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/un-tethered/SendIT/maintainability)
 
-### Full app hosted here:
-https://the-sendit-app.herokuapp.com
-
 #### SendIT is an app that helps users deliver parcels to different destinations.
 
 
