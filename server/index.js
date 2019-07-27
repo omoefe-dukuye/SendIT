@@ -2,6 +2,7 @@ import 'babel-polyfill';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import path from 'path';
+import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 import router from './routes/index';
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // parse incoming requests with middleware
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('ui'));
